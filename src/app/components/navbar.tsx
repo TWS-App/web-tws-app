@@ -8,12 +8,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Image
-              src="/globe.svg"
-              alt="Logo"
-              width={100}
-              height={20}
-            />
+            <Image src="/globe.svg" alt="Logo" width={100} height={20} />
           </Link>
 
           {/* Desktop Menu */}
@@ -21,9 +16,10 @@ const Navbar = () => {
             <Link href="/" className="text-blue-600 font-semibold">
               Home
             </Link>
-            <Link href="/explore" className="text-gray-700 hover:text-blue-600">
+            <a className="inline-block bg-primary text-black px-6 py-2 rounded-full hover:bg-primary/90 transition text-sm">
               Explore
-            </Link>
+            </a>
+
             <Link href="/details" className="text-gray-700 hover:text-blue-600">
               Item Details
             </Link>
