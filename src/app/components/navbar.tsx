@@ -13,22 +13,21 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex space-x-6 items-center">
-            <Link href="/" className="text-blue-600 font-semibold">
+            <a className="inline-block bg-primary text-black px-6 py-2 rounded-full hover:bg-primary/90 transition text-sm">
               Home
-            </Link>
+            </a>
             <a className="inline-block bg-primary text-black px-6 py-2 rounded-full hover:bg-primary/90 transition text-sm">
               Explore
             </a>
-
-            <Link href="/details" className="text-gray-700 hover:text-blue-600">
+            <a className="inline-block bg-primary text-black px-6 py-2 rounded-full hover:bg-primary/90 transition text-sm">
               Item Details
-            </Link>
-            <Link href="/author" className="text-gray-700 hover:text-blue-600">
+            </a>
+            <a className="inline-block bg-primary text-black px-6 py-2 rounded-full hover:bg-primary/90 transition text-sm">
               Author
-            </Link>
-            <Link href="/create" className="text-gray-700 hover:text-blue-600">
+            </a>
+            <a className="inline-block bg-primary text-black px-6 py-2 rounded-full hover:bg-primary/90 transition text-sm">
               Create Yours
-            </Link>
+            </a>
           </nav>
 
           {/* Mobile Menu Button */}
