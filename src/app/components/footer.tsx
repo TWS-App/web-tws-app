@@ -12,7 +12,7 @@ const Footer = () => {
             rel="noopener noreferrer"
             className="text-indigo-600 hover:underline"
           >
-            Calfarera
+            {' '}Calfarera
           </a>
         </p>
       </div>
