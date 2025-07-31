@@ -1,9 +1,13 @@
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 const items = [
   {
     title: "Music Art Super Item",
+    category: "Music Art",
     image: "/images/market-01.jpg",
     bid: "2.03 ETH",
     usd: "$8,240.50",
@@ -12,6 +16,7 @@ const items = [
   },
   {
     title: "Digital Crypto Artwork",
+    category: "Digital Art",
     image: "/images/market-01.jpg",
     bid: "2.03 ETH",
     usd: "$7,200.50",
@@ -20,6 +25,7 @@ const items = [
   },
   {
     title: "Blockchain Item One",
+    category: "Blockchain",
     image: "/images/market-01.jpg",
     bid: "3.64 ETH",
     usd: "$6,600.00",
@@ -28,6 +34,7 @@ const items = [
   },
   {
     title: "Virtual Currency Art",
+    category: "Virtual",
     image: "/images/market-01.jpg",
     bid: "2.44 ETH",
     usd: "$8,800.50",
@@ -36,9 +43,24 @@ const items = [
   },
 ];
 
+const filters = [
+  "All Items",
+  "Music Art",
+  "Digital Art",
+  "Blockchain",
+  "Virtual",
+];
+
 const MarketSection = () => {
+  const [activeFilter, setActiveFilter] = useState("All Items");
+
+  const filteredItems =
+    activeFilter === "All Items"
+      ? items
+      : items.filter((item) => item.category === activeFilter);
+
   return (
-    <section className="bg-white py-16">
+    <section className="bg-gradient-to-b from-[#0e0b1d] to-[#1b1b2f] py-16 text-white w-full">
       <div className="container mx-auto px-4">
         {/* Heading */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
@@ -53,31 +75,29 @@ const MarketSection = () => {
           {/* Filter (Static placeholder) */}
           <div className="mt-6 md:mt-0">
             <ul className="flex flex-wrap gap-4 text-sm">
-              <li className="text-indigo-600 font-semibold cursor-pointer">
-                All Items
-              </li>
-              <li className="text-gray-600 hover:text-indigo-500 cursor-pointer">
-                Music Art
-              </li>
-              <li className="text-gray-600 hover:text-indigo-500 cursor-pointer">
-                Digital Art
-              </li>
-              <li className="text-gray-600 hover:text-indigo-500 cursor-pointer">
-                Blockchain
-              </li>
-              <li className="text-gray-600 hover:text-indigo-500 cursor-pointer">
-                Virtual
-              </li>
+              {filters.map((filter) => (
+                <li
+                  key={filter}
+                  className={`cursor-pointer ${
+                    activeFilter === filter
+                      ? "text-indigo-400 font-semibold"
+                      : "text-white hover:text-indigo-400"
+                  }`}
+                  onClick={() => setActiveFilter(filter)}
+                >
+                  {filter}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
         {/* Market Items */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {items.map((item, index) => (
+          {filteredItems.map((item, index) => (
             <div
               key={index}
-              className="bg-gray-50 rounded-lg shadow p-4 flex gap-4"
+              className="bg-[#1f1f3a] rounded-xl shadow p-4 flex gap-4 hover:shadow-lg transition"
             >
               {/* Left Image */}
               <div className="w-40 min-w-[160px] relative rounded-lg overflow-hidden">
@@ -92,7 +112,9 @@ const MarketSection = () => {
 
               {/* Right Content */}
               <div className="flex-1">
-                <h4 className="text-lg font-semibold mb-2">{item.title}</h4>
+                <h4 className="text-lg font-semibold mb-2 text-white">
+                  {item.title}
+                </h4>
                 <div className="flex items-center gap-3 mb-3">
                   <Image
                     src="/images/author.jpg"
@@ -102,32 +124,34 @@ const MarketSection = () => {
                     className="rounded-full"
                   />
                   <div>
-                    <h6 className="text-sm font-medium">Liberty Artist</h6>
-                    <a href="#" className="text-xs text-indigo-500">
+                    <h6 className="text-sm font-medium text-white">
+                      Liberty Artist
+                    </h6>
+                    <a href="#" className="text-xs text-indigo-400">
                       @libertyart
                     </a>
                   </div>
                 </div>
 
-                <div className="border-t border-gray-200 my-3"></div>
+                <div className="border-t border-gray-600 my-3"></div>
 
                 <div className="flex justify-between text-sm">
                   <div>
-                    <p className="text-gray-500">Current Bid</p>
-                    <p className="font-semibold">{item.bid}</p>
-                    <p className="text-xs text-gray-400">{item.usd}</p>
+                    <p className="text-gray-400">Current Bid</p>
+                    <p className="font-semibold text-white">{item.bid}</p>
+                    <p className="text-xs text-gray-500">{item.usd}</p>
                   </div>
                   <div>
-                    <p className="text-gray-500">Ends In</p>
-                    <p className="font-semibold">{item.ends}</p>
-                    <p className="text-xs text-gray-400">{item.endsDate}</p>
+                    <p className="text-gray-400">Ends In</p>
+                    <p className="font-semibold text-white">{item.ends}</p>
+                    <p className="text-xs text-gray-500">{item.endsDate}</p>
                   </div>
                 </div>
 
                 <div className="mt-4">
                   <Link
                     href="/details"
-                    className="text-indigo-600 hover:underline text-sm font-medium"
+                    className="text-indigo-400 hover:text-indigo-300 text-sm font-medium"
                   >
                     View Item Details &rarr;
                   </Link>
