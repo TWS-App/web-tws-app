@@ -38,44 +38,44 @@ const Navbar = () => {
         {/* Menu */}
         <ul className="hidden md:flex gap-6 text-sm font-medium text-gray-700">
           <li>
-            <a
+            <Link
               href="/"
               className="text-blue-600 hover:text-purple-600 transition-colors duration-200"
             >
               Home
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               href="/product"
               className="text-blue-600 hover:text-purple-600 transition-colors duration-200"
             >
               Product
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               href="/services"
               className="text-blue-600 hover:text-purple-600 transition-colors duration-200"
             >
               Services
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               href="/collaborations"
               className="text-blue-600 hover:text-purple-600 transition-colors duration-200"
             >
               Collaborations
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               href="/about"
               className="text-blue-600 hover:text-purple-600 transition-colors duration-200"
             >
               About
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>
@@ -119,36 +119,36 @@ const Navbar = () => {
           </button>
         </div>
         <nav className="flex flex-col p-4 text-blue-500 bg-amber-50 font-medium space-y-4">
-          <a
+          <Link
             href="#"
             className="text-custom-blue hover:text-purple-600 transition-colors duration-200"
           >
             Home
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="text-custom-blue hover:text-purple-600 transition-colors duration-200"
           >
             Product
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="text-custom-blue hover:text-purple-600 transition-colors duration-200"
           >
             Services
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="text-custom-blue hover:text-purple-600 transition-colors duration-200"
           >
             Collaborations
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="text-custom-blue hover:text-purple-600 transition-colors duration-200"
           >
             About
-          </a>
+          </Link>
         </nav>
       </aside>
     </header>

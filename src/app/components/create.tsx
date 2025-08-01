@@ -57,7 +57,7 @@ const CreateSection = () => {
           {steps.map((step) => (
             <div
               key={step.number}
-              className="relative bg-white text-gray-900 rounded-xl p-8 shadow-lg text-center"
+              className="relative bg-transparent text-gray-900 rounded-xl p-8 shadow-lg text-left"
             >
               {/* Step Number */}
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-indigo-600 text-white w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold shadow-md">
@@ -69,15 +69,15 @@ const CreateSection = () => {
                 <Image
                   src={step.icon}
                   alt={step.title}
-                  width={64}
-                  height={64}
-                  className="mx-auto"
+                  width={62}
+                  height={62}
+                  className="mx-auto bg-amber-50 p-3 rounded-full"
                 />
               </div>
 
               {/* Content */}
-              <h4 className="text-lg font-semibold mb-3">{step.title}</h4>
-              <p className="text-sm text-gray-600">{step.description}</p>
+              <h4 className="text-lg font-semibold text-white mb-3">{step.title}</h4>
+              <p className="text-sm text-white">{step.description}</p>
             </div>
           ))}
         </div>

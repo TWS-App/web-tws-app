@@ -30,7 +30,7 @@ const collections = [
 
 const HotCollections = () => {
   return (
-    <section className="bg-gradient-to-r from-[#1e1b4b] via-[#312e81] to-[#3b82f6] py-20 px-4 text-white">
+    <section className="bg-gradient-to-r from-[#1e1b4b] via-[#312e81] to-[#3b82f6] py-20 px-4 text-white w-full">
       <div className="container mx-auto px-4">
         {/* Heading */}
         <div className="text-center mb-12">
