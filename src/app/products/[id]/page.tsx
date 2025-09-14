@@ -5,8 +5,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-// Dummy data (nanti bisa diganti fetch API / DB)
-const products = [
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  oldPrice?: number | null;
+  description?: string;
+  details: string[];
+  images: string[];
+  category?: string;
+}
+
+const products: Product[] = [
   {
     id: 1,
     name: "Tozo Aerosound 3",
@@ -51,7 +61,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
   // PROPS
   const { id } = params;
 
-  const product = products.find((p) => p.id.toString() === id);
+  const product = products.find((p: any) => p.id.toString() === id);
   //   const product = products.find((p) => p.id.toString() === params?.id);
 
   // Data

@@ -5,8 +5,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-// Dummy data (nanti bisa diganti fetch API / DB)
-const services = [
+interface Service {
+  id: number;
+  name: string;
+  price: number;
+  oldPrice?: number | null;
+  description: string;
+  details: string[];
+  images: string[];
+  category: string;
+  prefix: string;
+}
+
+const services: Service[] = [
   {
     id: 1,
     name: "Adobe Photoshop",

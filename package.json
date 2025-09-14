@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:debug": "npm run clean && next build --debug",
     "start": "next start",
     "lint": "next lint"
   },
