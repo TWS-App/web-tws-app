@@ -1,5 +1,7 @@
 import { formatPrice } from "@/utils/function/price";
 import Image from "next/image";
+import ServiceCard from "../components/services/ServiceCard";
+import Sidebar from "../components/sidebar";
 
 const products = [
   {
@@ -41,6 +43,8 @@ const categories = ["All", "Editing", "Service Headphone", "Maintenance"];
 export default function ProductsPage() {
   return (
     <>
+      <Sidebar />
+      
       <section className="bg-white pt-28 pb-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
@@ -61,31 +65,9 @@ export default function ProductsPage() {
           </div>
 
           {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {products.map((item) => (
-              <div key={item.id} className="text-center">
-                <div className="aspect-square relative mb-4">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-
-                <h3 className="text-xl font-semibold text-black mb-2 cursor-pointer hover:text-blue-600 transition-colors">
-                  {item.name}
-                </h3>
-
-                <div className="text-gray-500">
-                  {item.prefix && (
-                    <span className="text-blue-500 mr-2">{item.prefix}</span>
-                  )}
-                  <span className="font-semibold">
-                    {formatPrice(item.price)}
-                  </span>
-                </div>
-              </div>
+              <ServiceCard key={item.id} item={item} />
             ))}
           </div>
         </div>
