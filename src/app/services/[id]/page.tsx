@@ -3,7 +3,7 @@
 import { formatPrice } from "@/utils/function/price";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, use } from "react";
 
 interface Service {
   id: number;
@@ -64,9 +64,13 @@ const services: Service[] = [
   },
 ];
 
-export default function ProductDetail({ params }: { params: { id: string } }) {
+export default function ProductDetail({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   // PROPS
-  const { id } = params;
+  const { id } = use(params);
 
   const service = services.find((p) => p.id.toString() === id);
 
