@@ -8,12 +8,12 @@ export default function ServiceCard({ item }: { item: any }) {
   return (
     <Link href={`/services/${item.id}`} className="block text-center group">
       <div key={item.id} className="text-center">
-        <div className="aspect-square relative mb-4">
+        <div className="aspect-square relative mb-4 overflow-hidden">
           <Image
             src={item.image}
             alt={item.name}
             fill
-            className="object-cover"
+            className="object-cover group-hover:scale-105 transition-transform"
           />
         </div>
 

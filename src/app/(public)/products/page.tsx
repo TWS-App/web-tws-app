@@ -1,8 +1,5 @@
-import { formatPrice } from "@/utils/function/price";
-import Image from "next/image";
-import Sidebar from "../components/sidebar";
-import Link from "next/link";
-import ProductCard from "../components/products/ProductCard";
+import ProductCard from "@/app/components/products/ProductCard";
+import Sidebar from "@/app/components/sidebar";
 
 const products = [
   {
