@@ -1,3 +1,4 @@
+import Navbar from "@/app/components/navbar/cartbar";
 import ServiceCard from "@/app/components/services/ServiceCard";
 import Sidebar from "@/app/components/sidebar";
 
@@ -42,7 +43,8 @@ export default function ProductsPage() {
   return (
     <>
       <Sidebar />
-      
+      {/* <Navbar onToggleSidebar={} key={'products'} /> */}
+
       <section className="bg-white pt-28 pb-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">

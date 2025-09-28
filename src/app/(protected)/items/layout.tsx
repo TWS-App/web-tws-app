@@ -1,4 +1,3 @@
-import SalesChart from "@/app/components/charts/sales";
 import Navbar from "@/app/components/navbar/navbar";
 import Sidebar from "@/app/components/sidebar/sidebar";
 import TableProducts from "@/app/components/tables/products/Table";

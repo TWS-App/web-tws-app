@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "@/context/themes/ThemeContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { BiBell, BiSearch } from "react-icons/bi";
@@ -10,6 +11,7 @@ import { FiMoon, FiSun } from "react-icons/fi";
 export default function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
 
   const [dark, setDark] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -43,13 +45,12 @@ export default function Navbar() {
         />
       </div>
 
-      {/* Actions */}
       <div className="flex items-center gap-4">
         <button
-          onClick={() => setDark(!dark)}
+          onClick={toggleTheme}
           className="p-2 rounded-full hover:bg-gray-700 transition cursor-pointer"
         >
-          {dark ? <FiSun size={20} /> : <FiMoon size={20} />}
+          {theme === "dark" ? <FiSun size={20} /> : <FiMoon size={20} />}
         </button>
         <button className="p-2 rounded-full hover:bg-gray-700 transition cursor-pointer">
           <BiBell size={20} />

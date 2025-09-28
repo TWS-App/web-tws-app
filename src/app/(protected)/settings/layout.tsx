@@ -1,10 +1,8 @@
-import SalesChart from "@/app/components/charts/sales";
 import Navbar from "@/app/components/navbar/navbar";
 import Sidebar from "@/app/components/sidebar/sidebar";
-import TableProducts from "@/app/components/tables/products/Table";
 import { ThemeProvider } from "@/context/themes/ThemeContext";
 
-export default function DashboardLayout({
+export default function MasterLayout({
   children,
 }: {
   children: React.ReactNode;
