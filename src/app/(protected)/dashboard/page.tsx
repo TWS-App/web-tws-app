@@ -1,5 +1,8 @@
+"use client";
+
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 import SalesChart from "@/app/components/charts/sales";
+// import SalesChart from "@/app/components/charts/sales";
 import { FaClock, FaDollarSign, FaShoppingCart, FaUsers } from "react-icons/fa";
 import { IoHome } from "react-icons/io5";
 
@@ -58,7 +61,7 @@ export default function DashboardPage() {
             </div>
 
             <div key={item.value}>
-              <p key={item.title} className="text-sm text-gray-400">
+              <p key={item.value} className="text-sm text-gray-400">
                 {item.title}
               </p>
               <h3
