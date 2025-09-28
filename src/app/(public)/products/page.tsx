@@ -1,5 +1,9 @@
+"use client";
+
+import Navbar from "@/app/components/navbar/cartbar";
 import ProductCard from "@/app/components/products/ProductCard";
 import Sidebar from "@/app/components/sidebar";
+import { useState } from "react";
 
 const products = [
   {
@@ -36,12 +40,11 @@ const products = [
 const categories = ["All", "Earphone", "Headphone", "Headset"];
 
 export default function ProductsPage() {
+  const [open, setOpen] = useState(false);
   const handleMove = () => {};
 
   return (
     <>
-      <Sidebar />
-
       <section className="min-h-screen bg-white pt-28 pb-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">

@@ -1,9 +1,11 @@
 "use client";
 
+import { useCartStore } from "@/stores/cart/cart";
 import { formatPrice } from "@/utils/function/price";
 import Image from "next/image";
 import Link from "next/link";
 import { use, useState } from "react";
+import { BiCart } from "react-icons/bi";
 
 interface Product {
   id: number;
@@ -57,9 +59,15 @@ const products: Product[] = [
   },
 ];
 
-export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
+export default function ProductDetail({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   // PROPS
   const { id } = use(params);
+  const { addToCart } = useCartStore();
+  const [qty, setQty] = useState(1);
 
   const product = products.find((p: any) => p.id.toString() === id);
   //   const product = products.find((p) => p.id.toString() === params?.id);
@@ -70,6 +78,16 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
   if (!product) {
     return <p className="text-center mt-20">Product not found.</p>;
   }
+
+  const handleAdd = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product?.images,
+      qty: qty,
+    });
+  };
 
   return (
     <section className="min-h-screen bg-white py-12 px-6">
@@ -134,8 +152,29 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             ))}
           </ul>
 
-          <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition cursor-pointer">
-            Add to Cart
+          <div className="flex items-center gap-3 mb-4">
+            <button
+              onClick={() => setQty(Math.max(1, qty - 1))}
+              className="px-3 py-1 border rounded bg-gray-400 hover:bg-gray-500 cursor-pointer"
+            >
+              -
+            </button>
+            <span className="px-16 py-1 items-center rounded bg-gray-400">
+              {qty}
+            </span>
+            <button
+              onClick={() => setQty(qty + 1)}
+              className="px-3 py-1 border rounded bg-gray-400 hover:bg-gray-500 cursor-pointer"
+            >
+              +
+            </button>
+          </div>
+
+          <button
+            onClick={handleAdd}
+            className="flex items-center gap-2 bg-blue-600 px-3 py-2 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition cursor-pointer"
+          >
+            <BiCart /> Add to Cart
           </button>
         </div>
       </div>

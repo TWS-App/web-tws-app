@@ -1,13 +1,22 @@
 "use client";
 
 import { useCartStore } from "@/stores/cart/cart";
+import { formatPrice } from "@/utils/function/price";
+import { FaCartShopping } from "react-icons/fa6";
 
 export default function OrderPage() {
   const { items, removeFromCart, clearCart } = useCartStore();
   const total = items.reduce((sum: any, i: any) => sum + i.price * i.qty, 0);
 
   if (items.length === 0) {
-    return <p className="p-6">Your cart is empty.</p>;
+    return (
+      <div className="flex justify-center items-center mt-28">
+        <FaCartShopping size={75} />
+        <p className="p-6">
+          Your cart is empty. Please add a product or services.
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -28,7 +37,9 @@ export default function OrderPage() {
             <tr key={item.id} className="border-b border-gray-600">
               <td className="p-3">{item.name}</td>
               <td className="p-3 text-center">{item.qty}</td>
-              <td className="p-3">${item.price * item.qty}</td>
+              <td className="p-3 text-center">
+                {formatPrice(item.price * item.qty)}
+              </td>
               <td className="p-3 text-center">
                 <button
                   onClick={() => removeFromCart(item.id)}
@@ -43,16 +54,17 @@ export default function OrderPage() {
       </table>
 
       <div className="mt-6 flex justify-between items-center">
-        <h2 className="text-xl font-bold">Total: ${total}</h2>
+        <h2 className="text-xl font-bold">Total: {formatPrice(total)}</h2>
         <div className="flex gap-4">
           <button
             onClick={clearCart}
-            className="px-4 py-2 bg-gray-500 rounded text-white hover:bg-gray-600 cursor-pointer"
+            className="px-4 py-2 bg-red-500 rounded text-white hover:bg-red-600 cursor-pointer"
           >
             Clear
           </button>
-          <button className="px-4 py-2 bg-blue-600 rounded text-white hover:bg-blue-700 cursor-pointer">
-            Checkout
+
+          <button className="flex items-center gap-1 px-4 py-2 bg-blue-600 rounded text-white hover:bg-blue-700 cursor-pointer">
+            <FaCartShopping /> Checkout
           </button>
         </div>
       </div>

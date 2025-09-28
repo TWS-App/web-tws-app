@@ -3,38 +3,39 @@
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 
 import Link from "next/link";
-import { FaBox, FaTags } from "react-icons/fa";
+import { FaBox, FaChartLine, FaChartPie, FaClipboard, FaTags } from "react-icons/fa";
 import { BsCreditCard2BackFill, BsLayersFill } from "react-icons/bs";
+import { BiDollar } from "react-icons/bi";
 
 const masterItems = [
   {
-    name: "Product Categories",
-    href: "/settings/master/category-product",
-    icon: <FaBox size={22} />,
+    name: "Sales Report",
+    href: "/reports/",
+    icon: <BiDollar size={22} />,
   },
   {
-    name: "Service Categories",
-    href: "/settings/master/category-service",
-    icon: <FaTags size={22} />,
+    name: "Sales by Categories",
+    href: "/reports/",
+    icon: <FaChartPie size={22} />,
   },
   {
-    name: "Payment List",
-    href: "/settings/master/payments",
-    icon: <BsCreditCard2BackFill size={22} />,
+    name: "Income Report",
+    href: "/reports/",
+    icon: <FaChartLine size={22} />,
   },
 ];
 
-export default function DashboardPage() {
+export default function ReportPage() {
   return (
     <section className="p-6">
-      <Breadcrumb items={["Settings", "Master Data"]} />
+      <Breadcrumb items={["Reports"]} />
 
       <h1 className="text-2xl flex items-center gap-3 font-semibold border rounded-lg  p-6 mb-6 text-gray-800 dark:text-gray-100 dark:bg-gray-800">
         <div className="text-blue-500 dark:text-blue-500 ">
-          <BsLayersFill />
+          <FaClipboard />
         </div>
         <span className="font-medium text-gray-700 dark:text-gray-200">
-          MASTER DATA
+          REPORTS
         </span>
       </h1>
 

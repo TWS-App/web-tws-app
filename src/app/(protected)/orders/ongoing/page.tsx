@@ -1,23 +1,22 @@
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
-import TableServices from "@/app/components/tables/services/Table";
-import Link from "next/link";
-import { FaTools } from "react-icons/fa";
+import TableOrders from "@/app/components/tables/orders/table";
+import { FaSyncAlt } from "react-icons/fa";
 
-export default function DashboardPage() {
+export default function OrderCancelPage() {
   return (
     <div>
-      <Breadcrumb items={["Items", "Service"]} />
+      <Breadcrumb items={["Orders", "Ongoing"]} />
 
       <h1 className="text-2xl flex items-center gap-3 font-semibold border rounded-lg  p-6 mb-6 text-gray-800 dark:text-gray-100 dark:bg-gray-800">
         <div className="text-blue-500 dark:text-blue-500 ">
-          <FaTools />
+          <FaSyncAlt />
         </div>
         <span className="font-medium text-gray-700 dark:text-gray-200">
-          SERVICE LIST
+          ORDER ACTIVE
         </span>
       </h1>
 
-      <TableServices />
+      <TableOrders />
     </div>
   );
 }

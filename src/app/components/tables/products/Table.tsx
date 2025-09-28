@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 import type { Client } from "./types/types";
+import Link from "next/link";
+import { FaPlus } from "react-icons/fa6";
 
 const clients: Client[] = [
   {
@@ -126,8 +128,14 @@ export default function TableProducts() {
   return (
     <div className="bg-gray-800 rounded-lg shadow p-4 text-white">
       {/* Header with Refresh */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Products</h2>
+      <div className="flex justify-end items-center mb-4 gap-4">
+        <Link
+          href="/items/products/create"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition cursor-pointer"
+        >
+          <FaPlus /> Add New Product
+        </Link>
+
         <button
           onClick={handleRefresh}
           className="flex items-center gap-2 px-3 py-2 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer"

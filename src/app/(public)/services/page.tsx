@@ -42,9 +42,6 @@ const categories = ["All", "Editing", "Service Headphone", "Maintenance"];
 export default function ProductsPage() {
   return (
     <>
-      <Sidebar />
-      {/* <Navbar onToggleSidebar={} key={'products'} /> */}
-
       <section className="bg-white pt-28 pb-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">

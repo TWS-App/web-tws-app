@@ -1,6 +1,5 @@
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 import TableProducts from "@/app/components/tables/products/Table";
-import Link from "next/link";
 import { FiShoppingBag } from "react-icons/fi";
 
 export default function DashboardPage() {
@@ -16,15 +15,6 @@ export default function DashboardPage() {
           PRODUCT LIST
         </span>
       </h1>
-
-      <div className="flex justify-end items-center mb-6">
-        <Link
-          href="/items/products/create"
-          className=" px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition cursor-pointer"
-        >
-          + Add New Product
-        </Link>
-      </div>
 
       <TableProducts />
     </div>

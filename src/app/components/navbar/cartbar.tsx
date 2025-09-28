@@ -22,11 +22,11 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
       </button>
 
       {/* Title */}
-      <h1 className="font-bold text-lg">My Store</h1>
+      <h1 className="font-bold text-lg">Yushan Store</h1>
 
       {/* Cart */}
       <Link
-        href="/cart"
+        href="/order"
         className="relative cursor-pointer hover:text-blue-400 transition"
       >
         <FaShoppingCart size={22} />
