@@ -46,7 +46,10 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         {dataCard.map((item) => (
-          <div className="flex items-center gap-4 bg-gray-900 dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition cursor-pointer hover:scale-105">
+          <div
+            key={item.value}
+            className="flex items-center gap-4 bg-gray-900 dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition cursor-pointer hover:scale-105"
+          >
             <div
               key={item.title}
               className={`w-10 h-10 flex items-center justify-center rounded-full ${item.color} text-white`}
@@ -54,9 +57,14 @@ export default function DashboardPage() {
               {item.icon}
             </div>
 
-            <div>
-              <p key={item.title} className="text-sm text-gray-400">{item.title}</p>
-              <h3 key={item.title} className="text-xl font-semibold text-gray-100">
+            <div key={item.value}>
+              <p key={item.title} className="text-sm text-gray-400">
+                {item.title}
+              </p>
+              <h3
+                key={item.title}
+                className="text-xl font-semibold text-gray-100"
+              >
                 {item.value}
               </h3>
             </div>
