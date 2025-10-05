@@ -1,12 +1,21 @@
 "use client";
 
-import { useCartStore } from "@/stores/cart/cart";
-import { formatPrice } from "@/utils/function/price";
+// REACT
+import { useState, use } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, use } from "react";
+
+// REDUX
+import { useDispatch } from "react-redux";
+
+// ICONS
 import { BiCart } from "react-icons/bi";
 
+// FORMATTER
+import { formatPrice } from "@/utils/function/price";
+import { addToCart } from "@/stores/cart/cart";
+
+// Services
 interface Service {
   id: number;
   name: string;
@@ -71,29 +80,33 @@ export default function ProductDetail({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  // DISPATCH
+  const dispatch = useDispatch();
+
   // PROPS
   const { id } = use(params);
-
-  const { addToCart } = useCartStore();
-  const [qty, setQty] = useState(1);
-
   const service = services.find((p) => p.id.toString() === id);
 
-  // Data
+  const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState(service?.images[0]);
+
+  // Data
 
   if (!service) {
     return <p className="text-center mt-20">Product not found.</p>;
   }
 
   const handleAdd = () => {
-    addToCart({
-      id: service.id,
-      name: service.name,
-      price: service.price,
-      image: service?.images,
-      qty: qty,
-    });
+    dispatch(
+      addToCart({
+        id: service.id,
+        name: service.name,
+        price: service.price,
+        quantity: quantity,
+        variant: "",
+        image: service.images[0],
+      })
+    );
   };
 
   return (
@@ -157,7 +170,18 @@ export default function ProductDetail({
             ))}
           </ul>
 
-          <div className="flex items-center gap-3 mb-4">
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2 text-black">Quantity:</h3>
+            <input
+              type="number"
+              min={1}
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              className="w-50 px-3 py-2 border rounded text-black"
+            />
+          </div>
+
+          {/* <div className="flex items-center gap-3 mb-4">
             <button
               onClick={() => setQty(Math.max(1, qty - 1))}
               className="px-3 py-1 border rounded bg-gray-400 hover:bg-gray-500 cursor-pointer"
@@ -173,11 +197,11 @@ export default function ProductDetail({
             >
               +
             </button>
-          </div>
+          </div> */}
 
           <button
             onClick={handleAdd}
-            className="flex items-center gap-2 bg-blue-600 px-3 py-2 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition cursor-pointer"
+            className="flex items-center gap-2 bg-blue-600 px-3 py-2 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer"
           >
             <BiCart /> Add to Cart
           </button>

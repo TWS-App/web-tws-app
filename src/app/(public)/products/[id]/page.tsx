@@ -1,12 +1,21 @@
 "use client";
 
-import { useCartStore } from "@/stores/cart/cart";
-import { formatPrice } from "@/utils/function/price";
-import Image from "next/image";
-import Link from "next/link";
+// REACT
 import { use, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+
+// REDUX
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/stores/cart/cart";
+
+// ICONS
 import { BiCart } from "react-icons/bi";
 
+// FORMATTER
+import { formatPrice } from "@/utils/function/price";
+
+// Products
 interface Product {
   id: number;
   name: string;
@@ -16,6 +25,7 @@ interface Product {
   details: string[];
   images: string[];
   category?: string;
+  variants: string[];
 }
 
 const products: Product[] = [
@@ -31,6 +41,7 @@ const products: Product[] = [
       "/images/tozo_02.png",
       "/images/tozo_03.png",
     ],
+    variants: ["White", "Black"],
   },
   {
     id: 2,
@@ -41,6 +52,7 @@ const products: Product[] = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     details: ["Bass Boost", "Mic Clear Voice", "USB-C Fast Charging"],
     images: ["/images/soundcore_01.png", "/images/soundcore_02.png"],
+    variants: ["White", "Black", "Green", "Blue"],
   },
   {
     id: 3,
@@ -56,6 +68,7 @@ const products: Product[] = [
     ],
     category: "Earphone",
     details: ["Bass Boost", "Mic Clear Voice", "USB-C Fast Charging"],
+    variants: ["White", "Black"],
   },
 ];
 
@@ -64,29 +77,37 @@ export default function ProductDetail({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  // DISPATCH
+  const dispatch = useDispatch();
   // PROPS
   const { id } = use(params);
-  const { addToCart } = useCartStore();
-  const [qty, setQty] = useState(1);
 
-  const product = products.find((p: any) => p.id.toString() === id);
-  //   const product = products.find((p) => p.id.toString() === params?.id);
-
+  // const dispatch = useAppDispatch();
   // Data
+  const product = products.find((p: any) => p.id.toString() === id);
+
+  const [selectedImage, setSelectedImage] = useState(product?.images[0]);
   const [mainImage, setMainImage] = useState(product?.images[0]);
+  const [selectedVar, setSelectedVar] = useState(product?.variants[0]);
+  const [quantity, setQuantity] = useState(1);
 
   if (!product) {
     return <p className="text-center mt-20">Product not found.</p>;
   }
 
   const handleAdd = () => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product?.images,
-      qty: qty,
-    });
+    console.log("Qty: ", quantity);
+
+    dispatch(
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        variant: selectedVar,
+        quantity: quantity,
+        image: product.images[0],
+      })
+    );
   };
 
   return (
@@ -152,7 +173,36 @@ export default function ProductDetail({
             ))}
           </ul>
 
-          <div className="flex items-center gap-3 mb-4">
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2 text-black">Variants:</h3>
+            <div className="flex gap-2">
+              {product.variants.map((variant) => (
+                <button
+                  key={variant}
+                  onClick={() => setSelectedVar(variant)}
+                  className={`px-4 py-2 border border-black rounded ${
+                    selectedVar === variant
+                      ? "bg-gray-700 text-white hover:bg-gray-950 hover:text-shadow-amber-100"
+                      : "bg-white text-black hover:bg-blue-500 hover:text-white"
+                  } cursor-pointer`}
+                >
+                  {variant}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2 text-black">Quantity:</h3>
+            <input
+              type="number"
+              min={1}
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              className="w-50 px-3 py-2 border rounded text-black"
+            />
+          </div>
+          {/* <div className="flex items-center gap-3 mb-4">
             <button
               onClick={() => setQty(Math.max(1, qty - 1))}
               className="px-3 py-1 border rounded bg-gray-400 hover:bg-gray-500 cursor-pointer"
@@ -168,11 +218,11 @@ export default function ProductDetail({
             >
               +
             </button>
-          </div>
+          </div> */}
 
           <button
             onClick={handleAdd}
-            className="flex items-center gap-2 bg-blue-600 px-3 py-2 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition cursor-pointer"
+            className="flex items-center gap-2 bg-blue-600 px-3 py-2 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer"
           >
             <BiCart /> Add to Cart
           </button>

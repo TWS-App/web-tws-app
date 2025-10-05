@@ -14,10 +14,10 @@ export default function Sidebar({
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => setOpen(!open)}
         className="p-4 text-gray-700 hover:text-blue-500 fixed top-4 left-4 z-50 cursor-pointer"
       >
-        <TiThMenu />
+        {open ? (<MdClose />) : (<TiThMenu />)}
       </button>
 
       {open && (
@@ -34,12 +34,12 @@ export default function Sidebar({
         }`}
       >
         <div className="p-6 space-y-6">
-          <button
+          {/* <button
             onClick={() => setOpen(false)}
-            className="absolute top-4 right-4 text-gray-700 hover:text-blue-500 cursor-pointer"
+            className="p-8 top-4 right-4 text-gray-700 hover:text-blue-500 cursor-pointer"
           >
             <MdClose />
-          </button>
+          </button> */}
 
           <nav className="flex flex-col space-y-4 mt-15">
             <Link href="/" className="text-black hover:text-blue-500">
@@ -50,6 +50,9 @@ export default function Sidebar({
             </Link>
             <Link href="/services" className="text-black hover:text-blue-500">
               Services
+            </Link>
+            <Link href="/tracking" className="text-black hover:text-blue-500">
+              Tracking Order
             </Link>
             <Link href="/contact" className="text-black hover:text-blue-500">
               Contact

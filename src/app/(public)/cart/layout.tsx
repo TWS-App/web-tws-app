@@ -5,7 +5,7 @@ import Sidebar from "@/app/components/sidebar";
 
 import { useEffect, useState } from "react";
 
-export default function ServicesLayout({
+export default function CartLayout({
   children,
 }: {
   children: React.ReactNode;

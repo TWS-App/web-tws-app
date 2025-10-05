@@ -1,36 +1,84 @@
-"use client";
-import { create } from "zustand";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type CartItem = {
+interface CartItem {
   id: number;
-  name: string;
+  name: string | undefined | null;
   price: number;
-  qty: number;
-  image: string[];
-};
+  quantity: number;
+  variant: string | undefined | null;
+  image: string | undefined | null;
+}
 
 interface CartState {
   items: CartItem[];
-  addToCart: (item: CartItem) => void;
-  removeFromCart: (id: number) => void;
-  clearCart: () => void;
 }
 
-export const useCartStore = create<CartState>((set) => ({
+const initialState: CartState = {
   items: [],
-  addToCart: (item) =>
-    set((state) => {
-      const exist = state.items.find((i) => i.id === item.id);
-      if (exist) {
-        return {
-          items: state.items.map((i) =>
-            i.id === item.id ? { ...i, qty: i.qty + item.qty } : i
-          ),
-        };
+};
+
+const cartSlice = createSlice({
+  name: "cart",
+  initialState,
+  reducers: {
+    addToCart: (state, action: PayloadAction<CartItem>) => {
+      const existing = state.items.find(
+        (item) =>
+          item.id === action.payload.id &&
+          item.variant === action.payload.variant
+      );
+
+      console.log("Dispatch Payload: ", action.payload);
+      console.log("Dispatch Existing: ", existing);
+
+      if (existing) {
+        existing.quantity += action.payload.quantity;
+      } else {
+        state.items.push({ ...action.payload });
       }
-      return { items: [...state.items, item] };
-    }),
-  removeFromCart: (id) =>
-    set((state) => ({ items: state.items.filter((i) => i.id !== id) })),
-  clearCart: () => set({ items: [] }),
-}));
+      // const existing = state.items.find(
+      //   (item) => item.id === action.payload.id
+      // );
+
+      // if (existing) {
+      //   existing.quantity += action.payload.quantity;
+      // } else {
+      //   // state.items.push({ ...action.payload, quantity: 1 });
+      //   state.items.push(action.payload);
+      // }
+    },
+    removeFromCart: (
+      state,
+      action: PayloadAction<{ id: number; variant: string }>
+    ) => {
+      state.items = state.items.filter((item) => {
+        if (item.id !== action.payload.id) {
+          return item;
+        }
+
+        if (item.variant !== action.payload.variant) {
+          return item;
+        }
+      });
+    },
+    updateQuantity: (
+      state,
+      action: PayloadAction<{ id: number; variant: string; quantity: number }>
+    ) => {
+      const item = state.items.find(
+        (i) =>
+          i.id === action.payload.id && i.variant === action.payload.variant
+      );
+      if (item) {
+        item.quantity = action.payload.quantity;
+      }
+    },
+    clearCart: (state) => {
+      state.items = [];
+    },
+  },
+});
+
+export const { addToCart, removeFromCart, clearCart, updateQuantity } =
+  cartSlice.actions;
+export default cartSlice.reducer;
