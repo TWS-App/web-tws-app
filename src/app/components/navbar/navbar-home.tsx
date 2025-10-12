@@ -4,8 +4,25 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FiMenu, FiX } from "react-icons/fi";
+import {
+  FaCogs,
+  FaComments,
+  FaHome,
+  FaMapMarkerAlt,
+  FaQuestionCircle,
+  FaTools,
+} from "react-icons/fa";
 
-const Navbar = () => {
+const menu = [
+  { icon: <FaHome />, label: "Home", href: "/" },
+  { icon: <FaTools />, label: "Service TWS", href: "/services" },
+  { icon: <FaCogs />, label: "Sparepart TWS", href: "/products" },
+  { icon: <FaQuestionCircle />, label: "Tutorial Pairing", href: "/tutorial" },
+  { icon: <FaComments />, label: "Konsultasi", href: "/contact" },
+  { icon: <FaMapMarkerAlt />, label: "Lokasi", href: "/location" },
+];
+
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -25,18 +42,20 @@ const Navbar = () => {
     <header
       className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 ${
         scrolled
-          ? "-top-0 w-full bg-white shadow rounded-none px-6"
-          : "bg-white/90 backdrop-blur-xl shadow-lg rounded-full w-[90%] px-8"
+          ? "-top-0 w-full bg-[#03a9f4] shadow rounded-none px-6"
+          : "bg-[#03a9f4] backdrop-blur-xl shadow-lg rounded-full w-[90%] px-8"
       }`}
     >
       <nav className="hidden md:flex gap-8 text-sm items-center justify-between h-16">
         {/* Logo */}
-        <Link href="/">
+        <Link href="/" className="flex justify-center items-center gap-3">
           <Image src="/logo.jpeg" alt="Logo" width={50} height={40} />
+
+          <h1 className="font-extrabold">YHUSAN DIGITAL</h1>
         </Link>
 
         {/* Menu */}
-        <ul className="hidden md:flex gap-6 text-sm font-medium text-gray-700">
+        {/* <ul className="hidden md:flex gap-6 text-sm font-medium text-gray-700">
           <li>
             <Link
               href="/"
@@ -77,6 +96,19 @@ const Navbar = () => {
               About
             </Link>
           </li>
+        </ul> */}
+        <ul className="hidden md:flex items-center gap-6 text-sm font-medium">
+          {menu.map((item, index) => (
+            <li key={index}>
+              <a
+                href={item.href}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-yellow-400 rounded-full p- transition cursor-pointer"
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </a>
+            </li>
+          ))}
         </ul>
       </nav>
 
@@ -153,6 +185,41 @@ const Navbar = () => {
       </aside>
     </header>
   );
-};
+}
 
-export default Navbar;
+// <nav className="w-full bg-[#1e40af] text-white shadow-md py-3">
+//   <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8">
+//     {/* Logo */}
+//     <div className="flex items-center gap-2">
+//       <Image
+//         src="/logo-yhusan.png"
+//         alt="Yhusan Digital"
+//         width={160}
+//         height={40}
+//         priority
+//       />
+//     </div>
+
+//     {/* Menu */}
+
+//     {/* Mobile menu (hamburger) */}
+//     <div className="md:hidden">
+//       <button className="p-2 rounded-md hover:bg-blue-700 transition">
+//         <svg
+//           xmlns="http://www.w3.org/2000/svg"
+//           fill="none"
+//           viewBox="0 0 24 24"
+//           strokeWidth={1.5}
+//           stroke="currentColor"
+//           className="w-6 h-6"
+//         >
+//           <path
+//             strokeLinecap="round"
+//             strokeLinejoin="round"
+//             d="M3.75 5.25h16.5M3.75 12h16.5m-16.5 6.75h16.5"
+//           />
+//         </svg>
+//       </button>
+//     </div>
+//   </div>
+// </nav>

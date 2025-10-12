@@ -6,23 +6,24 @@ const HeroBanner = () => {
     <section
       // className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white py-20 px-6"
       // <div
-      className="bg-cover bg-center py-20 px-4 text-white"
+      className="bg-cover bg-center py-20 px-4 text-white w-full"
       style={{ backgroundImage: "url('/images/banner-bg.jpg')" }}
     >
       {/* > */}
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 items-center gap-10">
         <div>
           <h6 className="text-indigo-500 font-semibold mb-2">
-            Liberty NFT Market
+            YHUSAN DIGITAL
           </h6>
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            {`Create, Sell & Collect Top NFT's.`}
+            {`TWS AUDIO SPECIALIST`}
           </h2>
           <p className="text-white mb-6">
-            {`Liberty NFT Market is a really cool and professional design for your
-            NFT websites. This HTML CSS template is based on Bootstrap v5 and it
-            is designed for NFT related web portals. Liberty can be freely
-            downloaded from TemplateMo's free css templates.`}
+            {`Memperbaiki TWS yang Rusak untuk di-service dengan part original.`}
+          </p>
+
+          <p className="text-white mb-6">
+            {`PENJUALAN UNIT TWS (REPLACMENT)`}
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -33,7 +34,7 @@ const HeroBanner = () => {
                 cursor: "pointer",
               }}
             >
-              Explore Top NFTs
+              Service TWS
             </Link>
 
             <Link
@@ -44,7 +45,7 @@ const HeroBanner = () => {
                 cursor: "pointer",
               }}
             >
-              Watch Our Videos
+              Sparepart TWS
             </Link>
           </div>
         </div>
