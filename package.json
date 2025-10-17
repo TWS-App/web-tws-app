@@ -10,7 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/nextjs-registry": "^1.1.0",
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@reduxjs/toolkit": "^2.9.0",
+    "antd": "^5.27.5",
     "apexcharts": "^5.3.5",
     "axios": "^1.11.0",
     "dayjs": "^1.11.13",

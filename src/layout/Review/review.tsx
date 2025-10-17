@@ -39,10 +39,10 @@ export default function ReviewSection() {
   ];
 
   return (
-    <section className="w-full bg-white py-20 text-center" id="testimoni">
-      <div className="max-w-7xl mx-auto px-6 border-t-4 border-t-black">
+    <section className="w-full bg-white" id="testimoni">
+      <div className="max-w-7xl mx-auto mt-3 mb-10 px-6">
         {/* Title */}
-        <h2 className="mt-10 text-3xl md:text-4xl font-extrabold text-blue-700 uppercase tracking-wide mb-12">
+        <h2 className="mt-10 text-3xl md:text-4xl font-extrabold text-blue-700 text-center uppercase tracking-wide mb-12 border-t-2 border-t-black">
           Testimoni Pelanggan
         </h2>
 
@@ -51,7 +51,7 @@ export default function ReviewSection() {
           {reviews.map((r) => (
             <div
               key={r.name}
-              className="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-6 border border-gray-100 cursor-pointer"
+              className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-transform p-6 border border-gray-100 hover:scale-105 cursor-pointer"
             >
               <img
                 src="https://i.pravatar.cc/40"

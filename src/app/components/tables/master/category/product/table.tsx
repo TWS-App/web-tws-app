@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 import { BiPlus } from "react-icons/bi";
 import { ProductCategory } from "../types/product";
+import ModalCategoryProduct from "@/app/components/modals/master/category/modal";
+import { useApi } from "@/api/context/ApiContext";
+import { categoryProductServices } from "@/api/services/master/category";
 
 const clients: ProductCategory[] = [
   {
@@ -33,8 +36,20 @@ const clients: ProductCategory[] = [
 ];
 
 export default function TableProductCategory() {
+  // CONTEXT
+  const {} = useApi();
+
+  // STATES
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [data, setData] = useState([]);
+
+  const [modals, setModals] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [dataEdit, setDataEdit] = useState(null);
+
+  const [loading, setLoading] = useState(false);
 
   const totalPages = Math.ceil(clients.length / rowsPerPage);
 
@@ -43,22 +58,53 @@ export default function TableProductCategory() {
     page * rowsPerPage
   );
 
-  const handleEdit = (id: number) => {
-    // alert(`Edit client with ID: ${id}`);
+  // FETCH DATA
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const result = await categoryProductServices.getAll();
+
+      console.log("Fetch res: ", data);
+
+      setData(result);
+    } catch (err) {
+      // Error sudah otomatis muncul di notification handler
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // USEEFFECTS
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // Handle Edit
+  const handleEdit = (value: any) => {
+    setModals(true);
+    setEdit(true);
+
+    setDataEdit(value);
+  };
+
+  // Handle Modals
   const handleAdd = () => {
-    // alert(`Edit client with ID: ${id}`);
+    setModals(true);
   };
 
-  const handleDelete = (id: number) => {
+  // Handle Close
+  const handleClose = () => {
+    setModals(false);
+  };
+
+  const handleDelete = (value: any) => {
     // if (confirm("Are you sure you want to delete this client?")) {
     // alert(`Deleted client with ID: ${id}`);
     // }
   };
 
   const handleRefresh = () => {
-    // alert("Table data refreshed!");
+    fetchData();
   };
 
   return (
@@ -91,33 +137,33 @@ export default function TableProductCategory() {
           </tr>
         </thead>
         <tbody>
-          {paginatedClients.map((c) => (
+          {paginatedClients.map((items) => (
             <tr
-              key={c.id}
+              key={items?.id}
               className="border-b border-gray-700 hover:bg-gray-700/50"
             >
               <td className="py-3 px-4 text-center flex justify-center gap-3">
                 <button
-                  onClick={() => handleEdit(c.id || 0)}
+                  onClick={() => handleEdit(items)}
                   className="text-blue-400 hover:text-blue-600 cursor-pointer"
                 >
                   <FiEdit size={16} />
                 </button>
                 <button
-                  onClick={() => handleDelete(c.id || 0)}
+                  onClick={() => handleDelete(items)}
                   className="text-red-400 hover:text-red-600 cursor-pointer"
                 >
                   <FiTrash2 size={16} />
                 </button>
               </td>
               <td className="py-3 px-4">
-                <p className="font-semibold">{c.category_name}</p>
+                <p className="font-semibold">{items.category_name}</p>
               </td>
               <td className="py-3 px-4">
-                <p className="font-bold">{c.code}</p>
+                <p className="font-bold">{items.code}</p>
               </td>
 
-              <td className="py-3 px-4">{c.description}</td>
+              <td className="py-3 px-4">{items.description}</td>
             </tr>
           ))}
         </tbody>
@@ -180,6 +226,14 @@ export default function TableProductCategory() {
           </button>
         </div>
       </div>
+
+      <ModalCategoryProduct
+        isOpen={modals}
+        isClose={handleClose}
+        isEdit={edit}
+        dataEdit={dataEdit}
+        onRefresh={handleRefresh}
+      />
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default function SparepartTWS() {
       description: "Case replacement untuk Soundcore R50i",
       rating: 5,
       price: "Rp 95.000",
-      image: "/images/soundcore_02.png",
+      image: "/images/assets//PRODUK_BOXChargerOnly.png",
     },
     {
       id: 2,
@@ -22,7 +22,7 @@ export default function SparepartTWS() {
       description: "Charging dock untuk Soundcore Liberty",
       rating: 4,
       price: "Rp 120.000",
-      image: "/images/soundcore_02.png",
+      image: "/images/assets/PRODUK_EarbudsKANAN.png",
     },
     {
       id: 3,
@@ -30,7 +30,7 @@ export default function SparepartTWS() {
       description: "Earpiece kanan replacement",
       rating: 5,
       price: "Rp 75.000",
-      image: "/images/soundcore_02.png",
+      image: "/images/assets/PRODUK_EarbudsKiri.png",
     },
     {
       id: 4,
@@ -38,7 +38,7 @@ export default function SparepartTWS() {
       description: "Earpiece kiri replacement",
       rating: 5,
       price: "Rp 75.000",
-      image: "/images/soundcore_02.png",
+      image: "/images/assets/PRODUK_Silicon.png",
     },
     {
       id: 5,
@@ -46,7 +46,7 @@ export default function SparepartTWS() {
       description: "Case dan earpiece komplit",
       rating: 5,
       price: "Rp 160.000",
-      image: "/images/soundcore_02.png",
+      image: "/images/assets//PRODUK_BOXChargerOnly.png",
     },
   ];
 
@@ -80,7 +80,7 @@ export default function SparepartTWS() {
         <p className="text-sm text-gray-700 mt-2">
           Contoh Keyword = “Merk + Type + Part Bagian + Warna”
         </p>
-        <p className="text-md font-semibold text-gray-900 mt-1">
+        <p className="text-md font-semibold text-gray-900 mt-1 mb-8">
           Soundcore R50i Kiri Hitam
         </p>
 
@@ -94,8 +94,16 @@ export default function SparepartTWS() {
             RUSAK ATAU HILANG
           </h2>
 
-          <div className="grid grid-cols-5 justify-center gap-5">
+          <div className="grid grid-cols-5 justify-center gap-6">
             {filtered.map((item) => (
+              <img
+                key={item.id}
+                src={item.image}
+                alt={item.name}
+                className="transition-transform hover:scale-110 duration-300 cursor-pointer"
+              />
+            ))}
+            {/* {filtered.map((item) => (
               <div
                 key={item.id}
                 className="p-3 bg-blue-500 text-white rounded-2xl shadow-lg overflow-hidden flex flex-col items-center justify-between hover:scale-105 transition-transform duration-300  cursor-pointer"
@@ -131,7 +139,7 @@ export default function SparepartTWS() {
                   BELI PART
                 </button>
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       </div>

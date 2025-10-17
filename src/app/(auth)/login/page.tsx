@@ -3,20 +3,23 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { BiLoader } from "react-icons/bi";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     if (email === "admin@example.com" && password === "123456") {
       // Set cookie token
-      document.cookie = "token=sample-token; path=/; max-age=3600"; 
-      router.push("/dashboard"); 
+      document.cookie = "token=sample-token; path=/; max-age=3600";
+      router.push("/dashboard");
     } else {
       setError("Email atau password salah!");
     }
@@ -71,8 +74,9 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-purple-600 transition cursor-pointer"
+                className="w-full flex justify-center gap-3 bg-blue-600 text-white py-2 rounded-lg hover:bg-purple-600 transition cursor-pointer"
               >
+                {loading ? <BiLoader className="animate-spin size-8" /> : null }
                 Log in
               </button>
             </form>
@@ -89,6 +93,6 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
-        </section>
+    </section>
   );
 }

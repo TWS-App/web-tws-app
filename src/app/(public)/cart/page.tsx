@@ -86,6 +86,7 @@ export default function CartPage() {
                   type="number"
                   className="flex items-center border-2 rounded text-center text-xl focus:border-b-sky-500"
                   value={item.quantity}
+                  
                   onChange={() =>
                     handleQuantityChange(
                       item.id,

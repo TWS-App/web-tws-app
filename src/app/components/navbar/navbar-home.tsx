@@ -11,15 +11,17 @@ import {
   FaMapMarkerAlt,
   FaQuestionCircle,
   FaTools,
+  FaWhatsapp,
 } from "react-icons/fa";
+import { PiMapPinAreaFill } from "react-icons/pi";
 
 const menu = [
-  { icon: <FaHome />, label: "Home", href: "/" },
-  { icon: <FaTools />, label: "Service TWS", href: "/services" },
-  { icon: <FaCogs />, label: "Sparepart TWS", href: "/products" },
-  { icon: <FaQuestionCircle />, label: "Tutorial Pairing", href: "/tutorial" },
-  { icon: <FaComments />, label: "Konsultasi", href: "/contact" },
-  { icon: <FaMapMarkerAlt />, label: "Lokasi", href: "/location" },
+  { icon: <FaHome />, label: "HOME", href: "/" },
+  { icon: <FaCogs />, label: "PRODUCT", href: "/products" },
+  { icon: <FaTools />, label: "SERVICES TWS", href: "/services" },
+  // { icon: <FaQuestionCircle />, label: "Tutorial Pairing", href: "/tutorial" },
+  { icon: <FaWhatsapp />, label: "CONTACT", href: "/contact" },
+  { icon: <PiMapPinAreaFill />, label: "LOCATION", href: "/location" },
 ];
 
 export default function Navbar() {
@@ -49,9 +51,9 @@ export default function Navbar() {
       <nav className="hidden md:flex gap-8 text-sm items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex justify-center items-center gap-3">
-          <Image src="/logo.jpeg" alt="Logo" width={50} height={40} />
+          <Image src="/images/assets/MainLogo.png" alt="Logo" width={50} height={40} />
 
-          <h1 className="font-extrabold">YHUSAN DIGITAL</h1>
+          <p className="font-extrabold text-3xl">YHUSAN DIGITAL</p>
         </Link>
 
         {/* Menu */}
@@ -102,7 +104,7 @@ export default function Navbar() {
             <li key={index}>
               <a
                 href={item.href}
-                className="flex items-center gap-2 px-3 py-2 hover:bg-yellow-400 rounded-full p- transition cursor-pointer"
+                className="flex items-center gap-2 px-3 py-2 hover:bg-yellow-400 rounded-full transition hover:scale-105 cursor-pointer"
               >
                 {item.icon}
                 <span>{item.label}</span>
@@ -114,7 +116,7 @@ export default function Navbar() {
 
       <button
         onClick={toggleMenu}
-        className="md:hidden text-2xl text-gray-700 self-center"
+        className="md:hidden text-2xl text-white self-center"
         aria-label="Toggle Menu"
       >
         <FiMenu
