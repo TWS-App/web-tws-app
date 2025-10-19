@@ -12,8 +12,9 @@ import {
 } from "antd";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
 import { PiFileFill } from "react-icons/pi";
-import { categoryProductServices } from "@/api/services/master/category";
-import { ProductCategory } from "@/app/components/tables/master/category/types/product";
+import { Payment } from "@/app/components/tables/master/payment/types/types";
+import { masterPaymentServices } from "@/api/services/master/payment";
+
 
 // INTERFACE
 interface ModalProps {
@@ -28,8 +29,7 @@ interface ModalProps {
 const { confirm } = Modal;
 
 // CODE
-
-export default function ModalCategoryProduct({
+export default function ModalMasterPayment({
   isOpen,
   isEdit,
   isClose,
@@ -42,7 +42,7 @@ export default function ModalCategoryProduct({
   const [loading, setLoading] = useState(false);
   const [loadingBtn, setLoadingBtn] = useState(false);
   // DATA
-  const [data, setData] = useState<ProductCategory>();
+  const [data, setData] = useState<Payment>();
 
   // FORMS
   const [form] = Form.useForm();
@@ -60,7 +60,7 @@ export default function ModalCategoryProduct({
     } else {
       setOpen(false);
     }
-  }, [isOpen, dataEdit?.category_name]);
+  }, [isOpen, dataEdit?.payment_name]);
 
   // FETCH DATA DETAILS
   const fetchDetails = async (value: any) => {
@@ -68,13 +68,13 @@ export default function ModalCategoryProduct({
     setLoading(true);
 
     try {
-      const result = await categoryProductServices.getById(value?.id);
+      const result = await masterPaymentServices.getById(value?.id);
 
       console.log("Fetch res: ", result);
 
       setData(result);
 
-      if (value?.category_name) {
+      if (value?.payment_name) {
         handleFormField(value);
       }
     } catch (err) {
@@ -86,8 +86,8 @@ export default function ModalCategoryProduct({
   // Handle Form Fields
   const handleFormField = (value: any) => {
     form.setFieldsValue({
-      category_name: value?.category_name,
-      code: value?.code,
+      payment_name: value?.payment_name,
+      payment_number: value?.payment_number,
       description: value.description,
       id: value?.id,
     });
@@ -116,7 +116,7 @@ export default function ModalCategoryProduct({
       className: "modals-confirm",
       title: `Are you sure want to ${
         isEdit ? "Update" : "Create a new Data"
-      } Category Product ${_data.category_name}?`,
+      } Master Payment ${_data.payment_name}?`,
       okText: "Confirm",
       cancelText: "Cancel",
       centered: true,
@@ -164,7 +164,7 @@ export default function ModalCategoryProduct({
         const body = value;
         delete body["id"];
 
-        const result = await categoryProductServices.update(value?.id, body);
+        const result = await masterPaymentServices.update(value?.id, body);
 
         console.log("Update res: ", result);
 
@@ -177,7 +177,7 @@ export default function ModalCategoryProduct({
       }
     } else {
       try {
-        const result = await categoryProductServices.create(value);
+        const result = await masterPaymentServices.create(value);
 
         console.log("Create res: ", result);
 
@@ -205,7 +205,7 @@ export default function ModalCategoryProduct({
                 }}
               />
               <Typography style={{ marginLeft: 15 }}>
-                {isEdit ? "EDIT PRODUCT CATEGORY " : "ADD NEW PRODUCT CATEGORY"}
+                {isEdit ? "EDIT PAYMENT" : "ADD NEW PAYMENT"}
               </Typography>
             </Row>
           </>
@@ -227,29 +227,29 @@ export default function ModalCategoryProduct({
           style={{ padding: "20px 10px 0px" }}
         >
           <Form.Item
-            name="category_name"
-            label="Category Product's Name"
+            name="payment_name"
+            label="Bank's Name"
             rules={[
               {
                 required: true,
-                message: "Please, Input Category Product's Name!",
+                message: "Please, Input Bank's Name!",
               },
             ]}
           >
-            <Input placeholder="Category Product's Name" />
+            <Input placeholder="Bank's Name" />
           </Form.Item>
 
           <Form.Item
-            name="code"
-            label="Code"
+            name="payment_number"
+            label="No. Card/Bank"
             rules={[
               {
                 required: true,
-                message: "Please, Input Category Product's Code! ",
+                message: "Please, Input Bank's Number! ",
               },
             ]}
           >
-            <Input placeholder="Category Product's Code" />
+            <Input placeholder="Bank's Number" />
           </Form.Item>
 
           <Form.Item name="description" label="Description">

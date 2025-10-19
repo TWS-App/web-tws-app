@@ -1,10 +1,10 @@
 import { notifySuccess } from "@/utils/notification/notifications";
 import api from "../../context/config";
 
-export const productService = {
+export const servicesService = {
   async getAll() {
     try {
-      const response = await api.get("/products");
+      const response = await api.get("/services");
 
       return response.data;
     } catch (error: any) {
@@ -14,7 +14,7 @@ export const productService = {
 
   async getById(id: number) {
     try {
-      const response = await api.get(`/products/${id}`);
+      const response = await api.get(`/services/${id}`);
 
       return response.data;
     } catch (error: any) {
@@ -24,9 +24,9 @@ export const productService = {
 
   async create(data: any) {
     try {
-      const response = await api.post("/products", data);
+      const response = await api.post("/services", data);
 
-      notifySuccess("Products created successfully!");
+      notifySuccess("Services created successfully!");
       return response.data;
     } catch (error: any) {
       throw error;
@@ -35,9 +35,9 @@ export const productService = {
 
   async update(id: number, data: any) {
     try {
-      const response = await api.put(`/products/${id}`, data);
+      const response = await api.put(`/services/${id}`, data);
 
-      notifySuccess("Products updated successfully!");
+      notifySuccess("Services updated successfully!");
       return response.data;
     } catch (error: any) {
       throw error;
@@ -46,8 +46,8 @@ export const productService = {
 
   async delete(id: number) {
     try {
-      await api.delete(`/products/${id}`);
-      notifySuccess("Products deleted successfully!");
+      await api.delete(`/services/${id}`);
+      notifySuccess("Services deleted successfully!");
     } catch (error: any) {
       throw error;
     }

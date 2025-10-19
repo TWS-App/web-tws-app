@@ -12,8 +12,10 @@ import {
 } from "antd";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
 import { PiFileFill } from "react-icons/pi";
-import { categoryProductServices } from "@/api/services/master/category";
-import { ProductCategory } from "@/app/components/tables/master/category/types/product";
+import {
+  categoryServiceServices,
+} from "@/api/services/master/category";
+import { ServiceCategory } from "@/app/components/tables/master/category/types/service";
 
 // INTERFACE
 interface ModalProps {
@@ -28,8 +30,7 @@ interface ModalProps {
 const { confirm } = Modal;
 
 // CODE
-
-export default function ModalCategoryProduct({
+export default function ModalCategoryService({
   isOpen,
   isEdit,
   isClose,
@@ -42,7 +43,7 @@ export default function ModalCategoryProduct({
   const [loading, setLoading] = useState(false);
   const [loadingBtn, setLoadingBtn] = useState(false);
   // DATA
-  const [data, setData] = useState<ProductCategory>();
+  const [data, setData] = useState<ServiceCategory>();
 
   // FORMS
   const [form] = Form.useForm();
@@ -68,7 +69,7 @@ export default function ModalCategoryProduct({
     setLoading(true);
 
     try {
-      const result = await categoryProductServices.getById(value?.id);
+      const result = await categoryServiceServices.getById(value?.id);
 
       console.log("Fetch res: ", result);
 
@@ -116,7 +117,7 @@ export default function ModalCategoryProduct({
       className: "modals-confirm",
       title: `Are you sure want to ${
         isEdit ? "Update" : "Create a new Data"
-      } Category Product ${_data.category_name}?`,
+      } Category Service ${_data.category_name}?`,
       okText: "Confirm",
       cancelText: "Cancel",
       centered: true,
@@ -164,7 +165,7 @@ export default function ModalCategoryProduct({
         const body = value;
         delete body["id"];
 
-        const result = await categoryProductServices.update(value?.id, body);
+        const result = await categoryServiceServices.update(value?.id, body);
 
         console.log("Update res: ", result);
 
@@ -177,7 +178,7 @@ export default function ModalCategoryProduct({
       }
     } else {
       try {
-        const result = await categoryProductServices.create(value);
+        const result = await categoryServiceServices.create(value);
 
         console.log("Create res: ", result);
 
@@ -205,7 +206,7 @@ export default function ModalCategoryProduct({
                 }}
               />
               <Typography style={{ marginLeft: 15 }}>
-                {isEdit ? "EDIT PRODUCT CATEGORY " : "ADD NEW PRODUCT CATEGORY"}
+                {isEdit ? "EDIT SERVICE CATEGORY " : "ADD NEW SERVICE CATEGORY"}
               </Typography>
             </Row>
           </>
@@ -228,15 +229,15 @@ export default function ModalCategoryProduct({
         >
           <Form.Item
             name="category_name"
-            label="Category Product's Name"
+            label="Category Service's Name"
             rules={[
               {
                 required: true,
-                message: "Please, Input Category Product's Name!",
+                message: "Please, Input Category Service's Name!",
               },
             ]}
           >
-            <Input placeholder="Category Product's Name" />
+            <Input placeholder="Category Service's Name" />
           </Form.Item>
 
           <Form.Item
@@ -245,11 +246,11 @@ export default function ModalCategoryProduct({
             rules={[
               {
                 required: true,
-                message: "Please, Input Category Product's Code! ",
+                message: "Please, Input Category Service's Code! ",
               },
             ]}
           >
-            <Input placeholder="Category Product's Code" />
+            <Input placeholder="Category Service's Code" />
           </Form.Item>
 
           <Form.Item name="description" label="Description">

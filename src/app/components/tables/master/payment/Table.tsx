@@ -1,64 +1,120 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 import type { Payment } from "./types/types";
 import { BiPlus } from "react-icons/bi";
+import { masterPaymentServices } from "@/api/services/master/payment";
+import { Modal, Spin, Tooltip } from "antd";
+import ModalMasterPayment from "@/app/components/modals/master/payment/modal";
+import Pagination from "@/app/components/pagination/pagination";
 
-const clients: Payment[] = [
-  {
-    id: 1,
-    payment_name: "BCA",
-    payment_number: "20203456711",
-    description: null,
-  },
-  {
-    id: 2,
-    payment_name: "BNI",
-    payment_number: "112763578272711",
-    description: null,
-  },
-  {
-    id: 3,
-    payment_name: "Mandiri",
-    payment_number: "1705253555",
-    description: null,
-  },
-  {
-    id: 4,
-    payment_name: "DANA",
-    payment_number: "082123451234",
-    description: null,
-  },
-];
+// CONFIRM
+const { confirm } = Modal;
 
+// CODE
 export default function TablePayments() {
-  const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  // STATES
+  const [data, setData] = useState<Payment[]>([]);
 
-  const totalPages = Math.ceil(clients.length / rowsPerPage);
+  const [modals, setModals] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [dataEdit, setDataEdit] = useState(null);
 
-  const paginatedClients = clients.slice(
-    (page - 1) * rowsPerPage,
-    page * rowsPerPage
-  );
+  const [loading, setLoading] = useState(false);
 
-  const handleEdit = (id: number) => {
-    // alert(`Edit client with ID: ${id}`);
+  // FETCH DATA
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const result = await masterPaymentServices.getAll();
+
+      console.log("Fetch res: ", data);
+
+      if (result?.length > 0) {
+        setData(result);
+      } else {
+        setData([]);
+      }
+    } catch (err) {
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // USEEFFECTS
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // Handle Edit
+  const handleEdit = (value: any) => {
+    setEdit(true);
+    setDataEdit(value);
+    setModals(true);
+  };
+
+  // Handle Modals
   const handleAdd = () => {
-    // alert(`Edit client with ID: ${id}`);
+    setModals(true);
   };
 
-  const handleDelete = (id: number) => {
-    // if (confirm("Are you sure you want to delete this client?")) {
-    // alert(`Deleted client with ID: ${id}`);
-    // }
+  // Handle Close
+  const handleClose = () => {
+    setModals(false);
+    setDataEdit(null);
+    setEdit(false);
   };
 
+  // Handle Delete
+  const handleDelete = (value: any) => {
+    const _data = value;
+
+    confirm({
+      className: "modals-confirm",
+      title: `Are you sure want to Delete Category Product ${
+        _data ? _data?.category_name : null
+      }?`,
+      okText: "Confirm",
+      cancelText: "Cancel",
+      centered: true,
+
+      onOk() {
+        handleSubmit(_data);
+      },
+
+      onCancel() {},
+
+      okButtonProps: {
+        className: "submit-btn",
+        type: "primary",
+      },
+
+      cancelButtonProps: {
+        className: "cancel-btn",
+        type: "default",
+      },
+
+      width: 750,
+    });
+  };
+
+  // REFRESH
   const handleRefresh = () => {
-    // alert("Table data refreshed!");
+    fetchData();
+  };
+
+  // Handle Submit
+  const handleSubmit = async (value: any) => {
+    try {
+      const body = value;
+
+      const result = await masterPaymentServices.delete(body?.id);
+
+      console.log("Delete res: ", result);
+
+      handleRefresh();
+    } catch (err) {}
   };
 
   return (
@@ -80,106 +136,74 @@ export default function TablePayments() {
         </button>
       </div>
 
-      {/* Table */}
-      <table className="w-full text-sm">
-        <thead className="bg-gray-700 text-gray-300">
-          <tr>
-            <th className="py-3 px-4 text-center">Actions</th>
-            <th className="py-3 px-4 text-left">Payment Name</th>
-            <th className="py-3 px-4 text-left">Account Numbers</th>
-            <th className="py-3 px-4 text-left">Descriptions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedClients.map((c) => (
-            <tr
-              key={c.id}
-              className="border-b border-gray-700 hover:bg-gray-700/50"
-            >
-              <td className="py-3 px-4 text-center flex justify-center gap-3">
-                <button
-                  onClick={() => handleEdit(c.id || 0)}
-                  className="text-blue-400 hover:text-blue-600 cursor-pointer"
-                >
-                  <FiEdit size={16} />
-                </button>
-                <button
-                  onClick={() => handleDelete(c.id || 0)}
-                  className="text-red-400 hover:text-red-600 cursor-pointer"
-                >
-                  <FiTrash2 size={16} />
-                </button>
-              </td>
-              <td className="py-3 px-4">
-                <p className="font-semibold">{c.payment_name}</p>
-              </td>
-              <td className="py-3 px-4">
-                <p className="text-gray-400 text-xs">{c.payment_number}</p>
-              </td>
+      <div className="relative min-h-[200px]">
+        {loading ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm rounded-lg">
+            <Spin size="large" />
+          </div>
+        ) : data.length === 0 ? (
+          <div className="text-center py-10 text-gray-400">No data found.</div>
+        ) : (
+          <div className="w-full">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-700 text-gray-300">
+                <tr>
+                  <th className="py-3 px-4 text-center">Actions</th>
+                  <th className="py-3 px-4 text-left">Payment Name</th>
+                  <th className="py-3 px-4 text-left">Account Numbers</th>
+                  <th className="py-3 px-4 text-left">Descriptions</th>
+                </tr>
+              </thead>
 
-              <td className="py-3 px-4">{c.description}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              <tbody>
+                {data.map((items) => (
+                  <tr
+                    key={items?.id}
+                    className="border-b border-gray-700 hover:bg-gray-700/50"
+                  >
+                    <td className="py-3 px-4 text-center flex justify-center gap-3">
+                      <button
+                        onClick={() => handleEdit(items)}
+                        className="text-blue-400 hover:text-blue-600 cursor-pointer"
+                      >
+                        <Tooltip title="Edit Data">
+                          <FiEdit size={16} />
+                        </Tooltip>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(items)}
+                        className="text-red-400 hover:text-red-600 cursor-pointer"
+                      >
+                        <Tooltip title="Delete Data">
+                          <FiTrash2 size={16} />
+                        </Tooltip>
+                      </button>
+                    </td>
+                    <td className="py-3 px-4">
+                      <p className="font-semibold">{items.payment_name}</p>
+                    </td>
+                    <td className="py-3 px-4">
+                      <p className="font-bold">{items.payment_number}</p>
+                    </td>
 
-      {/* Pagination + Rows per page */}
-      <div className="flex justify-between items-center mt-4">
-        {/* Rows per page */}
-        <div className="flex items-center gap-2">
-          <label htmlFor="rows" className="text-sm text-gray-400">
-            Rows per page:
-          </label>
-          <select
-            id="rows"
-            value={rowsPerPage}
-            onChange={(e) => {
-              setRowsPerPage(Number(e.target.value));
-              setPage(1);
-            }}
-            className="bg-gray-700 text-white rounded px-2 py-1 cursor-pointer hover:bg-gray-600"
-          >
-            {[5, 10, 20, 50].map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </select>
-        </div>
+                    <td className="py-3 px-4">{items.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-        {/* Pagination */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            disabled={page === 1}
-            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
-          >
-            Prev
-          </button>
-
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => setPage(i + 1)}
-              className={`px-3 py-1 rounded cursor-pointer transition ${
-                page === i + 1
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-700 hover:bg-gray-600"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={page === totalPages}
-            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+            <Pagination data={data} loading={loading} totalPages={1} />
+          </div>
+        )}
       </div>
+
+      <ModalMasterPayment
+        isOpen={modals}
+        isClose={handleClose}
+        isEdit={edit}
+        dataEdit={dataEdit}
+        onRefresh={handleRefresh}
+      />
     </div>
   );
 }

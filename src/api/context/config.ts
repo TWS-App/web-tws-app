@@ -2,14 +2,14 @@ import axios, { CreateAxiosDefaults } from "axios";
 import { notifyError } from "@/utils/notification/notifications";
 import React, { createContext } from "react";
 
-const _api =  process.env.NEXT_PUBLIC_API_URL
+const _api = process.env.NEXT_PUBLIC_API_URL;
 
 export const API_CONFIG: CreateAxiosDefaults = {
   baseURL: _api || "http://localhost:5000/api",
   timeout: Number(process.env.NEXT_PUBLIC_API_TIMEOUT) || 30000,
 };
 
-console.log("Alamat: ", _api)
+console.log("Alamat: ", _api);
 
 interface ApiContextType {
   api: ReturnType<typeof axios.create>;
@@ -65,6 +65,8 @@ config.interceptors.response.use(
   async function (error) {
     const originalRequest = error.config;
 
+    console.log("Errors: ", error);
+
     if (error.code === "ERR_CANCELED") {
       setTimeout(() => {
         return config(error.config);
@@ -93,11 +95,6 @@ config.interceptors.response.use(
       originalRequest.url?.includes("login") ||
       originalRequest.url?.includes("auth/login");
 
-    // UNAUTHORIZED
-    if (error?.response?.status === 401) {
-      notifyError("Error", error);
-    }
-
     if (
       error.response &&
       error.response.status === 401 &&
@@ -113,43 +110,43 @@ config.interceptors.response.use(
         });
       }
 
-      if (
-        error.response.data?.detail ===
-        "No active account found with the given credentials"
-      ) {
-        return Promise.reject(error);
-      } else {
-        isRefreshing = true;
-        originalRequest._retry = true;
-        try {
-          const refreshToken = localStorage.getItem("refresh-token");
+      // if (
+      //   error.response.data?.detail ===
+      //   "No active account found with the given credentials"
+      // ) {
+      //   return Promise.reject(error);
+      // } else {
+      //   isRefreshing = true;
+      //   originalRequest._retry = true;
+      //   try {
+      //     const refreshToken = localStorage.getItem("refresh-token");
 
-          const response = await axios.post(`${API_CONFIG.baseURL}/refresh/`, {
-            refresh: refreshToken,
-          });
+      //     const response = await axios.post(`${API_CONFIG.baseURL}/refresh/`, {
+      //       refresh: refreshToken,
+      //     });
 
-          const newToken = response.data.access;
-          localStorage.setItem("access-token", newToken);
-          //   localStorage.removeItem("refresh-token");
+      //     const newToken = response.data.access;
+      //     localStorage.setItem("access-token", newToken);
+      //     //   localStorage.removeItem("refresh-token");
 
-          originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+      //     originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
 
-          onRefreshed(newToken);
-          isRefreshing = false;
-          return config(originalRequest);
-        } catch (refreshError) {
-          isRefreshing = false;
-          if (typeof window !== "undefined") {
-            window.location.href = "/login";
-            localStorage.removeItem("access-token");
-            localStorage.removeItem("refresh-token");
-          }
+      //     onRefreshed(newToken);
+      //     isRefreshing = false;
+      //     return config(originalRequest);
+      //   } catch (refreshError) {
+      //     isRefreshing = false;
+      //     if (typeof window !== "undefined") {
+      //       window.location.href = "/login";
+      //       localStorage.removeItem("access-token");
+      //       localStorage.removeItem("refresh-token");
+      //     }
 
-          return Promise.reject(refreshError);
-        } finally {
-          subscribers = [];
-        }
-      }
+      //     return Promise.reject(refreshError);
+      //   } finally {
+      //     subscribers = [];
+      //   }
+      // }
     }
 
     // UNAUTHORIZED
@@ -158,12 +155,14 @@ config.interceptors.response.use(
     }
 
     if (error?.response?.status === 404) {
-      const datas = error?.response.data;
+      const datas = error?.response?.data?.error;
+
       notifyError("Error", datas);
     }
 
     if (error.response?.status >= 500) {
-      notifyError("Server Error", "Internal server error");
+
+      notifyError("Internal Server Error", error?.response?.data?.error);
     }
 
     if (!error.response) {

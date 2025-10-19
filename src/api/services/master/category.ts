@@ -1,6 +1,20 @@
 import api from "../../context/config";
 import { notifyError, notifySuccess } from "@/utils/notification/notifications";
 
+export interface Category {
+  id?: number;
+  category_name: string | undefined | null;
+  code: string | undefined | null;
+  description?: string | undefined | null;
+}
+
+export interface CategoryService {
+  id?: number;
+  category_name: string | undefined | null;
+  code: string | undefined | null;
+  description?: string | undefined | null;
+}
+
 export const categoryProductServices = {
   async getAll() {
     try {
@@ -8,10 +22,10 @@ export const categoryProductServices = {
 
       return response.data;
     } catch (error: any) {
-      notifyError(
-        "Failed to load categories",
-        error?.message || "Unknown error"
-      );
+      // notifyError(
+      //   "Failed to load Data!",
+      //   error?.message || "Unknown error"
+      // );
       throw error;
     }
   },
@@ -22,7 +36,7 @@ export const categoryProductServices = {
 
       return response.data;
     } catch (error: any) {
-      notifyError("Error fetching category", error?.message);
+      // notifyError("Failed to GET Data!", error?.message);
       throw error;
     }
   },
@@ -31,10 +45,10 @@ export const categoryProductServices = {
     try {
       const response = await api.post("/category/product-list", data);
 
-      notifySuccess("Category created successfully");
+      notifySuccess("Category created successfully!");
       return response.data;
     } catch (error: any) {
-      notifyError("Error creating category", error.message);
+      // notifyError("Error creating category", error.message);
       throw error;
     }
   },
@@ -43,10 +57,10 @@ export const categoryProductServices = {
     try {
       const response = await api.put(`/category/product-list/${id}`, data);
 
-      notifySuccess("Category updated successfully");
+      notifySuccess("Category updated successfully!");
       return response.data;
     } catch (error: any) {
-      notifyError("Error updating category", error.message);
+      // notifyError("Error updating category", error.message);
       throw error;
     }
   },
@@ -54,73 +68,64 @@ export const categoryProductServices = {
   async delete(id: number) {
     try {
       await api.delete(`/category/product-list/${id}`);
-      notifySuccess("Category deleted successfully");
+      notifySuccess("Category deleted successfully!");
     } catch (error: any) {
-      notifyError("Error deleting category", error.message);
+      // notifyError("Error deleting category", error.message);
       throw error;
     }
   },
 };
 
-export interface Category {
-  id?: number;
-  name: string;
-  description?: string;
-}
+export const categoryServiceServices = {
+  async getAll() {
+    try {
+      const response = await api.get("/category/service-list");
 
-// ✅ Get all categories
-export const getCategories = async () => {
-  try {
-    const response = await api.get("/category/product-list/");
-    return response.data;
-  } catch (error: any) {
-    notifyError("Failed to load categories", error.message || "Unknown error");
-    throw error;
-  }
-};
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  },
 
-// ✅ Get category by ID
-export const getCategoryById = async (id: number) => {
-  try {
-    const response = await api.get(`/category/product-list/${id}/`);
-    return response.data;
-  } catch (error: any) {
-    notifyError("Error fetching category", error.message);
-    throw error;
-  }
-};
+  async getById(id: number) {
+    try {
+      const response = await api.get(`/category/service-list/${id}`);
 
-// ✅ Create new category
-export const createCategory = async (data: Category) => {
-  try {
-    const response = await api.post("/category/product-list/", data);
-    notifySuccess("Category created successfully");
-    return response.data;
-  } catch (error: any) {
-    notifyError("Error creating category", error.message);
-    throw error;
-  }
-};
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  },
 
-// ✅ Update category
-export const updateCategory = async (id: number, data: Category) => {
-  try {
-    const response = await api.put(`/category/product-list/${id}/`, data);
-    notifySuccess("Category updated successfully");
-    return response.data;
-  } catch (error: any) {
-    notifyError("Error updating category", error.message);
-    throw error;
-  }
-};
+  async create(data: any) {
+    try {
+      const response = await api.post("/category/service-list", data);
 
-// ✅ Delete category
-export const deleteCategory = async (id: number) => {
-  try {
-    await api.delete(`/category/product-list/${id}/`);
-    notifySuccess("Category deleted successfully");
-  } catch (error: any) {
-    notifyError("Error deleting category", error.message);
-    throw error;
-  }
+      notifySuccess("Category created successfully!");
+      return response.data;
+    } catch (error: any) {
+      // notifyError("Error creating category", error.message);
+      throw error;
+    }
+  },
+
+  async update(id: number, data: any) {
+    try {
+      const response = await api.put(`/category/service-list/${id}`, data);
+
+      notifySuccess("Category updated successfully!");
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  },
+
+  async delete(id: number) {
+    try {
+      await api.delete(`/category/service-list/${id}`);
+      notifySuccess("Category deleted successfully!");
+    } catch (error: any) {
+      throw error;
+    }
+  },
 };

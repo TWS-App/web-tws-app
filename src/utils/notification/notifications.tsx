@@ -1,39 +1,37 @@
 import { notification } from "antd";
 
+const duration = 15;
+
 export const notifySuccess = (message: string, description?: string) => {
   notification.success({
-    message,
-    description,
+    message: message,
+    description: description,
     placement: "bottomRight",
+    closable: true,
+    type: "success",
+    duration: duration,
   });
 };
 
 export const notifyError = (message: string, description?: string) => {
+  console.log("Errors: ", message, description);
   notification.error({
-    message,
-    description,
+    message: message,
+    description: description,
     placement: "bottomRight",
+    closable: true,
+    type: "error",
+    duration: duration,
   });
 };
 
 export const notifyWarning = (message: string, description?: string) => {
   notification.warning({
-    message,
-    description,
+    message: message,
+    description: description,
     placement: "top",
-  });
-};
-
-export const handleApiError = (
-  error: any,
-  defaultMessage = "Request failed"
-) => {
-  console.error(error);
-  const message =
-    error?.response?.data?.message || error.message || defaultMessage;
-    
-  notification.error({
-    message: "Error",
-    description: message,
+    closable: true,
+    type: "warning",
+    duration: duration,
   });
 };

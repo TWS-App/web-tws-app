@@ -28,7 +28,7 @@ const masterItems = [
 export default function ReportPage() {
   return (
     <section className="p-6">
-      <Breadcrumb items={["Reports"]} />
+      <Breadcrumb items={["Reports"]} path={["/reports",]} />
 
       <h1 className="text-2xl flex items-center gap-3 font-semibold border rounded-lg  p-6 mb-6 text-gray-800 dark:text-gray-100 dark:bg-gray-800">
         <div className="text-blue-500 dark:text-blue-500 ">

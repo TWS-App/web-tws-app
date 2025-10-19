@@ -5,7 +5,14 @@ import { FaBox, FaTools } from "react-icons/fa";
 export default function CategoryProductPage() {
   return (
     <div>
-      <Breadcrumb items={["Settings", "Master Data", "Category Product"]} />
+      <Breadcrumb
+        items={["Settings", "Master Data", "Category Product"]}
+        path={[
+          "/settings",
+          "/settings/master",
+          "settings/master/category-product",
+        ]}
+      />
 
       <h1 className="text-2xl flex items-center gap-3 font-semibold border rounded-lg  p-6 mb-6 text-gray-800 dark:text-gray-100 dark:bg-gray-800">
         <div className="text-blue-500 dark:text-blue-500 ">

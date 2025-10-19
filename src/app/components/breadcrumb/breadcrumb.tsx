@@ -1,6 +1,16 @@
 import Link from "next/link";
 
-export default function Breadcrumb({ items }: { items: string[] }) {
+// INTERFACE
+interface Props {
+  items: any[];
+  path: any[];
+  children?: React.ReactNode;
+}
+
+// CODE
+export default function Breadcrumb({ items, path }: Props) {
+  console.log(path);
+
   return (
     <nav className="text-sm text-gray-400 mb-4">
       {items.map((item, idx) => (
@@ -9,7 +19,7 @@ export default function Breadcrumb({ items }: { items: string[] }) {
           {idx === items.length - 1 ? (
             <span className="text-white">{item}</span>
           ) : (
-            <Link href="#" className="hover:underline">
+            <Link href={path[idx] ?? "#"} className="hover:underline">
               {item}
             </Link>
           )}

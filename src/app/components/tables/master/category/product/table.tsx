@@ -5,58 +5,25 @@ import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 import { BiPlus } from "react-icons/bi";
 import { ProductCategory } from "../types/product";
 import ModalCategoryProduct from "@/app/components/modals/master/category/modal";
-import { useApi } from "@/api/context/ApiContext";
 import { categoryProductServices } from "@/api/services/master/category";
+import { Modal, Spin, Tooltip } from "antd";
+import Pagination from "@/app/components/pagination/pagination";
 
-const clients: ProductCategory[] = [
-  {
-    id: 1,
-    category_name: "Earphone",
-    code: "EAR",
-    description: null,
-  },
-  {
-    id: 2,
-    category_name: "Headset",
-    code: "HDS",
-    description: null,
-  },
-  {
-    id: 3,
-    category_name: "Airpods",
-    code: "AIR",
-    description: null,
-  },
-  {
-    id: 4,
-    category_name: "Handsfree",
-    code: "HFR",
-    description: null,
-  },
-];
+// Modals
+const { confirm } = Modal;
 
+// CODE
 export default function TableProductCategory() {
   // CONTEXT
-  const {} = useApi();
 
   // STATES
-  const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<ProductCategory[]>([]);
 
   const [modals, setModals] = useState(false);
   const [edit, setEdit] = useState(false);
   const [dataEdit, setDataEdit] = useState(null);
 
   const [loading, setLoading] = useState(false);
-
-  const totalPages = Math.ceil(clients.length / rowsPerPage);
-
-  const paginatedClients = clients.slice(
-    (page - 1) * rowsPerPage,
-    page * rowsPerPage
-  );
 
   // FETCH DATA
   const fetchData = async () => {
@@ -66,9 +33,12 @@ export default function TableProductCategory() {
 
       console.log("Fetch res: ", data);
 
-      setData(result);
+      if (result?.length > 0) {
+        setData(result);
+      } else {
+        setData([]);
+      }
     } catch (err) {
-      // Error sudah otomatis muncul di notification handler
     } finally {
       setLoading(false);
     }
@@ -81,10 +51,9 @@ export default function TableProductCategory() {
 
   // Handle Edit
   const handleEdit = (value: any) => {
-    setModals(true);
     setEdit(true);
-
     setDataEdit(value);
+    setModals(true);
   };
 
   // Handle Modals
@@ -95,16 +64,59 @@ export default function TableProductCategory() {
   // Handle Close
   const handleClose = () => {
     setModals(false);
+    setDataEdit(null);
+    setEdit(false);
   };
 
+  // Handle Delete
   const handleDelete = (value: any) => {
-    // if (confirm("Are you sure you want to delete this client?")) {
-    // alert(`Deleted client with ID: ${id}`);
-    // }
+    const _data = value;
+
+    confirm({
+      className: "modals-confirm",
+      title: `Are you sure want to Delete Category Product ${
+        _data ? _data?.category_name : null
+      }?`,
+      okText: "Confirm",
+      cancelText: "Cancel",
+      centered: true,
+
+      onOk() {
+        handleSubmit(_data);
+      },
+
+      onCancel() {},
+
+      okButtonProps: {
+        className: "submit-btn",
+        type: "primary",
+      },
+
+      cancelButtonProps: {
+        className: "cancel-btn",
+        type: "default",
+      },
+
+      width: 750,
+    });
   };
 
+  // REFRESH
   const handleRefresh = () => {
     fetchData();
+  };
+
+  // Handle Submit
+  const handleSubmit = async (value: any) => {
+    try {
+      const body = value;
+
+      const result = await categoryProductServices.delete(body?.id);
+
+      console.log("Delete res: ", result);
+
+      handleRefresh();
+    } catch (err) {}
   };
 
   return (
@@ -126,52 +138,68 @@ export default function TableProductCategory() {
         </button>
       </div>
 
-      {/* Table */}
-      <table className="w-full text-sm">
-        <thead className="bg-gray-700 text-gray-300">
-          <tr>
-            <th className="py-3 px-4 text-center">Actions</th>
-            <th className="py-3 px-4 text-left">Category Name</th>
-            <th className="py-3 px-4 text-left">Code</th>
-            <th className="py-3 px-4 text-left">Descriptions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedClients.map((items) => (
-            <tr
-              key={items?.id}
-              className="border-b border-gray-700 hover:bg-gray-700/50"
-            >
-              <td className="py-3 px-4 text-center flex justify-center gap-3">
-                <button
-                  onClick={() => handleEdit(items)}
-                  className="text-blue-400 hover:text-blue-600 cursor-pointer"
-                >
-                  <FiEdit size={16} />
-                </button>
-                <button
-                  onClick={() => handleDelete(items)}
-                  className="text-red-400 hover:text-red-600 cursor-pointer"
-                >
-                  <FiTrash2 size={16} />
-                </button>
-              </td>
-              <td className="py-3 px-4">
-                <p className="font-semibold">{items.category_name}</p>
-              </td>
-              <td className="py-3 px-4">
-                <p className="font-bold">{items.code}</p>
-              </td>
+      <div className="relative min-h-[200px]">
+        {loading ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm rounded-lg">
+            <Spin size="large" />
+          </div>
+        ) : data.length === 0 ? (
+          <div className="text-center py-10 text-gray-400">No data found.</div>
+        ) : (
+          <div className="w-full">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-700 text-gray-300">
+                <tr>
+                  <th className="py-3 px-4 text-center">Actions</th>
+                  <th className="py-3 px-4 text-left">Category Name</th>
+                  <th className="py-3 px-4 text-left">Code</th>
+                  <th className="py-3 px-4 text-left">Descriptions</th>
+                </tr>
+              </thead>
 
-              <td className="py-3 px-4">{items.description}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              <tbody>
+                {data.map((items) => (
+                  <tr
+                    key={items?.id}
+                    className="border-b border-gray-700 hover:bg-gray-700/50"
+                  >
+                    <td className="py-3 px-4 text-center flex justify-center gap-3">
+                      <button
+                        onClick={() => handleEdit(items)}
+                        className="text-blue-400 hover:text-blue-600 cursor-pointer"
+                      >
+                        <Tooltip title="Edit Data">
+                          <FiEdit size={16} />
+                        </Tooltip>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(items)}
+                        className="text-red-400 hover:text-red-600 cursor-pointer"
+                      >
+                        <Tooltip title="Delete Data">
+                          <FiTrash2 size={16} />
+                        </Tooltip>
+                      </button>
+                    </td>
+                    <td className="py-3 px-4">
+                      <p className="font-semibold">{items.category_name}</p>
+                    </td>
+                    <td className="py-3 px-4">
+                      <p className="font-bold">{items.code}</p>
+                    </td>
 
-      {/* Pagination + Rows per page */}
-      <div className="flex justify-between items-center mt-4">
-        {/* Rows per page */}
+                    <td className="py-3 px-4">{items.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <Pagination data={data} loading={loading} totalPages={1} />
+          </div>
+        )}
+      </div>
+
+      {/* <div className="flex justify-between items-center mt-4">
         <div className="flex items-center gap-2">
           <label htmlFor="rows" className="text-sm text-gray-400">
             Rows per page:
@@ -193,7 +221,6 @@ export default function TableProductCategory() {
           </select>
         </div>
 
-        {/* Pagination */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
@@ -225,7 +252,7 @@ export default function TableProductCategory() {
             Next
           </button>
         </div>
-      </div>
+      </div> */}
 
       <ModalCategoryProduct
         isOpen={modals}

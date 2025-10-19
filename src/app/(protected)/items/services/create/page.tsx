@@ -117,7 +117,10 @@ export default function CreateServicePage() {
 
   return (
     <div className="p-6">
-      <Breadcrumb items={["Items", "Service", "Create"]} />
+      <Breadcrumb
+        items={["Items", "Service", "Create"]}
+        path={["/items", "/items/create", "/items/service/create"]}
+      />
 
       <h1 className="text-2xl font-semibold mb-6">Creates New Services</h1>
 

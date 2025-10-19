@@ -117,7 +117,10 @@ export default function CreateProductPage() {
 
   return (
     <div className="p-6">
-      <Breadcrumb items={["Items", "Product", "Create"]} />
+      <Breadcrumb
+        items={["Items", "Product", "Create"]}
+        path={["/items", "/items/product", "/items/product/create"]}
+      />
 
       <h1 className="text-2xl font-semibold mb-6">Creates New Product</h1>
 
