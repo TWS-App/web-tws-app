@@ -59,24 +59,11 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-// Interface
-interface Props {
-  isOpen: boolean;
-  dataEdit?: any;
-  isClose: (value: boolean) => void;
-  onRefresh?: (refresh: boolean) => void;
-}
-
 // Modals
 const { confirm } = Modal;
 
 // CODE
-export default function EditService({
-  isOpen,
-  dataEdit,
-  isClose,
-  onRefresh,
-}: Props) {
+export default function EditService() {
   // React
   const { id } = useParams();
   const router = useRouter();
@@ -101,13 +88,6 @@ export default function EditService({
       fetchDetails(id);
     }
   }, [id]);
-
-  // USE EFFECTS
-  useEffect(() => {
-    if (dataEdit) {
-      setData(dataEdit);
-    }
-  }, [dataEdit]);
 
   // FETCH DETAILS
   const fetchDetails = async (values: any) => {
