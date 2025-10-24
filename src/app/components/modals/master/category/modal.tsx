@@ -1,5 +1,10 @@
 // REACT
 import React, { useEffect, useState } from "react";
+
+// Services
+import { categoryProductServices } from "@/api/services/master/category";
+
+// Antd Components
 import {
   Button,
   Divider,
@@ -12,7 +17,8 @@ import {
 } from "antd";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
 import { PiFileFill } from "react-icons/pi";
-import { categoryProductServices } from "@/api/services/master/category";
+
+// Page Components
 import { ProductCategory } from "@/app/components/tables/master/category/types/product";
 
 // INTERFACE

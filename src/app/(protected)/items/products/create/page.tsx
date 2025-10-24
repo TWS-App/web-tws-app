@@ -1,9 +1,42 @@
 "use client";
 
-import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
-import { useRouter } from "next/navigation";
+// REACT COMPONENTS
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
+// SERVICES
+import { Products, productServices } from "@/api/services/product/product";
+
+// ANTD Components
+import {
+  Button,
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Row,
+  Space,
+} from "antd";
+import { TiPlusOutline } from "react-icons/ti";
+import {
+  PiMinus,
+  PiPlus,
+  PiPlusCircle,
+  PiTrash,
+  PiX,
+  PiXCircle,
+} from "react-icons/pi";
+
+// Appe Components
+import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
+import MasterCategoryProduct from "@/app/components/masters/category/categoryProduct";
+
+// Utils
+import { formatPrice } from "@/utils/function/price";
+
+// Interface
 type Form = {
   category: number;
   code: string;
@@ -34,85 +67,124 @@ const initialForm: Form = {
   variants: [],
 };
 
+// Confirm Modal
+const { confirm } = Modal;
+
+// CODE
 export default function CreateProductPage() {
   const router = useRouter();
-  const [form, setForm] = useState(initialForm);
+
+  // STATE
+  const [dataSubmit, setDataSubmit] = useState(null);
+  const [loadingBtn, setLoadingBtn] = useState(false);
+
+  const [colors, setColors] = useState([""]);
+  const [variants, setVariants] = useState([""]);
+
   // helper state for comma-separated inputs
   const [colorsInput, setColorsInput] = useState<string>("");
   const [variantsInput, setVariantsInput] = useState<string>("");
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const target = e.target as HTMLInputElement; // safe cast
-    const { name, type } = target;
+  // FORM
+  const [form] = Form.useForm();
 
-    if (type === "checkbox") {
-      setForm(
-        (prev) => ({ ...prev, [name]: target.checked } as unknown as Form)
-      );
-      return;
+  const handleAddColor = () => setColors([...colors, ""]);
+  const handleAddVariant = () => setVariants([...variants, ""]);
+
+  // GET CATEGORY
+  const getCategory = (value: any) => {
+    console.log("Category: ", value);
+
+    form.setFieldsValue({
+      category_id: value.id,
+      category: value?.value,
+    });
+  };
+
+  const handleSubmit = async (values: any) => {
+    console.log("Submitting product payload:", values);
+
+    try {
+      const body: Products = {
+        category: values?.category_id,
+        code: values?.code,
+        colors: values?.colors?.length > 0 ? values.colors : [],
+        description: values?.description,
+        details: values?.details,
+        discount: values?.discount,
+        is_colors: values?.colors?.length > 0 ? true : false,
+        is_ready: values?.is_ready,
+        is_variants: values?.variants?.length > 0 ? true : false,
+        price: values.price,
+        product_name: values?.product_name,
+        variants: values?.variants?.length > 0 ? values.variants : [],
+      };
+
+      const res = await productServices.create(body);
+
+      console.log("Res Create: ", res);
+      router.push("/items/products");
+    } catch (error) {
+    } finally {
+      setLoadingBtn(false);
     }
-
-    if (type === "number") {
-      const num = target.value === "" ? 0 : Number(target.value);
-      setForm((prev) => ({ ...prev, [name]: num } as unknown as Form));
-      return;
-    }
-
-    // text/textarea defaults
-    setForm((prev) => ({ ...prev, [name]: target.value } as unknown as Form));
   };
 
-  const handleArrayChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: "colors" | "variants",
-    index: number
-  ) => {
-    const newArr = [...form[field]];
-    newArr[index] = e.target.value;
-    setForm({ ...form, [field]: newArr });
-  };
-
-  const addArrayItem = (field: "colors" | "variants") => {
-    setForm({ ...form, [field]: [...form[field], ""] });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // parse comma separated values
-    const colors = colorsInput
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-    const variants = variantsInput
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-
-    const payload: Form = {
-      ...form,
-      colors,
-      variants,
-    };
-
-    // simulasikan request ke API
-    console.log("Submitting product payload:", payload);
-
-    // TODO: replace with actual fetch / mutation
-    // await fetch('/api/products', { method: 'POST', body: JSON.stringify(payload) });
-
-    // setelah sukses balik ke page products
-    router.push("/items/products");
-  };
-
+  // Handle Cancel
   const handleCancel = () => {
-    // Reset form + navigate back to products list
-    setForm(initialForm);
     setColorsInput("");
     setVariantsInput("");
     router.push("/items/products");
+  };
+
+  // ON FINISH
+  const onFinish = (data: any) => {
+    console.log("Finish: ", data);
+
+    setLoadingBtn(true);
+    showModalConfirm(data);
+  };
+
+  // ON FINISH FAILED
+  const onFinishFailed = (errors: any) => {
+    console.log("Failed: ", errors);
+  };
+
+  // SHOW MODAL CONFIRM
+  const showModalConfirm = (value: any) => {
+    const _data = value;
+
+    console.log("Submit: ", _data);
+
+    confirm({
+      className: "modals-confirm",
+      title: `Are you sure want to Create a new Data Product ${
+        _data.product_name || " - "
+      }?`,
+      okText: "Confirm",
+      cancelText: "Cancel",
+      centered: true,
+
+      onOk() {
+        handleSubmit(_data);
+      },
+
+      onCancel() {
+        setLoadingBtn(false);
+      },
+
+      okButtonProps: {
+        className: "submit-btn",
+        type: "primary",
+      },
+
+      cancelButtonProps: {
+        className: "cancel-btn",
+        type: "default",
+      },
+
+      width: 750,
+    });
   };
 
   return (
@@ -124,165 +196,254 @@ export default function CreateProductPage() {
 
       <h1 className="text-2xl font-semibold mb-6">Creates New Product</h1>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4 bg-gray-800 p-6 rounded-lg text-gray-200"
+      <Form
+        className="space-y-4 bg-white p-6 rounded-lg text-black"
+        layout="vertical"
+        form={form}
+        scrollToFirstError
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        style={{ padding: "20px 10px" }}
       >
-        <label className="block mb-1 text-sm font-medium">Category</label>
-        <input
-          type="number"
-          name="category"
-          placeholder="Category"
-          value={form.category}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
-        />
-
-        <label className="block mb-1 text-sm font-medium">Code</label>
-        <input
-          type="text"
-          name="code"
-          placeholder="Code"
-          value={form.code}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
-        />
-
-        <label className="block mb-1 text-sm font-medium">Product Name</label>
-        <input
-          type="text"
-          name="product_name"
-          placeholder="Product Name"
-          value={form.product_name}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
-        />
-
-        <label className="block mb-1 text-sm font-medium">Description</label>
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
-        />
-
-        <label className="block mb-1 text-sm font-medium">Details</label>
-        <textarea
-          name="details"
-          placeholder="Details"
-          value={form.details}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
-        />
-
-        <label className="block mb-1 text-sm font-medium">Price</label>
-        <input
-          type="number"
-          name="price"
-          placeholder="Price"
-          value={form.price}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
-        />
-
-        <label className="block mb-1 text-sm font-medium">Discount</label>
-        <input
-          type="number"
-          name="discount"
-          placeholder="Discount"
-          value={form.discount}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
-        />
-
-        <div>
-          <label className="block mb-2">Colors</label>
-          {form.colors.map((color, idx) => (
-            <input
-              key={idx}
-              type="text"
-              value={color}
-              onChange={(e) => handleArrayChange(e, "colors", idx)}
-              className="w-full p-2 mb-2 rounded bg-gray-700 border border-gray-600"
-            />
-          ))}
-          <button
-            type="button"
-            onClick={() => addArrayItem("colors")}
-            className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
+        <Col
+          span={24}
+          style={{
+            padding: "10px 15px",
+          }}
+        >
+          <Form.Item
+            name="product_name"
+            label="Product Name"
+            rules={[
+              { required: true, message: "Please input Product's Name!" },
+            ]}
           >
-            + Add Color
-          </button>
-        </div>
+            <Input placeholder="Product's Name" />
+          </Form.Item>
 
-        <div>
-          <label className="block mb-2">Variants</label>
-          {form.variants.map((variant, idx) => (
-            <input
-              key={idx}
-              type="text"
-              value={variant}
-              onChange={(e) => handleArrayChange(e, "variants", idx)}
-              className="w-full p-2 mb-2 rounded bg-gray-700 border border-gray-600"
-            />
-          ))}
-          <button
-            type="button"
-            onClick={() => addArrayItem("variants")}
-            className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
+          <Form.Item
+            name="code"
+            label="Code"
+            rules={[
+              { required: true, message: "Please input Product's Code!" },
+            ]}
           >
-            + Add Variant
-          </button>
-        </div>
+            <Input placeholder="Code" />
+          </Form.Item>
 
-        <div className="flex gap-6">
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="is_colors"
-              checked={form.is_colors}
-              onChange={handleChange}
-            />
-            Is Colors
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="is_ready"
-              checked={form.is_ready}
-              onChange={handleChange}
-            />
-            Is Ready
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="is_variants"
-              checked={form.is_variants}
-              onChange={handleChange}
-            />
-            Is Variants
-          </label>
-        </div>
-
-        <div className="flex items-center justify-end gap-3 pt-2">
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="px-4 py-2 rounded border border-white bg-red-400 hover:bg-red-500 cursor-pointer transition"
+          <Form.Item
+            name="category"
+            label="Category"
+            rules={[{ required: true, message: "Please input category!" }]}
           >
-            Cancel
-          </button>
+            <MasterCategoryProduct
+              category={""}
+              getCategory={getCategory}
+              isDisable={false}
+            />
+          </Form.Item>
 
-          <button
-            type="submit"
-            className="px-5 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 cursor-pointer transition"
+          <Form.Item name="category_id" label="Category ID" hidden>
+            <InputNumber className="w-full" placeholder="Category ID" />
+          </Form.Item>
+
+          <Row justify="center" gutter={30}>
+            <Col span={12}>
+              <Form.Item name="description" label="Description">
+                <Input.TextArea
+                  rows={2}
+                  allowClear
+                  showCount
+                  placeholder="Description"
+                />
+              </Form.Item>
+            </Col>
+
+            <Col span={12}>
+              <Form.Item name="details" label="Details">
+                <Input.TextArea
+                  rows={2}
+                  allowClear
+                  showCount
+                  placeholder="Details"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row justify="center" gutter={30}>
+            <Col span={12}>
+              <Form.Item
+                name="price"
+                label="Price"
+                rules={[{ required: true, message: "Please input Price!" }]}
+              >
+                <InputNumber
+                  min={0}
+                  formatter={(value: any) => {
+                    return formatPrice(value);
+                  }}
+                  placeholder="Price"
+                  addonBefore={"Rp"}
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+
+            <Col span={12}>
+              <Form.Item name="discount" label="Discount">
+                <InputNumber
+                  min={0}
+                  placeholder="Discount"
+                  addonBefore={"Rp"}
+                  formatter={(value: any) => {
+                    return formatPrice(value);
+                  }}
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+
+          <Form.Item label="Colors">
+            <Form.List
+              name="colors"
+              rules={[
+                {
+                  validator: async (_, colors) => {
+                    if (!colors || colors.length === 0) {
+                      return Promise.reject(
+                        new Error("Please add at least one color!")
+                      );
+                    }
+                  },
+                },
+              ]}
+            >
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space
+                      key={key}
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="baseline"
+                    >
+                      <Form.Item
+                        {...restField}
+                        name={name}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input color name!",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="Color name" />
+                      </Form.Item>
+                      <Button
+                        shape="circle"
+                        color="danger"
+                        variant="solid"
+                        icon={<PiTrash onClick={() => remove(name)} />}
+                      />
+                    </Space>
+                  ))}
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      variant="solid"
+                      color="green"
+                      onClick={() => add()}
+                      icon={<PiPlus />}
+                      className="text-white border-gray-500"
+                    >
+                      Add Color
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
+          </Form.Item>
+
+          <Form.Item label="Variants">
+            <Form.List name="variants">
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space
+                      key={key}
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="baseline"
+                    >
+                      <Form.Item
+                        {...restField}
+                        name={name}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input color name!",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="Color name" />
+                      </Form.Item>
+                      <Button
+                        shape="circle"
+                        color="danger"
+                        variant="solid"
+                        icon={<PiTrash onClick={() => remove(name)} />}
+                      />
+                    </Space>
+                  ))}
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      variant="solid"
+                      color="green"
+                      onClick={() => add()}
+                      icon={<PiPlus />}
+                      className="text-white border-gray-500"
+                    >
+                      Add Variant
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
+          </Form.Item>
+
+          <Form.Item
+            label="Product Ready?"
+            name="is_ready"
+            valuePropName="checked"
           >
-            Create
-          </button>
-        </div>
-      </form>
+            <Checkbox />
+          </Form.Item>
+
+          <Row
+            justify="end"
+            className="flex items-center justify-end gap-3 pt-2"
+          >
+            <Button onClick={handleCancel} type="default" icon={<PiXCircle />}>
+              Cancel
+            </Button>
+
+            <Button
+              loading={loadingBtn}
+              htmlType="submit"
+              type="primary"
+              icon={<PiPlusCircle />}
+            >
+              Create
+            </Button>
+          </Row>
+        </Col>
+      </Form>
     </div>
   );
 }

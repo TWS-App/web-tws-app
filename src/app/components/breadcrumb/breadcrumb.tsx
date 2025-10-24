@@ -9,8 +9,6 @@ interface Props {
 
 // CODE
 export default function Breadcrumb({ items, path }: Props) {
-  console.log(path);
-
   return (
     <nav className="text-sm text-gray-400 mb-4">
       {items.map((item, idx) => (

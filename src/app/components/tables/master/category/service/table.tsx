@@ -103,6 +103,11 @@ export default function TableServiceCategory() {
     fetchData();
   };
 
+  // HANDLE PAGINATION
+  const handlePagination = (params: any) => {
+    // set
+  };
+
   // Handle Submit
   const handleSubmit = async (value: any) => {
     try {
@@ -155,7 +160,7 @@ export default function TableServiceCategory() {
               </thead>
 
               <tbody>
-                {data.map((items) => (
+                {data.map((items: any) => (
                   <tr
                     key={items?.id}
                     className="border-b border-gray-700 hover:bg-gray-700/50"
@@ -201,7 +206,7 @@ export default function TableServiceCategory() {
         isClose={handleClose}
         isEdit={edit}
         dataEdit={dataEdit}
-        onRefresh={handleRefresh}
+        onRefresh={handlePagination}
       />
     </div>
   );

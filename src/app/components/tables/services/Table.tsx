@@ -1,10 +1,27 @@
 "use client";
 
-import { useState } from "react";
-import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
-import type { Client } from "./types/types";
-import { FaPlus } from "react-icons/fa";
+// REACT Components
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+// Services
+import api from "@/api/context/config";
+import { servicesService } from "@/api/services/service/service";
+
+// Antd Components
+import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
+import { FaPlus } from "react-icons/fa";
+import { Spin } from "antd";
+
+// Page Components
+import Pagination from "../../pagination/pagination";
+
+// Utils
+import type { Client } from "./types/types";
+import { randomColors } from "@/utils/constans/colors";
+import { formatPrice } from "@/utils/function/price";
+import { PiCheckCircle, PiXCircle } from "react-icons/pi";
 
 const clients: Client[] = [
   {
@@ -89,37 +106,95 @@ const clients: Client[] = [
   },
 ];
 
+// CODE
 export default function TableServices() {
-  const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  // Route
+  const route = useRouter();
 
-  const totalPages = Math.ceil(clients.length / rowsPerPage);
+  // DATA STATE
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const paginatedClients = clients.slice(
-    (page - 1) * rowsPerPage,
-    page * rowsPerPage
-  );
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    pageSize: 5,
+    next: null,
+    previous: null,
+  });
 
-  const handleEdit = (id: number) => {
-    alert(`Edit client with ID: ${id}`);
-  };
+  // FETCH DATA
+  const fetchData = async (params: any) => {
+    setLoading(true);
 
-  const handleDelete = (id: number) => {
-    if (confirm("Are you sure you want to delete this client?")) {
-      alert(`Deleted client with ID: ${id}`);
+    try {
+      const result = params.linkUrl
+        ? await api.get(params.linkUrl).then((res: any) => {
+            return res.data;
+          })
+        : await servicesService.getAll({
+            page: params?.page ? params.page : pagination.page,
+            page_size: params?.pageSize ? params.pageSize : pagination.pageSize,
+          });
+
+      console.log("Fetch res: ", result, params);
+
+      if (result?.results?.length > 0) {
+        setData(result.results);
+      } else {
+        setData([]);
+      }
+
+      setPagination({
+        total: result?.total ?? 0,
+        page: result?.page ?? 1,
+        pageSize: result?.page_size ?? 5,
+        next: result.links?.next || null,
+        previous: result.links?.previous || null,
+      });
+    } catch (err) {
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleRefresh = () => {
-    alert("Table data refreshed!");
+  // USEEFFECTS
+  useEffect(() => {
+    fetchData({ page: pagination.page, pageSize: pagination.pageSize });
+  }, []);
+
+  // Handle Edit
+  const handleEdit = (values: any) => {
+    console.log(values);
+
+    route.push(`/items/services/edit/${values.id}`);
   };
 
-  const statusColors: Record<Client["status"], string> = {
-    primary: "bg-purple-600 text-white",
-    danger: "bg-red-600 text-white",
-    success: "bg-green-600 text-white",
-    warning: "bg-orange-500 text-white",
-    neutral: "bg-gray-500 text-white",
+  const handleDelete = (values: number) => {
+    if (confirm("Are you sure you want to delete this client?")) {
+      alert(`Deleted client with ID: ${values}`);
+    }
+  };
+
+  // Handle Refresh
+  const handleRefresh = (values: any) => {
+    fetchData(values);
+  };
+
+  // Get Colors
+  const getRandomColor = () => {
+    const idx = Math.floor(Math.random() * randomColors.length);
+    return randomColors[idx];
+  };
+
+  // Fungsi Colors
+  const getColorByName = (name: string): string => {
+    if (name.toLowerCase().includes("white")) return "default";
+    if (name.toLowerCase().includes("black")) return "black";
+    if (name.toLowerCase().includes("red")) return "red";
+    if (name.toLowerCase().includes("green")) return "green";
+    if (name.toLowerCase().includes("blue")) return "blue";
+    return getRandomColor(); // fallback random
   };
 
   return (
@@ -142,116 +217,95 @@ export default function TableServices() {
       </div>
 
       {/* Table */}
-      <table className="w-full text-sm">
-        <thead className="bg-gray-700 text-gray-300">
-          <tr>
-            <th className="py-3 px-4 text-left">Name</th>
-            <th className="py-3 px-4 text-left">Price</th>
-            <th className="py-3 px-4 text-left">Categories</th>
-            <th className="py-3 px-4 text-left">Discount</th>
-            <th className="py-3 px-4 text-left">Last Updated</th>
-            <th className="py-3 px-4 text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedClients.map((c) => (
-            <tr
-              key={c.id}
-              className="border-b border-gray-700 hover:bg-gray-700/50"
-            >
-              <td className="py-3 px-4">
-                <div>
-                  <p className="font-semibold">{c.name}</p>
-                  <p className="text-gray-400 text-xs">{c.code}</p>
-                </div>
-              </td>
-              <td className="py-3 px-4">Rp. {c.price?.toFixed(2)}</td>
-              <td className="py-3 px-4">
-                <span
-                  className={`px-2 py-1 rounded text-xs ${
-                    statusColors[c.status]
-                  }`}
-                >
-                  {c.status}
-                </span>
-              </td>
-              <td className="py-3 px-4">Rp. {c.discount?.toFixed(2) || 0}</td>
-              <td className="py-3 px-4">{c.date}</td>
-              <td className="py-3 px-4 text-center flex justify-center gap-3">
-                <button
-                  onClick={() => handleEdit(c.id)}
-                  className="text-blue-400 hover:text-blue-600 cursor-pointer"
-                >
-                  <FiEdit size={16} />
-                </button>
-                <button
-                  onClick={() => handleDelete(c.id)}
-                  className="text-red-400 hover:text-red-600 cursor-pointer"
-                >
-                  <FiTrash2 size={16} />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Pagination + Rows per page */}
-      <div className="flex justify-between items-center mt-4">
-        {/* Rows per page */}
-        <div className="flex items-center gap-2">
-          <label htmlFor="rows" className="text-sm text-gray-400">
-            Rows per page:
-          </label>
-          <select
-            id="rows"
-            value={rowsPerPage}
-            onChange={(e) => {
-              setRowsPerPage(Number(e.target.value));
-              setPage(1);
-            }}
-            className="bg-gray-700 text-white rounded px-2 py-1 cursor-pointer hover:bg-gray-600"
-          >
-            {[5, 10, 20, 50].map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            disabled={page === 1}
-            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
-          >
-            Prev
-          </button>
-
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => setPage(i + 1)}
-              className={`px-3 py-1 rounded cursor-pointer transition ${
-                page === i + 1
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-700 hover:bg-gray-600"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={page === totalPages}
-            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+      <div className="relative min-h-[200px]">
+        {loading ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm rounded-lg">
+            <Spin size="large" />
+          </div>
+        ) : data.length === 0 ? (
+          <div className="text-center py-10 text-gray-400">No data found.</div>
+        ) : (
+          <div className="w-full">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-700 text-gray-300">
+                <tr>
+                  <th className="py-3 px-4 text-left">Name</th>
+                  {/* <th className="py-3 px-4 text-left">Categories</th> */}
+                  <th className="py-3 px-4 text-left">{`Price (Rp)`}</th>
+                  <th className="py-3 px-4 text-left">{`Discount (Rp)`}</th>
+                  <th className="py-3 px-4 text-left">Last Updated</th>
+                  <th className="py-3 px-4 text-left">Ready</th>
+                  <th className="py-3 px-4 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((items: any) => (
+                  <tr
+                    key={items?.id}
+                    className="border-b border-gray-700 hover:bg-gray-700/50"
+                  >
+                    <td className="py-3 px-4">
+                      <div>
+                        <p className="font-semibold">{items?.service_name}</p>
+                        <p className="text-gray-400 text-xs">{items?.code}</p>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      {formatPrice(items.price)}
+                    </td>
+                    {/* <td className="py-3 px-4">
+                      <span
+                        className={`px-2 py-1 rounded text-xs ${
+                          statusColors[items?.status]
+                        }`}
+                      >
+                        {items?.status}
+                      </span>
+                    </td> */}
+                    <td className="py-3 px-4 text-right">
+                      {formatPrice(items?.discount || 0)}
+                    </td>
+                    <td className="py-3 px-4">{items?.date}</td>
+                    <td className="py-3 px-4 text-center">
+                      {items?.is_ready ? (
+                        <PiCheckCircle size={24} className="text-green-500" />
+                      ) : (
+                        <PiXCircle size={24} className="text-red-500" />
+                      )}
+                    </td>
+                    <td className="py-3 px-4 text-center flex justify-center items-center  gap-3">
+                      <button
+                        onClick={() => handleEdit(items)}
+                        className="text-blue-400 hover:text-blue-600 cursor-pointer"
+                      >
+                        <FiEdit size={24} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(items?.id)}
+                        className="text-red-400 hover:text-red-600 cursor-pointer"
+                      >
+                        <FiTrash2 size={24} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <Pagination
+              data={data}
+              loading={loading}
+              totalPages={pagination.total}
+              onChange={handleRefresh}
+              pageSize={{
+                page: pagination.page,
+                pageSize: pagination.pageSize,
+                pageOption: Math.ceil(pagination.total / pagination.pageSize),
+              }}
+              next={pagination.next}
+              previous={pagination.previous}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

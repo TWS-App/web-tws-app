@@ -1,18 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // INTERFACE
 interface Props {
   loading: boolean;
   data: any[];
+  onChange?: (params: Record<string, any>) => void;
   totalPages: number;
+  pageSize?: any;
+  next?: string | null;
+  previous?: string | null;
   children?: React.ReactNode;
 }
 
 // CODE
-export default function Pagination({ loading, data, totalPages }: Props) {
+export default function Pagination({
+  loading,
+  data,
+  totalPages,
+  pageSize,
+  next,
+  previous,
+  onChange,
+}: Props) {
   // STATES
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(pageSize?.pageSize);
+  const [page, setPage] = useState(pageSize?.page || 1);
+  const [pageOption, setPageOption] = useState(pageSize?.pageOption || 1);
 
   return (
     <>
@@ -28,8 +41,17 @@ export default function Pagination({ loading, data, totalPages }: Props) {
               id="rows"
               value={rowsPerPage}
               onChange={(e) => {
-                setRowsPerPage(Number(e.target.value));
+                const newSize = Number(e.target.value);
+                const newPage = totalPages / newSize < newSize ? 1 : page;
+
+                setRowsPerPage(newSize);
                 setPage(1);
+                console.log(newSize);
+
+                onChange?.({
+                  page: newPage,
+                  pageSize: newSize || 10,
+                });
               }}
               className="bg-gray-700 text-white rounded px-2 py-1 cursor-pointer hover:bg-gray-600"
             >
@@ -39,22 +61,35 @@ export default function Pagination({ loading, data, totalPages }: Props) {
                 </option>
               ))}
             </select>
+
+            {`Showing ${page} to ${rowsPerPage} of ${totalPages} entries`}
           </div>
 
           {/* Page navigation */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-              disabled={page === 1}
+              onClick={() => {
+                // setPage((prev) => Math.max(prev - 1, 1));
+
+                onChange?.({
+                  linkUrl: previous || 10,
+                });
+              }}
+              disabled={!previous}
               className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
             >
               Prev
             </button>
 
-            {[...Array(totalPages)].map((_, i) => (
+            {[...Array(pageOption)].map((_, i) => (
               <button
                 key={i + 1}
-                onClick={() => setPage(i + 1)}
+                onClick={() => {
+                  onChange?.({
+                    page: i + 1,
+                    pageSize: rowsPerPage || 10,
+                  });
+                }}
                 className={`px-3 py-1 rounded cursor-pointer transition ${
                   page === i + 1
                     ? "bg-blue-600 text-white"
@@ -66,8 +101,13 @@ export default function Pagination({ loading, data, totalPages }: Props) {
             ))}
 
             <button
-              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={page === totalPages}
+              onClick={() => {
+                // setPage((prev) => Math.min(prev + 1, totalPages));
+                onChange?.({
+                  linkUrl: next,
+                });
+              }}
+              disabled={!next}
               className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
             >
               Next

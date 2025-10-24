@@ -151,13 +151,13 @@ config.interceptors.response.use(
 
     // UNAUTHORIZED
     if (error?.response?.status === 403) {
-      notifyError("Error", error);
+      notifyError("Unauthorized", error);
     }
 
     if (error?.response?.status === 404) {
       const datas = error?.response?.data?.error;
 
-      notifyError("Error", datas);
+      notifyError("Not Found", datas);
     }
 
     if (error.response?.status >= 500) {
