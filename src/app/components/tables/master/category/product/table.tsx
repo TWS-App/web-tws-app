@@ -1,12 +1,19 @@
 "use client";
 
+// REACT Components
 import { useEffect, useState } from "react";
+
+// Services
+import { categoryProductServices } from "@/api/services/master/category";
+
+// ANTD Components
+import { Modal, Spin, Tooltip } from "antd";
 import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 import { BiPlus } from "react-icons/bi";
-import { ProductCategory } from "../types/product";
+
+// Page Components
 import ModalCategoryProduct from "@/app/components/modals/master/category/modal";
-import { categoryProductServices } from "@/api/services/master/category";
-import { Modal, Spin, Tooltip } from "antd";
+import { ProductCategory } from "../types/product";
 import Pagination from "@/app/components/pagination/pagination";
 
 // Modals
@@ -194,65 +201,14 @@ export default function TableProductCategory() {
               </tbody>
             </table>
 
-            <Pagination data={data} loading={loading} totalPages={1} />
+            <Pagination
+              data={data}
+              loading={loading}
+              totalPages={data?.length}
+            />
           </div>
         )}
       </div>
-
-      {/* <div className="flex justify-between items-center mt-4">
-        <div className="flex items-center gap-2">
-          <label htmlFor="rows" className="text-sm text-gray-400">
-            Rows per page:
-          </label>
-          <select
-            id="rows"
-            value={rowsPerPage}
-            onChange={(e) => {
-              setRowsPerPage(Number(e.target.value));
-              setPage(1);
-            }}
-            className="bg-gray-700 text-white rounded px-2 py-1 cursor-pointer hover:bg-gray-600"
-          >
-            {[5, 10, 20, 50].map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            disabled={page === 1}
-            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
-          >
-            Prev
-          </button>
-
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => setPage(i + 1)}
-              className={`px-3 py-1 rounded cursor-pointer transition ${
-                page === i + 1
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-700 hover:bg-gray-600"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={page === totalPages}
-            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-      </div> */}
 
       <ModalCategoryProduct
         isOpen={modals}

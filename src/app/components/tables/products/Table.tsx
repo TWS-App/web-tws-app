@@ -1,17 +1,26 @@
 "use client";
 
+// REACTS
 import { useEffect, useState } from "react";
-import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
-import type { Client } from "./types/types";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FaPlus } from "react-icons/fa6";
-import Pagination from "../../pagination/pagination";
+
+// Services
+import { productServices } from "@/api/services/product/product";
+import api from "@/api/context/config";
+
+// Antd Components
 import { Spin, Tag } from "antd";
-import { Products, productServices } from "@/api/services/product/product";
+import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
+import { FaPlus } from "react-icons/fa6";
+
+// Page Components
+import Pagination from "../../pagination/pagination";
+
+// Utils
+import type { Client } from "./types/types";
 import { formatPrice } from "@/utils/function/price";
 import { randomColors } from "@/utils/constans/colors";
-import { useRouter } from "next/navigation";
-import api from "@/api/context/config";
 
 const clients: Client[] = [
   {

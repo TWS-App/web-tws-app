@@ -10,6 +10,7 @@ export interface Images {
   file_path: string | undefined | null;
   mime_type: string | undefined | null;
   product_id: number | undefined | null;
+  service_id: number | undefined | null;
   uploaded_at: string | undefined | null;
   url: string | undefined | null;
 }

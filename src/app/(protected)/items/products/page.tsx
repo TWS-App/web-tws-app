@@ -1,7 +1,11 @@
-import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
-import TableProducts from "@/app/components/tables/products/Table";
+// React Components
 import { FiShoppingBag } from "react-icons/fi";
 
+// Page Components
+import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
+import TableProducts from "@/app/components/tables/products/Table";
+
+// CODE
 export default function DashboardPage() {
   return (
     <div>

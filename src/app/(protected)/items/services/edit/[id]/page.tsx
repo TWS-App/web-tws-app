@@ -2,7 +2,7 @@
 
 // REACT COMPONENTS
 import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { redirect, useParams, useRouter } from "next/navigation";
 
 // Antd Componetns
 import {
@@ -101,6 +101,11 @@ export default function EditService() {
       await fetchImage(id);
 
       console.log("Edit: ", result);
+
+      if (!result) {
+        redirect("/error/not-found");
+      }
+
       setData(result);
 
       form.setFieldsValue({
@@ -539,7 +544,7 @@ export default function EditService() {
             {`Service's Images`}
           </Divider>
 
-          <Form.Item name="image">
+          <Form.Item label="Image">
             <Upload
               multiple
               listType="picture-card"

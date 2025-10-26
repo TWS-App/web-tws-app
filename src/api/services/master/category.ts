@@ -53,7 +53,7 @@ export const categoryProductServices = {
     }
   },
 
-  async update(id: number, data: any) {
+  async update(id: any, data: any) {
     try {
       const response = await api.put(`/category/product-list/${id}`, data);
 
@@ -109,7 +109,7 @@ export const categoryServiceServices = {
     }
   },
 
-  async update(id: number, data: any) {
+  async update(id: any, data: any) {
     try {
       const response = await api.put(`/category/service-list/${id}`, data);
 

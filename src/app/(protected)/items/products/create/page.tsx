@@ -78,18 +78,8 @@ export default function CreateProductPage() {
   const [dataSubmit, setDataSubmit] = useState(null);
   const [loadingBtn, setLoadingBtn] = useState(false);
 
-  const [colors, setColors] = useState([""]);
-  const [variants, setVariants] = useState([""]);
-
-  // helper state for comma-separated inputs
-  const [colorsInput, setColorsInput] = useState<string>("");
-  const [variantsInput, setVariantsInput] = useState<string>("");
-
   // FORM
   const [form] = Form.useForm();
-
-  const handleAddColor = () => setColors([...colors, ""]);
-  const handleAddVariant = () => setVariants([...variants, ""]);
 
   // GET CATEGORY
   const getCategory = (value: any) => {
@@ -132,8 +122,6 @@ export default function CreateProductPage() {
 
   // Handle Cancel
   const handleCancel = () => {
-    setColorsInput("");
-    setVariantsInput("");
     router.push("/items/products");
   };
 
@@ -308,7 +296,6 @@ export default function CreateProductPage() {
               </Form.Item>
             </Col>
           </Row>
-
 
           <Form.Item label="Colors">
             <Form.List

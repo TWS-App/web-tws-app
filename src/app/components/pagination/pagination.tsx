@@ -62,7 +62,7 @@ export default function Pagination({
               ))}
             </select>
 
-            {`Showing ${page} to ${rowsPerPage} of ${totalPages} entries`}
+            {`Showing ${page} to ${rowsPerPage || totalPages} of ${totalPages} entries`}
           </div>
 
           {/* Page navigation */}

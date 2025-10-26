@@ -2,7 +2,7 @@
 
 // REACT COMPONENTS
 import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { redirect, useParams, useRouter } from "next/navigation";
 
 // Antd Componetns
 import {
@@ -101,22 +101,27 @@ export default function EditProduct() {
       await fetchImage(id);
 
       console.log("Edit: ", result);
-      setData(result);
 
-      form.setFieldsValue({
-        category: result?.category,
-        code: result?.code,
-        colors: result?.colors?.length > 0 ? result.colors : [],
-        variants: result?.variants?.length > 0 ? result.variants : [],
-        description: result?.description,
-        details: result?.details,
-        discount: result?.discount,
-        is_colors: result.is_color,
-        is_ready: result.is_ready,
-        is_variants: result.is_variants,
-        price: result.price,
-        product_name: result?.product_name,
-      });
+      if (!result) {
+        redirect("/error/not-found"); // ⛔ ke custom 404
+      } else {
+        setData(result);
+
+        form.setFieldsValue({
+          category: result?.category,
+          code: result?.code,
+          colors: result?.colors?.length > 0 ? result.colors : [],
+          variants: result?.variants?.length > 0 ? result.variants : [],
+          description: result?.description,
+          details: result?.details,
+          discount: result?.discount,
+          is_colors: result.is_color,
+          is_ready: result.is_ready,
+          is_variants: result.is_variants,
+          price: result.price,
+          product_name: result?.product_name,
+        });
+      }
     } catch (err) {
     } finally {
       setLoading(false);
@@ -539,7 +544,7 @@ export default function EditProduct() {
             {`Product's Images`}
           </Divider>
 
-          <Form.Item name="image">
+          <Form.Item label="Image">
             <Upload
               multiple
               listType="picture-card"

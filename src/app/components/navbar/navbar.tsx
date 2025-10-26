@@ -35,17 +35,23 @@ export default function Navbar() {
   };
 
   return (
-    <header className="flex items-center justify-between bg-gray-800 text-white px-6 py-4 shadow">
-      <div className="flex items-center bg-gray-700 rounded-lg px-3 py-2 w-1/3">
+    <header className="flex items-center justify-between bg-gray-800 text-white px-6 shadow transition-all duration-300">
+      <div className="hidden lg:flex items-center rounded px-3 py-2 w-1/3 sm:w-1/2 md:w-1/3">
         <BiSearch size={18} className="text-gray-400 mr-2" />
         <input
           type="text"
           placeholder="Search..."
-          className="bg-transparent outline-none flex-1 text-sm"
+          className="border border-gray-500 rounded-full py-3 px-6 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
-      <div className="flex items-center gap-4">
+      {/* Tombol search (tampil hanya di mobile) 
+      <button className="lg:hidden p-2 rounded-full hover:bg-gray-700 transition cursor-pointer">
+        <BiSearch size={20} />
+      </button>
+      */}
+
+      <div className="flex items-center gap-4 ml-auto">
         <button
           onClick={toggleTheme}
           className="p-2 rounded-full hover:bg-gray-700 transition cursor-pointer"

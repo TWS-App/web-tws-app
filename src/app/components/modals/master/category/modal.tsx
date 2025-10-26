@@ -100,11 +100,11 @@ export default function ModalCategoryProduct({
   };
 
   // ON FINISH
-  const onFinish = (data: any) => {
-    console.log("Finish: ", data);
+  const onFinish = (values: any) => {
+    // console.log("Finish: ", values);
 
     setLoadingBtn(true);
-    showModalConfirm(data);
+    showModalConfirm(values);
   };
 
   // ON FINISH FAILED
@@ -170,14 +170,13 @@ export default function ModalCategoryProduct({
         const body = value;
         delete body["id"];
 
-        const result = await categoryProductServices.update(value?.id, body);
+        const result = await categoryProductServices.update(data?.id, body);
 
         console.log("Update res: ", result);
 
         handleClose();
         onRefresh(true);
       } catch (err) {
-        // Error sudah otomatis muncul di notification handler
       } finally {
         setLoadingBtn(false);
       }
@@ -273,23 +272,24 @@ export default function ModalCategoryProduct({
 
           <Row justify="end" align="middle">
             <Button
+              icon={<IoCloseCircle />}
               type="primary"
-              htmlType="submit"
-              loading={loadingBtn}
-              icon={<IoCheckmarkCircle />}
+              danger
+              onClick={handleClose}
               style={{
                 marginRight: 15,
               }}
             >
-              {`Submit`}
+              {`Cancel`}
             </Button>
 
             <Button
-              icon={<IoCloseCircle />}
-              type="default"
-              onClick={handleClose}
+              type="primary"
+              htmlType="submit"
+              loading={loadingBtn}
+              icon={<IoCheckmarkCircle />}
             >
-              {`Cancel`}
+              {`Submit`}
             </Button>
           </Row>
         </Form>

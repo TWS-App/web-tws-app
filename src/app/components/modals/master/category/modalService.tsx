@@ -12,9 +12,7 @@ import {
 } from "antd";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
 import { PiFileFill } from "react-icons/pi";
-import {
-  categoryServiceServices,
-} from "@/api/services/master/category";
+import { categoryServiceServices } from "@/api/services/master/category";
 import { ServiceCategory } from "@/app/components/tables/master/category/types/service";
 
 // INTERFACE
@@ -95,11 +93,11 @@ export default function ModalCategoryService({
   };
 
   // ON FINISH
-  const onFinish = (data: any) => {
-    console.log("Finish: ", data);
+  const onFinish = (values: any) => {
+    console.log("Finish: ", values);
 
     setLoadingBtn(true);
-    showModalConfirm(data);
+    showModalConfirm(values);
   };
 
   // ON FINISH FAILED
@@ -165,7 +163,7 @@ export default function ModalCategoryService({
         const body = value;
         delete body["id"];
 
-        const result = await categoryServiceServices.update(value?.id, body);
+        const result = await categoryServiceServices.update(data?.id, body);
 
         console.log("Update res: ", result);
 
@@ -268,23 +266,24 @@ export default function ModalCategoryService({
 
           <Row justify="end" align="middle">
             <Button
+              icon={<IoCloseCircle />}
               type="primary"
-              htmlType="submit"
-              loading={loadingBtn}
-              icon={<IoCheckmarkCircle />}
+              danger
+              onClick={handleClose}
               style={{
                 marginRight: 15,
               }}
             >
-              {`Submit`}
+              {`Cancel`}
             </Button>
 
             <Button
-              icon={<IoCloseCircle />}
-              type="default"
-              onClick={handleClose}
+              type="primary"
+              htmlType="submit"
+              loading={loadingBtn}
+              icon={<IoCheckmarkCircle />}
             >
-              {`Cancel`}
+              {`Submit`}
             </Button>
           </Row>
         </Form>

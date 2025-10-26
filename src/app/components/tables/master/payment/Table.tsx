@@ -192,7 +192,7 @@ export default function TablePayments() {
               </tbody>
             </table>
 
-            <Pagination data={data} loading={loading} totalPages={1} />
+            <Pagination data={data} loading={loading} totalPages={data?.length} />
           </div>
         )}
       </div>

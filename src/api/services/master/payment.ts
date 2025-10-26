@@ -40,7 +40,7 @@ export const masterPaymentServices = {
     }
   },
 
-  async update(id: number, data: any) {
+  async update(id: any, data: any) {
     try {
       const response = await api.put(`/master/payment-list/${id}`, data);
 

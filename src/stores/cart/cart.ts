@@ -7,6 +7,7 @@ interface CartItem {
   quantity: number;
   variant: string | undefined | null;
   image: string | undefined | null;
+  type: string | undefined | null;
 }
 
 interface CartState {

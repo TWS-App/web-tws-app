@@ -103,11 +103,6 @@ export default function TableServiceCategory() {
     fetchData();
   };
 
-  // HANDLE PAGINATION
-  const handlePagination = (params: any) => {
-    // set
-  };
-
   // Handle Submit
   const handleSubmit = async (value: any) => {
     try {
@@ -196,7 +191,7 @@ export default function TableServiceCategory() {
               </tbody>
             </table>
 
-            <Pagination data={data} loading={loading} totalPages={1} />
+            <Pagination data={data} loading={loading} totalPages={data.length} />
           </div>
         )}
       </div>
@@ -206,7 +201,7 @@ export default function TableServiceCategory() {
         isClose={handleClose}
         isEdit={edit}
         dataEdit={dataEdit}
-        onRefresh={handlePagination}
+        onRefresh={handleRefresh}
       />
     </div>
   );

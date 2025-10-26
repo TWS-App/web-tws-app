@@ -14,7 +14,7 @@ export const notifySuccess = (message: string, description?: string) => {
 };
 
 export const notifyError = (message: string, description?: string) => {
-  console.log("Errors: ", message, description);
+  // console.log("Errors: ", message, description);
   notification.error({
     message: message,
     description: description,

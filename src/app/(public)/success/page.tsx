@@ -1,17 +1,63 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
-import { BiCheckCircle } from "react-icons/bi";
 
+// REACTS
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
+// Antd Components
+import { Spin } from "antd";
+import { BiCheckCircle } from "react-icons/bi";
+import { IoHome } from "react-icons/io5";
+import { RiPrinterFill } from "react-icons/ri";
+
+// Services
+import { orderHeaderService } from "@/api/services/orders/serviceHeader";
+
+// CODE
 export default function SuccessPage() {
+  // STATE
   const router = useRouter();
   const params = useSearchParams();
   const orderId = params.get("orderId");
 
-  console.log(orderId)
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  console.log(orderId);
+
+  // Handle Print
   const handlePrint = () => {
     router.push(`/invoice/${orderId}`);
   };
+
+  // Use effects
+  useEffect(() => {
+    if (orderId) {
+      fetchData(orderId);
+    }
+  }, [orderId]);
+
+  // Fetch Data
+  const fetchData = async (value: any) => {
+    setLoading(true);
+    try {
+      const res = await orderHeaderService.getById(value);
+
+      console.log("Res: ", res);
+    } catch (error) {
+      //
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm rounded-lg">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white px-6">
@@ -41,24 +87,25 @@ export default function SuccessPage() {
         // transition={{ delay: 0.4 }}
         className="text-gray-400 mb-8 text-center max-w-md"
       >
-        Thank you for your purchase! Your order with ID = {orderId || "ORD250900001"} is
-        created and will be processed immediately.
+        Thank you for your purchase! Your order with ID ={" "}
+        {orderId || "ORD250900001"} is created and will be processed immediately
+        after we have confirm your payment.
       </p>
 
       {/* Buttons */}
       <div className="flex gap-4">
         <button
           onClick={handlePrint}
-          className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition cursor-pointer"
+          className="flex justify-center align-baseline bg-blue-600 hover:bg-blue-700 px-6 py-3 gap-3 rounded-lg font-semibold transition cursor-pointer"
         >
-          Print Invoice
+          <RiPrinterFill size={24} /> Print Invoice
         </button>
 
         <button
           onClick={() => router.push("/")}
-          className="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg font-semibold transition cursor-pointer"
+          className="flex justify-center align-baseline bg-gray-700 hover:bg-gray-600 px-6 py-3 gap-3 rounded-lg font-semibold transition cursor-pointer"
         >
-          Back to Home
+          <IoHome size={20} /> Back to Home
         </button>
       </div>
     </div>

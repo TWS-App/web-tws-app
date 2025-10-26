@@ -15,7 +15,6 @@ import { PiFileFill } from "react-icons/pi";
 import { Payment } from "@/app/components/tables/master/payment/types/types";
 import { masterPaymentServices } from "@/api/services/master/payment";
 
-
 // INTERFACE
 interface ModalProps {
   isOpen: boolean;
@@ -94,11 +93,11 @@ export default function ModalMasterPayment({
   };
 
   // ON FINISH
-  const onFinish = (data: any) => {
-    console.log("Finish: ", data);
+  const onFinish = (values: any) => {
+    console.log("Finish: ", values);
 
     setLoadingBtn(true);
-    showModalConfirm(data);
+    showModalConfirm(values);
   };
 
   // ON FINISH FAILED
@@ -162,16 +161,16 @@ export default function ModalMasterPayment({
     if (isEdit) {
       try {
         const body = value;
+        const id = Number(data?.id);
         delete body["id"];
 
-        const result = await masterPaymentServices.update(value?.id, body);
+        const result = await masterPaymentServices.update(id, body);
 
         console.log("Update res: ", result);
 
         handleClose();
         onRefresh(true);
       } catch (err) {
-        // Error sudah otomatis muncul di notification handler
       } finally {
         setLoadingBtn(false);
       }
@@ -184,7 +183,6 @@ export default function ModalMasterPayment({
         handleClose();
         onRefresh(true);
       } catch (err) {
-        // Error sudah otomatis muncul di notification handler
       } finally {
         setLoadingBtn(false);
       }
@@ -267,23 +265,24 @@ export default function ModalMasterPayment({
 
           <Row justify="end" align="middle">
             <Button
+              icon={<IoCloseCircle />}
               type="primary"
-              htmlType="submit"
-              loading={loadingBtn}
-              icon={<IoCheckmarkCircle />}
+              danger
+              onClick={handleClose}
               style={{
                 marginRight: 15,
               }}
             >
-              {`Submit`}
+              {`Cancel`}
             </Button>
 
             <Button
-              icon={<IoCloseCircle />}
-              type="default"
-              onClick={handleClose}
+              type="primary"
+              htmlType="submit"
+              loading={loadingBtn}
+              icon={<IoCheckmarkCircle />}
             >
-              {`Cancel`}
+              {`Submit`}
             </Button>
           </Row>
         </Form>

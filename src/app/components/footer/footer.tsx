@@ -1,5 +1,6 @@
 "use client";
 
+// Antd Components
 import {
   FaFacebookF,
   FaTwitter,
@@ -9,6 +10,7 @@ import {
 import { FaTiktok } from "react-icons/fa6";
 import { IoSend } from "react-icons/io5";
 
+// CODE
 export default function HomeFooter() {
   return (
     <footer className="w-full bg-white text-gray-800">
@@ -17,7 +19,7 @@ export default function HomeFooter() {
         <div>
           <h3 className="text-xl font-semibold">Subscribe</h3>
         </div>
-        
+
         <p className="text-sm text-gray-600">
           Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do
           eiusmod.
@@ -36,15 +38,16 @@ export default function HomeFooter() {
       </div>
 
       {/* Main Footer */}
-      <div className="grid grid-cols-8 bg-white py-10 px-6 md:px-16 md:grid-cols-8 gap-3 border-t border-gray-200">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-8 xl:grid-cols-8 bg-white py-10 px-6  md:px-16 gap-6 border-t border-gray-200">
         {/* Brand Column */}
-        <div className="col-span-2">
+        <div className="col-span-2 text-center sm:text-left">
           <h2 className="text-lg font-bold">BRAND NAME</h2>
           <p className="text-sm text-gray-600 mb-3">Enter Your Slogan Here</p>
           <p className="text-sm text-gray-500">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do
             eiusmod tempor.
           </p>
+
           <div className="flex gap-3 mt-4">
             <a
               href="#"
