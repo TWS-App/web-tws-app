@@ -1,5 +1,7 @@
 // REACT
 import React, { useEffect, useState } from "react";
+
+// Antd Components
 import {
   Button,
   Col,
@@ -9,14 +11,22 @@ import {
   InputNumber,
   Modal,
   Row,
+  Select,
   Spin,
   Typography,
 } from "antd";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
+import { FiEdit } from "react-icons/fi";
 import { PiFileFill } from "react-icons/pi";
-import { OrderHeader } from "@/api/services/orders/serviceHeader";
+
+// Service
 import { orderDetailsService } from "@/api/services/orders/serviceDetails";
+import { OrderHeader } from "@/api/services/orders/serviceHeader";
+
+// Page Components
 import Pagination from "../../pagination/pagination";
+
+// Utils
 import { formatPrice } from "@/utils/function/price";
 
 // INTERFACE
@@ -32,7 +42,7 @@ interface ModalProps {
 const { confirm } = Modal;
 
 // CODE
-export default function ModalViewOrder({
+export default function ModalEditOrder({
   isOpen,
   isEdit,
   isClose,
@@ -58,10 +68,10 @@ export default function ModalViewOrder({
 
       if (dataEdit?.id > 0) {
         fetchDetails(dataEdit);
-
+        
         setTimeout(() => {
-          handleFormField(dataEdit);
-        }, 500);
+            handleFormField(dataEdit);
+          }, 500);
       } else {
         setOpen(true);
       }
@@ -213,7 +223,7 @@ export default function ModalViewOrder({
         title={
           <>
             <Row className="modal-title-row" justify="start" align="middle">
-              <PiFileFill
+              <FiEdit
                 className="modal-icon"
                 style={{
                   color: "#3699FF",
@@ -221,7 +231,7 @@ export default function ModalViewOrder({
                 }}
               />
               <Typography style={{ marginLeft: 15 }}>
-                {"View Orders"}
+                {"Edit Orders"}
               </Typography>
             </Row>
           </>
@@ -280,6 +290,85 @@ export default function ModalViewOrder({
               <InputNumber placeholder="ID" />
             </Form.Item>
           </Col>
+
+          <Divider
+            className="divider-form"
+            style={{ margin: "15px 0px 10px", background: "#EBEDF3" }}
+          />
+
+          <Row justify="start" gutter={30}>
+            <Col xs={24} sm={24} md={12} lg={12} xxl={12} xl={12}>
+              <Form.Item name="payment_status" label="Payment Status">
+                <Select
+                  placeholder="Payment Status"
+                  allowClear
+                  showSearch
+                  options={[
+                    {
+                      label: "Paid ( Confirmed )",
+                      value: 1,
+                    },
+                    {
+                      label: "Pending",
+                      value: 2,
+                    },
+                    {
+                      label: "Unpaid ( Outstanding )",
+                      value: 3,
+                    },
+                    {
+                      label: "Refund",
+                      value: 4,
+                    },
+                    {
+                      label: "Cancelled",
+                      value: 5,
+                    },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={24} md={12} lg={12} xxl={12} xl={12}>
+              <Form.Item name="order_status" label="Status Order">
+                <Select
+                  placeholder="Status Order"
+                  allowClear
+                  showSearch
+                  options={[
+                    {
+                      label: "Ordered",
+                      value: 1,
+                    },
+                    {
+                      label: "On Packaging",
+                      value: 2,
+                    },
+                    {
+                      label: "On Shipping",
+                      value: 3,
+                    },
+                    {
+                      label: "Pending",
+                      value: 4,
+                    },
+                    {
+                      label: "Completed ( Closed )",
+                      value: 5,
+                    },
+                    {
+                      label: "Refunded",
+                      value: 6,
+                    },
+                    {
+                      label: "Cancelled",
+                      value: 7,
+                    },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
           <Divider
             className="divider-form"

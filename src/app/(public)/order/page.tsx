@@ -19,6 +19,7 @@ import MasterPaymentList from "@/app/components/masters/payment/payment";
 import { notifyWarning } from "@/utils/notification/notifications";
 import { orderHeaderService } from "@/api/services/orders/serviceHeader";
 import { orderDetailsService } from "@/api/services/orders/serviceDetails";
+import MasterProvince from "@/app/components/masters/region/province";
 
 // CONST
 const { confirm } = Modal;
@@ -73,6 +74,15 @@ export default function CheckoutPage() {
 
     form.setFieldsValue({
       payment_type: value.id,
+    });
+  };
+
+  // Handle Province
+  const getProvince = (value: any) => {
+    console.log(value);
+
+    form.setFieldsValue({
+      province: value.id,
     });
   };
 
@@ -266,8 +276,23 @@ export default function CheckoutPage() {
 
               <Divider
                 className="form-divider"
-                style={{ margin: "15px 0px", background: "#EBEDF3" }}
-              />
+                style={{ margin: "15px 0px", borderColor: "#EBEDF3" }}
+              >
+                {`Address`}
+              </Divider>
+
+              {/* <Form.Item
+                name="province"
+                label={<span className="text-white">Province</span>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a Province!",
+                  },
+                ]}
+              >
+                <MasterProvince getProvince={getProvince} prov="" />
+              </Form.Item> */}
 
               <Form.Item
                 name="address"

@@ -253,7 +253,7 @@ export default function EditService() {
 
       for (const file of fileList) {
         if (file.originFileObj) {
-          await imageServices.upload(
+          await imageServices.uploadService(
             file.originFileObj as File,
             Number(product_id)
           );

@@ -22,6 +22,7 @@ import ModalCategoryProduct from "@/app/components/modals/master/category/modal"
 import Pagination from "@/app/components/pagination/pagination";
 import { HiViewfinderCircle } from "react-icons/hi2";
 import ModalViewOrder from "../../modals/orders/modalView";
+import ModalEditOrder from "../../modals/orders/modalEdit";
 
 const clients: Orders[] = [
   {
@@ -226,8 +227,7 @@ export default function TableOrders() {
   // Handle Edit
   const handleEdit = (value: any) => {
     setEdit(true);
-    // setDataEdit(value);
-    // setModals(true);
+    setDataEdit(value);
   };
 
   // Handle Refresh
@@ -246,6 +246,9 @@ export default function TableOrders() {
   // Handle Close
   const handleClose = (values: any) => {
     setOrderView(false);
+    setEdit(false);
+
+    setDataEdit(null);
   };
 
   return (
@@ -277,6 +280,7 @@ export default function TableOrders() {
                   <th className="py-3 px-4 text-left">Name</th>
                   <th className="py-3 px-4 text-left">Address</th>
                   <th className="py-3 px-4 text-left">Email</th>
+                  <th className="py-3 px-4 text-left">Phone Nmber</th>
                   <th className="py-3 px-4 text-left">Date</th>
                   <th className="py-3 px-4 text-left">Payment Date</th>
                   <th className="py-3 px-4 text-left">Status</th>
@@ -314,6 +318,7 @@ export default function TableOrders() {
                     </td>
                     <td className="py-3 px-4">{items?.address}</td>
                     <td className="py-3 px-4">{items?.email}</td>
+                    <td className="py-3 px-4">{items?.phone_number}</td>
                     <td className="py-3 px-4">{items?.order_date}</td>
                     <td className="py-3 px-4">{items?.payment_date}</td>
                     <td className="py-3 px-4">
@@ -346,6 +351,12 @@ export default function TableOrders() {
 
       <ModalViewOrder
         isOpen={orderView}
+        dataEdit={dataEdit}
+        isClose={handleClose}
+      />
+
+      <ModalEditOrder
+        isOpen={edit}
         dataEdit={dataEdit}
         isClose={handleClose}
       />
