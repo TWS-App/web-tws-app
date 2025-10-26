@@ -6,13 +6,13 @@ import { ApiParams } from "@/utils/routes/routes";
 // Interface
 export interface OrderDetails {
   id?: number | undefined | null;
+  product_id?: number | undefined | null;
+  service_id?: number | undefined | null;
   header_id: number | undefined | null;
   colors: string | undefined | null;
   discount: number | undefined | null;
   price: number | undefined | null;
-  product_id: number | undefined | null;
   qty: number | undefined | null;
-  service_id: number | undefined | null;
   total: number | undefined | null;
   variants?: string | undefined | null;
 

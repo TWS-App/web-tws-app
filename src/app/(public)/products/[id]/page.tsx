@@ -37,10 +37,10 @@ export default function ProductDetail({
   // Data
   const [data, setData] = useState<Products>();
   // const product = products.find((p: any) => p.id.toString() === id);
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList] = useState<Images[]>();
 
   const [selectedImage, setSelectedImage] = useState(null);
-  const [mainImage, setMainImage] = useState(null);
+  const [mainImage, setMainImage] = useState<string | null>();
   const [selectedVar, setSelectedVar] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
@@ -98,7 +98,7 @@ export default function ProductDetail({
       const resImg: [] = await imageServices.getAll();
 
       if (resImg) {
-        const map = resImg.filter((items: Images) => {
+        const map: Images[] = resImg.filter((items: Images) => {
           console.log("Image: ", resImg, items, id);
           return items?.product_id == id;
         });
@@ -152,7 +152,7 @@ export default function ProductDetail({
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         {/* Thumbnails */}
         <div className="flex md:flex-col gap-4 col-span-2">
-          {fileList.map((img: any, i: number) => (
+          {(fileList ?? []).map((img: any, i: number) => (
             <div
               key={i}
               className="relative w-20 h-20 border rounded-md"
@@ -172,7 +172,7 @@ export default function ProductDetail({
         {/* Main Image */}
         <div className="relative col-span-6 aspect-square border hover:scale-105 transition-transform duration-500 rounded-md">
           <Image
-            src={mainImage || fileList[0]}
+            src={mainImage || "error"}
             alt={data.product_name || `img`}
             preview={false}
             className="object-contain cursor-pointer"

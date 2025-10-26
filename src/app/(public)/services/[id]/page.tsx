@@ -11,11 +11,13 @@ import { useDispatch } from "react-redux";
 import { Form, Image, Spin } from "antd";
 import { BiCart } from "react-icons/bi";
 
-// FORMATTER
+// Services
+import { Images, imageServices } from "@/api/services/image/service";
 import { Services, servicesService } from "@/api/services/service/service";
+
+// FORMATTER
 import { formatPrice } from "@/utils/function/price";
 import { addToCart } from "@/stores/cart/cart";
-import { Images, imageServices } from "@/api/services/image/service";
 
 // Services
 interface Service {
@@ -92,10 +94,10 @@ export default function ProductDetail({
 
   const [data, setData] = useState<Services>();
   // const product = products.find((p: any) => p.id.toString() === id);
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList] = useState<Images[]>();
 
   const [quantity, setQuantity] = useState(1);
-  const [mainImage, setMainImage] = useState(null);
+  const [mainImage, setMainImage] = useState<string | null>();
   const [loading, setLoading] = useState(false);
   const [loadingBtn, setLoadingBtn] = useState(false);
 
@@ -150,14 +152,14 @@ export default function ProductDetail({
       const resImg: [] = await imageServices.getAll();
 
       if (resImg) {
-        const map = resImg.filter((items: Images) => {
+        const map: Images[] = resImg.filter((items: Images) => {
           console.log("Image: ", resImg, items, id);
           return items?.service_id == id;
         });
 
         console.log("MAPPED: ", map);
         setFileList(map);
-        setMainImage(map.length > 0 ? map[0]?.url : "");
+        setMainImage(map.length > 0 ? map[0]?.url || null : null);
       } else {
         setFileList([]);
       }
@@ -203,7 +205,7 @@ export default function ProductDetail({
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         {/* Thumbnails */}
         <div className="flex md:flex-col gap-4 col-span-2">
-          {fileList.map((img: any, i: number) => (
+          {(fileList ?? []).map((img: any, i: number) => (
             <div
               key={i}
               className="relative w-20 h-20 border rounded-md"
@@ -223,7 +225,7 @@ export default function ProductDetail({
         {/* Main Image */}
         <div className="relative col-span-6 aspect-square border rounded-md">
           <Image
-            src={mainImage || fileList[0]}
+            src={mainImage || "error"}
             alt={data.service_name || `img`}
             preview={false}
             className="object-contain cursor-pointer"
