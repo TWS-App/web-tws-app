@@ -29,9 +29,16 @@ export default function Home() {
         <SparepartTWS />
         {/* <CreateSection /> */}
 
-        <ServiceTWS />
+        {/* <ServiceTWS /> */}
 
-        {/* <div className="border-b border-gray-950 m-12" /> */}
+        <div
+          className="bg-cover bg-center m-auto py-60 px-96 text-white w-full h-full"
+          style={{
+            backgroundImage: "url('/images/assets/SEMENTARA.png')",
+            width: "100%",
+            height: "100%",
+          }}
+        />
 
         {/* <MarketSection /> */}
 

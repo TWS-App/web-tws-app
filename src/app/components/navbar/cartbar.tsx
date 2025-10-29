@@ -1,14 +1,20 @@
 "use client";
 
-import { RootState } from "@/stores";
+// REACT
 import Link from "next/link";
-import { FaBars, FaShoppingCart } from "react-icons/fa";
+import { RootState } from "@/stores";
 import { useSelector } from "react-redux";
 
+// Antd Components
+import { Image } from "antd";
+import { FaBars, FaShoppingCart } from "react-icons/fa";
+
+// Interface
 interface NavbarProps {
   onToggleSidebar: () => void;
 }
 
+// CODE
 export default function Navbar({ onToggleSidebar }: NavbarProps) {
   const cartCount = useSelector((state: RootState) =>
     state.cart.items.reduce((total, item) => total + item.quantity, 0)
@@ -25,7 +31,16 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
       </button>
 
       {/* Title */}
-      <h1 className="font-bold text-lg">Yushan Store</h1>
+      <Link href="/" className="flex justify-center self-center-safe cursor-pointer">
+        <Image
+          src="/images/assets/MainLogo.png"
+          alt="Logo"
+          preview={false}
+          width={30}
+          height={30}
+        />
+        <h1 className="font-bold text-lg">Yhusan Store</h1>
+      </Link>
 
       {/* Cart */}
       <Link
@@ -35,9 +50,7 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
         <FaShoppingCart size={22} />
 
         {cartCount >= 0 && (
-          <span className="text-lg px-2 py-0.5 rounded-full">
-            {cartCount}
-          </span>
+          <span className="text-lg px-2 py-0.5 rounded-full">{cartCount}</span>
         )}
       </Link>
     </header>

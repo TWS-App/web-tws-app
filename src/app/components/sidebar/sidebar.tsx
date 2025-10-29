@@ -160,7 +160,7 @@ export default function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="p-6 text-sm text-gray-400">© 2025 Yusan Stores</div>
+        <div className="p-6 text-sm text-gray-400">© 2025 Yhusan Stores</div>
       </aside>{" "}
     </>
   );
@@ -183,7 +183,7 @@ export default function Sidebar() {
   //         ))}
   //       </ul>
   //     </nav>
-  //     <div className="p-6 text-sm text-gray-400">© 2025 Yusan Stores</div>
+  //     <div className="p-6 text-sm text-gray-400">© 2025 Yhusan Stores</div>
   //   </aside>
   // );
 }

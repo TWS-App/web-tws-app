@@ -9,7 +9,7 @@ export default function ReviewSection() {
       role: "Product Designer",
       image: "/images/reviewers/ethan.jpg",
       review:
-        "I've been using Yusan Digital for a year now and it’s made managing my devices much easier.",
+        "I've been using Yhusan Digital for a year now and it’s made managing my devices much easier.",
       rating: 5,
     },
     {

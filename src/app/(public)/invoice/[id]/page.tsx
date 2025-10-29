@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/stores";
 
 // Antd Components
+import { Image } from "antd";
 import { BiHome, BiPrinter } from "react-icons/bi";
 
 // Service
@@ -19,6 +20,7 @@ import {
 // Utils
 import { formatPrice } from "@/utils/function/price";
 
+// CODE
 export default function InvoicePage() {
   // ID
   const { id } = useParams();
@@ -90,7 +92,19 @@ export default function InvoicePage() {
       <div className="max-w-4xl mx-auto border border-gray-300 p-10 rounded-lg shadow-md">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Yusan Store</h1>
+          <div className="flex justify-center">
+            <Image
+              src="/images/assets/MainLogo.png"
+              alt="Logo"
+              preview={false}
+              width={30}
+              height={30}
+              style={{
+                background: "#03a9f4"
+              }}
+            />
+            <h1 className="text-3xl font-bold">Yhusan Store</h1>
+          </div>
 
           <div className="text-right">
             <p className="text-lg font-semibold">Invoice #{id}</p>
@@ -103,9 +117,9 @@ export default function InvoicePage() {
         {/* Buyer Info */}
         <div className="mb-6">
           <h2 className="font-semibold mb-2">Buyer Information</h2>
-          <p>{data?.email || " - "}</p>
-          <p>{data?.customer_name}</p>
-          <p>{data?.address}</p>
+          <p>{`Name: ${data?.customer_name}`}</p>
+          <p>{`Email: ${data?.email || " - "}`}</p>
+          <p>{`Address: ${data?.address}`}</p>
 
           <p>Payment: {data?.payment_type || " - "}</p>
         </div>
