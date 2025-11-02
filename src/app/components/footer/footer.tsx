@@ -41,11 +41,10 @@ export default function HomeFooter() {
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-8 xl:grid-cols-8 bg-white py-10 px-6  md:px-16 gap-6 border-t border-gray-200">
         {/* Brand Column */}
         <div className="col-span-2 text-center sm:text-left">
-          <h2 className="text-lg font-bold">BRAND NAME</h2>
-          <p className="text-sm text-gray-600 mb-3">Enter Your Slogan Here</p>
+          <h2 className="text-lg font-bold">YHUSAN DIGITAL</h2>
+          <p className="text-sm text-gray-600 mb-3">Make Your Audio Great Again</p>
           <p className="text-sm text-gray-500">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do
-            eiusmod tempor.
+            Follow semua akun Media Sosial Kita di bawah ini untuk informasi seputar TWS Audio lainnya.
           </p>
 
           <div className="flex gap-3 mt-4">
@@ -160,10 +159,10 @@ export default function HomeFooter() {
         <div className="col-span-1">
           <h3 className="text-lg font-semibold mb-3">Contact</h3>
           <p className="text-sm text-gray-600">Call:</p>
-          <span className="font-semibold">+0124 456 789 00</span>
+          <span className="font-semibold">0821-2995-1421</span>
 
           <p className="text-sm text-gray-600">Email:</p>
-          <span className="font-semibold">user@example.com</span>
+          <span className="font-semibold">yhusansanjaya@gmail.com</span>
         </div>
 
         <div className="col-span-2 relative w-full pb-[56.25%] h-0 overflow-hidden rounded-lg shadow-lg">
@@ -196,7 +195,7 @@ export default function HomeFooter() {
           </a>
         </div>
         <p className="mt-2 text-xs">
-          &copy; 2025 Example Test. All images are for demo purposes only.
+          &copy; 2025 Digital Versatilities.
         </p>
       </div>
     </footer>

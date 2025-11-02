@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 
 // Antd Components
-import { Modal, Spin, Tooltip } from "antd";
+import { Modal, Spin, Tabs, Tooltip } from "antd";
 
 // Services
 import {
@@ -15,14 +15,16 @@ import {
 // Antd Components
 import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 import { BiPlus } from "react-icons/bi";
+import { HiViewfinderCircle } from "react-icons/hi2";
+
+// Utils
 import { Orders } from "./types/types";
 
 // Page Components
-import ModalCategoryProduct from "@/app/components/modals/master/category/modal";
 import Pagination from "@/app/components/pagination/pagination";
-import { HiViewfinderCircle } from "react-icons/hi2";
 import ModalViewOrder from "../../modals/orders/modalView";
 import ModalEditOrder from "../../modals/orders/modalEdit";
+import ModalCategoryProduct from "@/app/components/modals/master/category/modal";
 
 const clients: Orders[] = [
   {
@@ -230,6 +232,13 @@ export default function TableOrders() {
     setDataEdit(value);
   };
 
+  // ON CHANGE
+  const onChangeTabs = (values: any) => {
+    console.log(values);
+
+    fetchData()
+  };
+
   // Handle Refresh
   const handleRefresh = () => {
     fetchData();
@@ -263,91 +272,203 @@ export default function TableOrders() {
         </button>
       </div>
 
-      <div className="relative min-h-[200px]">
-        {loading ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm rounded-lg">
-            <Spin size="large" />
-          </div>
-        ) : data.length === 0 ? (
-          <div className="text-center py-10 text-gray-400">No data found.</div>
-        ) : (
-          <div className="w-full">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-700 text-gray-300">
-                <tr>
-                  <th className="py-3 px-4 text-center">Actions</th>
-                  <th className="py-3 px-4 text-left">Order No.</th>
-                  <th className="py-3 px-4 text-left">Name</th>
-                  <th className="py-3 px-4 text-left">Address</th>
-                  <th className="py-3 px-4 text-left">Email</th>
-                  <th className="py-3 px-4 text-left">Phone Nmber</th>
-                  <th className="py-3 px-4 text-left">Date</th>
-                  <th className="py-3 px-4 text-left">Payment Date</th>
-                  <th className="py-3 px-4 text-left">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((items) => (
-                  <tr
-                    key={items.id}
-                    className="border-b border-gray-700 hover:bg-gray-700/50"
-                  >
-                    <td className="py-3 px-4 text-center flex justify-center gap-3">
-                      <button
-                        onClick={() => handleEdit(items)}
-                        className="text-blue-400 hover:text-blue-600 cursor-pointer"
-                      >
-                        <Tooltip title="Edit Orders">
-                          <FiEdit size={16} />
-                        </Tooltip>
-                      </button>
-                      <button
-                        onClick={() => handleView(items)}
-                        className="text-green-400 hover:text-green-600 cursor-pointer"
-                      >
-                        <Tooltip title="View Orders">
-                          <HiViewfinderCircle size={20} />
-                        </Tooltip>
-                      </button>
-                    </td>
-                    <td className="py-3 px-4">
-                      <p className="font-bold">{items?.order_number}</p>
-                    </td>
-                    <td className="py-3 px-4">
-                      <p className="font-semibold">{items?.customer_name}</p>
-                    </td>
-                    <td className="py-3 px-4">{items?.address}</td>
-                    <td className="py-3 px-4">{items?.email}</td>
-                    <td className="py-3 px-4">{items?.phone_number}</td>
-                    <td className="py-3 px-4">{items?.order_date}</td>
-                    <td className="py-3 px-4">{items?.payment_date}</td>
-                    <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-1 rounded font-semibold ${
-                          items?.status_order === "Delivered"
-                            ? "bg-green-600 text-white"
-                            : items?.status_order === "On Shipping"
-                            ? "bg-orange-500 text-white"
-                            : items?.status_order === "Pending"
-                            ? "bg-sky-300 text-black"
-                            : "bg-red-600 text-white"
-                        }`}
-                      >
-                        {items?.status_order}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <Pagination
-              data={data}
-              loading={loading}
-              totalPages={data?.length}
-            />
-          </div>
-        )}
-      </div>
+      <Tabs
+        type="card"
+        onChange={onChangeTabs}
+        defaultActiveKey="product"
+        items={[
+          {
+            key: "product",
+            label: "Product",
+            children: (
+              <div className="relative min-h-[200px]">
+                {loading ? (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm rounded-lg">
+                    <Spin size="large" />
+                  </div>
+                ) : data.length === 0 ? (
+                  <div className="text-center py-10 text-gray-400">
+                    No data found.
+                  </div>
+                ) : (
+                  <div className="w-full">
+                    <table className="w-full text-sm">
+                      <thead className="bg-gray-700 text-gray-300">
+                        <tr>
+                          <th className="py-3 px-4 text-center">Actions</th>
+                          <th className="py-3 px-4 text-left">Order No.</th>
+                          <th className="py-3 px-4 text-left">Name</th>
+                          <th className="py-3 px-4 text-left">Address</th>
+                          <th className="py-3 px-4 text-left">Email</th>
+                          <th className="py-3 px-4 text-left">Phone Nmber</th>
+                          <th className="py-3 px-4 text-left">Date</th>
+                          <th className="py-3 px-4 text-left">Payment Date</th>
+                          <th className="py-3 px-4 text-left">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.map((items) => (
+                          <tr
+                            key={items.id}
+                            className="border-b border-gray-700 hover:bg-gray-700/50"
+                          >
+                            <td className="py-3 px-4 text-center flex justify-center gap-3">
+                              <button
+                                onClick={() => handleEdit(items)}
+                                className="text-blue-400 hover:text-blue-600 cursor-pointer"
+                              >
+                                <Tooltip title="Edit Orders">
+                                  <FiEdit size={16} />
+                                </Tooltip>
+                              </button>
+                              <button
+                                onClick={() => handleView(items)}
+                                className="text-green-400 hover:text-green-600 cursor-pointer"
+                              >
+                                <Tooltip title="View Orders">
+                                  <HiViewfinderCircle size={20} />
+                                </Tooltip>
+                              </button>
+                            </td>
+                            <td className="py-3 px-4">
+                              <p className="font-bold">{items?.order_number}</p>
+                            </td>
+                            <td className="py-3 px-4">
+                              <p className="font-semibold">
+                                {items?.customer_name}
+                              </p>
+                            </td>
+                            <td className="py-3 px-4">{items?.address}</td>
+                            <td className="py-3 px-4">{items?.email}</td>
+                            <td className="py-3 px-4">{items?.phone_number}</td>
+                            <td className="py-3 px-4">{items?.order_date}</td>
+                            <td className="py-3 px-4">{items?.payment_date}</td>
+                            <td className="py-3 px-4">
+                              <span
+                                className={`px-2 py-1 rounded font-semibold ${
+                                  items?.status_order === "Delivered"
+                                    ? "bg-green-600 text-white"
+                                    : items?.status_order === "On Shipping"
+                                    ? "bg-orange-500 text-white"
+                                    : items?.status_order === "Pending"
+                                    ? "bg-sky-300 text-black"
+                                    : "bg-red-600 text-white"
+                                }`}
+                              >
+                                {items?.status_order}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <Pagination
+                      data={data}
+                      loading={loading}
+                      totalPages={data?.length}
+                    />
+                  </div>
+                )}
+              </div>
+            ),
+          },
+          {
+            key: "service",
+            label: "Service",
+            children: (
+              <div className="relative min-h-[200px]">
+                {loading ? (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm rounded-lg">
+                    <Spin size="large" />
+                  </div>
+                ) : data.length === 0 ? (
+                  <div className="text-center py-10 text-gray-400">
+                    No data found.
+                  </div>
+                ) : (
+                  <div className="w-full">
+                    <table className="w-full text-sm">
+                      <thead className="bg-gray-700 text-gray-300">
+                        <tr>
+                          <th className="py-3 px-4 text-center">Actions</th>
+                          <th className="py-3 px-4 text-left">Order No.</th>
+                          <th className="py-3 px-4 text-left">Name</th>
+                          <th className="py-3 px-4 text-left">Address</th>
+                          <th className="py-3 px-4 text-left">Email</th>
+                          <th className="py-3 px-4 text-left">Phone Nmber</th>
+                          <th className="py-3 px-4 text-left">Date</th>
+                          <th className="py-3 px-4 text-left">Payment Date</th>
+                          <th className="py-3 px-4 text-left">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.map((items) => (
+                          <tr
+                            key={items.id}
+                            className="border-b border-gray-700 hover:bg-gray-700/50"
+                          >
+                            <td className="py-3 px-4 text-center flex justify-center gap-3">
+                              <button
+                                onClick={() => handleEdit(items)}
+                                className="text-blue-400 hover:text-blue-600 cursor-pointer"
+                              >
+                                <Tooltip title="Edit Orders">
+                                  <FiEdit size={16} />
+                                </Tooltip>
+                              </button>
+                              <button
+                                onClick={() => handleView(items)}
+                                className="text-green-400 hover:text-green-600 cursor-pointer"
+                              >
+                                <Tooltip title="View Orders">
+                                  <HiViewfinderCircle size={20} />
+                                </Tooltip>
+                              </button>
+                            </td>
+                            <td className="py-3 px-4">
+                              <p className="font-bold">{items?.order_number}</p>
+                            </td>
+                            <td className="py-3 px-4">
+                              <p className="font-semibold">
+                                {items?.customer_name}
+                              </p>
+                            </td>
+                            <td className="py-3 px-4">{items?.address}</td>
+                            <td className="py-3 px-4">{items?.email}</td>
+                            <td className="py-3 px-4">{items?.phone_number}</td>
+                            <td className="py-3 px-4">{items?.order_date}</td>
+                            <td className="py-3 px-4">{items?.payment_date}</td>
+                            <td className="py-3 px-4">
+                              <span
+                                className={`px-2 py-1 rounded font-semibold ${
+                                  items?.status_order === "Delivered"
+                                    ? "bg-green-600 text-white"
+                                    : items?.status_order === "On Shipping"
+                                    ? "bg-orange-500 text-white"
+                                    : items?.status_order === "Pending"
+                                    ? "bg-sky-300 text-black"
+                                    : "bg-red-600 text-white"
+                                }`}
+                              >
+                                {items?.status_order}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <Pagination
+                      data={data}
+                      loading={loading}
+                      totalPages={data?.length}
+                    />
+                  </div>
+                )}
+              </div>
+            ),
+          },
+        ]}
+      />
 
       <ModalViewOrder
         isOpen={orderView}
@@ -355,11 +476,7 @@ export default function TableOrders() {
         isClose={handleClose}
       />
 
-      <ModalEditOrder
-        isOpen={edit}
-        dataEdit={dataEdit}
-        isClose={handleClose}
-      />
+      <ModalEditOrder isOpen={edit} dataEdit={dataEdit} isClose={handleClose} />
     </div>
   );
 }

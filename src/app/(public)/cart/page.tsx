@@ -21,14 +21,22 @@ import { formatPrice } from "@/utils/function/price";
 
 // CODE
 export default function CartPage() {
+  // STATE
   const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
+  // SUBTOTAL
   const subtotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
 
+  const discount = cartItems.reduce(
+    (current, init) => current + (init.discount || 0) * init.quantity,
+    0
+  );
+
+  // Handle QTY
   const handleQuantityChange = (
     id: number,
     variant: string,
@@ -57,7 +65,6 @@ export default function CartPage() {
               key={`${item.id}-${item.variant}`}
               className="flex items-center flex-row justify-evenly border-b pb-6 bg-gray-800 p-4 rounded-lg shadow-sm"
             >
-              {/* Product Info */}
               <div className="flex items-center gap-6 basis-2/5">
                 <Image
                   src={item?.image || "error"}
@@ -67,11 +74,26 @@ export default function CartPage() {
                   height={100}
                   preview={false}
                 />
+
                 <div>
                   <h2 className="font-semibold text-lg">{item.name}</h2>
+                  {item.color ? (
+                    <p className="text-sm text-gray-500">Color: {item.color}</p>
+                  ) : (
+                    ""
+                  )}
+
                   {item.variant ? (
                     <p className="text-sm text-gray-500">
                       Variants: {item.variant}
+                    </p>
+                  ) : (
+                    ""
+                  )}
+
+                  {item.version ? (
+                    <p className="text-sm text-gray-500">
+                      Version: {item?.version}
                     </p>
                   ) : (
                     ""
@@ -149,6 +171,16 @@ export default function CartPage() {
               <div className="flex justify-between text-black text-lg font-semibold">
                 <span>Subtotal</span>
                 <span>{formatPrice(subtotal)}</span>
+              </div>
+
+              <div className="flex justify-between text-black text-lg font-semibold">
+                <span>Discount</span>
+                <span>{formatPrice(discount)}</span>
+              </div>
+
+              <div className="flex justify-between text-black text-lg font-semibold">
+                <span>TOTAL</span>
+                <span>{formatPrice(subtotal - discount)}</span>
               </div>
 
               <Link href="/order">

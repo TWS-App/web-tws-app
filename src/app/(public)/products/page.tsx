@@ -4,10 +4,10 @@
 import { useEffect, useState } from "react";
 
 // Services
+import { imageServices } from "@/api/services/image/service";
 import api from "@/api/context/config";
 import { productServices } from "@/api/services/product/product";
 import { categoryProductServices } from "@/api/services/master/category";
-import { imageServices } from "@/api/services/image/service";
 
 // Page Components
 import ProductCard from "@/app/components/products/ProductCard";
@@ -59,7 +59,7 @@ export default function ProductsPage() {
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
-    pageSize: 5,
+    pageSize: 10,
     next: null,
     previous: null,
   });
@@ -86,22 +86,17 @@ export default function ProductsPage() {
       const resultCat = await categoryProductServices.getAll();
       const resultImg = await imageServices.getAll();
 
-      console.log("Fetch res: ", result, resultCat, resultImg);
+      console.log("Fetch res: ", result, resultCat);
 
       if (result?.results?.length > 0) {
+        // setProduct(result.results);
         setDataProduct(result.results);
       } else {
+        // setProduct([]);
         setDataProduct([]);
       }
 
       if (resultCat?.length) {
-        // let arr = [
-        //   {
-        //     id: 0,
-        //     category_name: "ALL",
-        //   },
-        // ];
-
         resultCat.push({
           id: 0,
           category_name: "ALL",
@@ -184,6 +179,55 @@ export default function ProductsPage() {
               <ProductCard key={item.id} item={item} />
             ))}
           </div>
+        </div>
+
+        <div className="flex justify-center items-center gap-2 m-auto">
+          <button
+            onClick={() => {
+              // setPage((prev) => Math.max(prev - 1, 1));
+
+              fetchData({
+                linkUrl: pagination.previous || null,
+              });
+            }}
+            disabled={!pagination.previous}
+            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
+          >
+            Prev
+          </button>
+
+          {[...Array(1)].map((_, i) => (
+            <button
+              key={i + 1}
+              // onClick={() => {
+              //   onChange?.({
+              //     page: i + 1,
+              //     pageSize: pagination.pageSize || 10,
+              //   });
+              // }}
+              className={`px-3 py-1 rounded cursor-pointer transition ${
+                pagination.page === i + 1
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-700 hover:bg-gray-600"
+              }`}
+            >
+              {pagination.page}
+            </button>
+          ))}
+
+          <button
+            onClick={() => {
+              // setPage((prev) => Math.min(prev + 1, totalPages));
+
+              fetchData({
+                linkUrl: pagination.next || null,
+              });
+            }}
+            disabled={!pagination.next}
+            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
+          >
+            Next
+          </button>
         </div>
       </section>
     </>

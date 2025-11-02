@@ -48,6 +48,16 @@ export const orderDetailsService = {
     }
   },
 
+  async getDetailById(id: number) {
+    try {
+      const response = await api.get(`/transaction/details/header/${id}`);
+
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  },
+
   async create(data: OrderDetails) {
     try {
       const response = await api.post("/transaction/details", data);

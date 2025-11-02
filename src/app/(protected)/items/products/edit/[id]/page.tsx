@@ -27,6 +27,7 @@ import {
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
 import {
   PiArrowsClockwiseBold,
+  PiCheckCircle,
   PiFileFill,
   PiPlus,
   PiPlusCircle,
@@ -103,12 +104,13 @@ export default function EditProduct() {
       console.log("Edit: ", result);
 
       if (!result) {
-        redirect("/error/not-found"); // ⛔ ke custom 404
+        redirect("/error/not-found");
       } else {
         setData(result);
 
         form.setFieldsValue({
-          category: result?.category,
+          category: result?.category_name,
+          category_id: result?.category_id,
           code: result?.code,
           colors: result?.colors?.length > 0 ? result.colors : [],
           variants: result?.variants?.length > 0 ? result.variants : [],
@@ -135,11 +137,11 @@ export default function EditProduct() {
 
       if (resImg) {
         const map = resImg.filter((items: any) => {
-          console.log("Image: ", resImg, items, id);
+          // console.log("Image: ", resImg, items, id);
           return items?.product_id == id;
         });
 
-        console.log("MAPPED: ", map);
+        // console.log("MAPPED: ", map);
         setFileList(map);
       } else {
         setFileList([]);
@@ -159,9 +161,11 @@ export default function EditProduct() {
 
   // Handle Submit
   const handleSubmit = async (values: any) => {
+    const _id = values?.id ? values.id : id;
+
     try {
       const body: Products = {
-        category: values?.category_id,
+        category: values?.category_id || data?.category,
         code: values?.code,
         description: values?.description,
         details: values?.details,
@@ -173,9 +177,10 @@ export default function EditProduct() {
         product_name: values?.product_name,
         variants: values?.variants?.length > 0 ? values.variants : [],
         colors: values?.colors?.length > 0 ? values.colors : [],
+        versions: values?.versions?.length > 0 ? values.versions : [],
       };
 
-      const result = await productServices.update(values.id, body);
+      const result = await productServices.update(_id, body);
 
       console.log("Update Result: ", result);
 
@@ -290,7 +295,7 @@ export default function EditProduct() {
     <div className="p-6">
       <Breadcrumb
         items={["Items", "Product", "Edit"]}
-        path={["/items", "/items/product", "/items/product/edit"]}
+        path={["/items", "/items/products", "/items/products/edit"]}
       />
 
       <h1 className="text-2xl font-semibold mb-6">Edit Product</h1>
@@ -490,7 +495,7 @@ export default function EditProduct() {
                               rules={[
                                 {
                                   required: true,
-                                  message: "Please input color name!",
+                                  message: "Please input variants name!",
                                 },
                               ]}
                             >
@@ -620,7 +625,7 @@ export default function EditProduct() {
               loading={loadingBtn}
               htmlType="submit"
               type="primary"
-              icon={<PiPlusCircle />}
+              icon={<PiCheckCircle />}
             >
               Update
             </Button>

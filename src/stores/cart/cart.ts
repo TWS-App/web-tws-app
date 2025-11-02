@@ -5,9 +5,12 @@ interface CartItem {
   name: string | undefined | null;
   price: number;
   quantity: number;
-  variant: string | undefined | null;
+  variant?: string | undefined | null;
+  color?: string | undefined | null;
+  version?: string | undefined | null;
   image: string | undefined | null;
   type: string | undefined | null;
+  discount?: number;
 }
 
 interface CartState {

@@ -10,7 +10,7 @@ import { productServices } from "@/api/services/product/product";
 import api from "@/api/context/config";
 
 // Antd Components
-import { Spin, Tag } from "antd";
+import { Spin, Tag, Tooltip } from "antd";
 import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
 
@@ -261,7 +261,7 @@ export default function TableProducts() {
                         <p className="text-gray-400 text-xs">{items.code}</p>
                       </div>
                     </td>
-                    <td className="py-3 px-4">{items.category}</td>
+                    <td className="py-3 px-4">{items.category_name}</td>
                     <td className="py-3 px-4">
                       <div className="flex flex-wrap gap-1">
                         {items.colors?.map((color: string) => (
@@ -285,19 +285,26 @@ export default function TableProducts() {
                       {formatPrice(items.discount || 0)}
                     </td>
                     <td className="py-3 px-4">{items.date}</td>
-                    <td className="py-3 px-4 text-center flex justify-center items-center gap-3">
-                      <button
-                        onClick={() => handleEdit(items)}
-                        className="text-blue-400 hover:text-blue-600 cursor-pointer"
-                      >
-                        <FiEdit size={20} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(items)}
-                        className="text-red-400 hover:text-red-600 cursor-pointer"
-                      >
-                        <FiTrash2 size={20} />
-                      </button>
+                    <td className="m-auto">
+                      <div className="text-center flex justify-center items-center gap-3">
+                        <Tooltip title="Edit Data">
+                          <button
+                            onClick={() => handleEdit(items)}
+                            className="text-blue-400 hover:text-blue-600 cursor-pointer"
+                          >
+                            <FiEdit size={20} />
+                          </button>
+                        </Tooltip>
+
+                        <Tooltip title="Delete Data?">
+                          <button
+                            onClick={() => handleDelete(items)}
+                            className="text-red-400 hover:text-red-600 cursor-pointer"
+                          >
+                            <FiTrash2 size={20} />
+                          </button>
+                        </Tooltip>
+                      </div>
                     </td>
                   </tr>
                 ))}

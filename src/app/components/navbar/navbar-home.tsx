@@ -1,9 +1,12 @@
 "use client";
 
+// REACTS
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FiMenu, FiX } from "react-icons/fi";
+
+// ANTD Components
+import { FiMenu, FiX, FiXCircle } from "react-icons/fi";
 import {
   FaCogs,
   FaComments,
@@ -15,6 +18,7 @@ import {
 } from "react-icons/fa";
 import { PiMapPinAreaFill } from "react-icons/pi";
 
+// Menus
 const menu = [
   { icon: <FaHome />, label: "HOME", href: "/" },
   { icon: <FaCogs />, label: "PRODUCT", href: "/products" },
@@ -24,10 +28,12 @@ const menu = [
   { icon: <PiMapPinAreaFill />, label: "LOCATION", href: "/location" },
 ];
 
+// CODE
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // USE EFFECTS
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -36,6 +42,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Toogle Menu
   const toggleMenu = () => {
     setOpen(!open);
   };
@@ -51,9 +58,16 @@ export default function Navbar() {
       <nav className="hidden md:flex gap-8 text-sm items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex justify-center items-center gap-3">
-          <Image src="/images/assets/MainLogo.png" alt="Logo" width={50} height={40} />
+          <Image
+            src="/images/assets/MainLogo.png"
+            alt="Logo"
+            width={50}
+            height={40}
+          />
 
-          <p className="font-extrabold text-3xl">YHUSAN DIGITAL</p>
+          <p className="text-[clamp(0.9rem,2vw,1.3rem)] max-w-md mx-auto md:mx-0">
+            YHUSAN DIGITAL
+          </p>
         </Link>
 
         {/* Menu */}
@@ -143,16 +157,17 @@ export default function Navbar() {
           <span className="text-xl font-bold text-primary ">Menu</span>
           <button
             onClick={() => setOpen(false)}
-            className="text-xl hover:text-red-500 transition-colors duration-200"
+            className="text-xl text-red-600 hover:text-red-300 transition-colors duration-200"
           >
-            <FiX
+            <FiXCircle
               style={{
                 cursor: "pointer",
               }}
             />
           </button>
         </div>
-        <nav className="flex flex-col p-4 text-blue-500 bg-amber-50 font-medium space-y-4">
+
+        <nav className="flex flex-col p-4 h-[100rem] text-blue-500 bg-amber-50 font-medium space-y-4">
           <Link
             href="#"
             className="text-custom-blue hover:text-purple-600 transition-colors duration-200"
@@ -160,13 +175,13 @@ export default function Navbar() {
             Home
           </Link>
           <Link
-            href="#"
+            href="/products"
             className="text-custom-blue hover:text-purple-600 transition-colors duration-200"
           >
             Product
           </Link>
           <Link
-            href="#"
+            href="/services"
             className="text-custom-blue hover:text-purple-600 transition-colors duration-200"
           >
             Services
@@ -175,7 +190,7 @@ export default function Navbar() {
             href="#"
             className="text-custom-blue hover:text-purple-600 transition-colors duration-200"
           >
-            Collaborations
+            Location
           </Link>
           <Link
             href="#"

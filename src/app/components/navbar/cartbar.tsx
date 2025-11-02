@@ -16,6 +16,7 @@ interface NavbarProps {
 
 // CODE
 export default function Navbar({ onToggleSidebar }: NavbarProps) {
+  // STATE
   const cartCount = useSelector((state: RootState) =>
     state.cart.items.reduce((total, item) => total + item.quantity, 0)
   );

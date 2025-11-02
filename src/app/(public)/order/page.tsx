@@ -54,8 +54,14 @@ export default function CheckoutPage() {
     review: false,
   });
   const [step, setStep] = useState(1);
+
+  // TOTALING
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  const discount = cart.reduce(
+    (current, init) => current + (init.discount || 0) * init.quantity,
     0
   );
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -180,8 +186,8 @@ export default function CheckoutPage() {
       if (res?.id) {
         for (let i = 0; i < cart.length; i++) {
           const details = {
-            colors: cart[i].variant,
-            discount: 0,
+            colors: cart[i].color,
+            discount: cart[i]?.discount,
             header_id: res?.id,
             price: cart[i].price,
             product_id: cart[i].type === "product" ? cart[i].id : null,
@@ -529,12 +535,35 @@ export default function CheckoutPage() {
                   />
                   <div>
                     <p>
-                      {item.name} / {item.variant}
+                      {item.name} / {item?.color}
                     </p>
-                    <p className="text-sm text-gray-500">Qty {item.quantity}</p>
+                    {item?.variant ? (
+                      <p className="text-sm text-gray-500">
+                        Variants: {item.variant}
+                      </p>
+                    ) : null}
+                    {item?.version ? (
+                      <p className="text-sm text-gray-500">
+                        Versions: {item.version}
+                      </p>
+                    ) : null}
+                    <p className="text-sm text-gray-500">
+                      Quantity: {item.quantity}
+                    </p>
                   </div>
                 </div>
-                <p>{formatPrice(item.price * item.quantity)}</p>
+
+                {item.discount && (
+                  <span className="line-through mr-3">
+                    {formatPrice(Number(item.price))}
+                  </span>
+                )}
+                <p>
+                  {formatPrice(
+                    item.price * item.quantity -
+                      (item.discount || 0) * item.quantity
+                  )}
+                </p>
               </div>
             ))}
           </div>
@@ -553,6 +582,12 @@ export default function CheckoutPage() {
             <span>Tax</span>
             <span>$0.00</span>
           </div> */}
+            <div className="flex justify-between font-semibold text-lg">
+              <span>Discount</span>
+              <span>{formatPrice(discount)}</span>
+            </div>
+
+            <div className="border-t border-gray-700 my-4" />
 
             <div className="flex justify-between font-semibold text-lg">
               <span>Total</span>

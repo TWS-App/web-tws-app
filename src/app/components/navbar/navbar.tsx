@@ -1,18 +1,25 @@
 "use client";
 
-import { useTheme } from "@/context/themes/ThemeContext";
-import { useRouter } from "next/navigation";
+// Reacts
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+
+// Context
+import { useTheme } from "@/context/themes/ThemeContext";
+
+// ICONS
 import { BiBell, BiSearch } from "react-icons/bi";
 import { FaCog, FaSignOutAlt } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
 import { FiMoon, FiSun } from "react-icons/fi";
 
+// CODE
 export default function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
 
+  // STATE
   const [dark, setDark] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);

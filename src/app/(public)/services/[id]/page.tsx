@@ -244,7 +244,11 @@ export default function ProductDetail({
                 {formatPrice(Number(data.price))}
               </span>
             )}
-            <span className="text-2xl font-semibold text-black">
+            <span
+              className={`text-3xl font-bold ${
+                data?.discount ? "text-red-500" : "text-black"
+              }`}
+            >
               {formatPrice(
                 data?.discount
                   ? Number(data?.price) - Number(data.discount)
@@ -264,7 +268,17 @@ export default function ProductDetail({
             ))} */}
           </ul>
 
-          <div className="mb-4">
+          <p className="text-black mb-2">
+            Punya pertanyaan? Langsung hubungi kami:
+          </p>
+
+          <Image
+            src="/images/assets/SEMENTARA.png"
+            alt="Contact"
+            className="img"
+          />
+
+          {/* <div className="mb-4">
             <h3 className="font-semibold mb-2 text-black">Quantity:</h3>
             <input
               type="number"
@@ -273,7 +287,7 @@ export default function ProductDetail({
               onChange={(e) => setQuantity(Number(e.target.value))}
               className="w-50 px-3 py-2 border rounded text-black"
             />
-          </div>
+          </div> */}
 
           {/* <div className="flex items-center gap-3 mb-4">
             <button
@@ -293,12 +307,12 @@ export default function ProductDetail({
             </button>
           </div> */}
 
-          <button
+          {/* <button
             onClick={handleAdd}
             className="flex items-center gap-2 bg-blue-600 px-3 py-2 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer"
           >
             <BiCart /> Add to Cart
-          </button>
+          </button> */}
         </div>
       </div>
     </section>

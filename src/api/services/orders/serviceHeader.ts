@@ -9,25 +9,18 @@ export interface OrderHeader {
   id?: number | undefined | null;
   order_date?: string | undefined | null;
   order_number?: string | undefined | null;
-  payment_date?: string | undefined | null;
   status_order?: string | undefined | null;
   shipment?: number | undefined | null;
   address: string | undefined | null;
   customer_name: string | undefined | null;
   email: string | undefined | null;
   payment_status: number | undefined | null;
+  payment_name?: number | undefined | null;
+  payment_date?: string | undefined | null;
   payment_type: number | undefined | null;
   phone_number: string | undefined | null;
   total_harga: number | undefined | null;
   total_order: number | undefined | null;
-  //   address: "Bayongbong";
-  //   customer_name: "Ujang";
-  //   email: "ujang@gmail.com";
-  //   payment_status: 0;
-  //   payment_type: 1;
-  //   phone_number: "62815638244";
-  //   total_harga: 299000;
-  //   total_order: 1;
 }
 
 // CODE

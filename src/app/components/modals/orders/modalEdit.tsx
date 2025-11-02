@@ -15,19 +15,23 @@ import {
   Spin,
   Typography,
 } from "antd";
-import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
+import { IoCheckmark, IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
 import { FiEdit } from "react-icons/fi";
-import { PiFileFill } from "react-icons/pi";
+import { PiCheckCircle, PiFileFill } from "react-icons/pi";
 
 // Service
 import { orderDetailsService } from "@/api/services/orders/serviceDetails";
-import { OrderHeader } from "@/api/services/orders/serviceHeader";
+import {
+  OrderHeader,
+  orderHeaderService,
+} from "@/api/services/orders/serviceHeader";
 
 // Page Components
 import Pagination from "../../pagination/pagination";
 
 // Utils
 import { formatPrice } from "@/utils/function/price";
+import MasterOrderStatus from "../../masters/status/orderStatus";
 
 // INTERFACE
 interface ModalProps {
@@ -68,10 +72,11 @@ export default function ModalEditOrder({
 
       if (dataEdit?.id > 0) {
         fetchDetails(dataEdit);
-        
+        setData(dataEdit);
+
         setTimeout(() => {
-            handleFormField(dataEdit);
-          }, 500);
+          handleFormField(dataEdit);
+        }, 500);
       } else {
         setOpen(true);
       }
@@ -86,11 +91,12 @@ export default function ModalEditOrder({
     setLoading(true);
 
     try {
+      const res = await orderHeaderService.getById(dataEdit?.id);
       const result = await orderDetailsService.getAll();
 
       console.log("Fetch res: ", result);
 
-      setData(result);
+      // setData(result);
 
       if (result?.length > 0) {
         const filter = result.filter((items: any) => {
@@ -117,6 +123,9 @@ export default function ModalEditOrder({
       email: value?.email,
       address: value.address,
       id: value?.id,
+      order_number: value?.order_number || "YHSN2510300001",
+      total_harga: value?.total_harga,
+      total_order: value?.total_order,
     });
   };
 
@@ -141,9 +150,7 @@ export default function ModalEditOrder({
 
     confirm({
       className: "modals-confirm",
-      title: `Are you sure want to ${
-        isEdit ? "Update" : "Create a new Data"
-      } Master Payment ${_data.customer_name}?`,
+      title: `Are you sure want to Update Order?`,
       okText: "Confirm",
       cancelText: "Cancel",
       centered: true,
@@ -175,6 +182,15 @@ export default function ModalEditOrder({
     });
   };
 
+  // Get Status Order
+  const getStatusOrder = (value: any) => {
+    console.log(value);
+
+    form.setFieldsValue({
+      status_order: value.id,
+    });
+  };
+
   // Handle Close
   const handleClose = () => {
     form.resetFields();
@@ -186,34 +202,20 @@ export default function ModalEditOrder({
 
   // Handle Submit
   const handleSubmit = async (value: any) => {
-    if (isEdit) {
-      try {
-        const body = value;
-        const id = Number(data?.id);
-        delete body["id"];
+    try {
+      const body = value;
+      const id = Number(data?.id);
+      delete body["id"];
 
-        const result = await orderDetailsService.update(id, body);
+      const result = await orderHeaderService.update(id, body);
 
-        console.log("Update res: ", result);
+      console.log("Update res: ", result);
 
-        handleClose();
-        onRefresh(true);
-      } catch (err) {
-      } finally {
-        setLoadingBtn(false);
-      }
-    } else {
-      try {
-        const result = await orderDetailsService.create(value);
-
-        console.log("Create res: ", result);
-
-        handleClose();
-        onRefresh(true);
-      } catch (err) {
-      } finally {
-        setLoadingBtn(false);
-      }
+      handleClose();
+      onRefresh(true);
+    } catch (err) {
+    } finally {
+      setLoadingBtn(false);
     }
   };
 
@@ -281,6 +283,35 @@ export default function ModalEditOrder({
             </Col>
           </Row>
 
+          <Row justify="start" gutter={30}>
+            <Col xs={24} sm={24} md={8} lg={8} xxl={8} xl={8}>
+              <Form.Item name="total_order" label="Total Items">
+                <InputNumber
+                  readOnly
+                  formatter={(value: any) => {
+                    return formatPrice(value);
+                  }}
+                  placeholder="Totam Items"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={24} md={8} lg={8} xxl={8} xl={8}>
+              <Form.Item name="total_harga" label="Total Price">
+                <InputNumber
+                  placeholder="Total Price"
+                  readOnly
+                  addonBefore={"Rp"}
+                  formatter={(value: any) => {
+                    return formatPrice(value);
+                  }}
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
           <Col span={24}>
             <Form.Item name="address" label="Address">
               <Input.TextArea showCount placeholder="Address" rows={2} />
@@ -330,8 +361,8 @@ export default function ModalEditOrder({
             </Col>
 
             <Col xs={24} sm={24} md={12} lg={12} xxl={12} xl={12}>
-              <Form.Item name="order_status" label="Status Order">
-                <Select
+              <Form.Item name="status_order" label="Status Order">
+                {/* <Select
                   placeholder="Status Order"
                   allowClear
                   showSearch
@@ -365,6 +396,10 @@ export default function ModalEditOrder({
                       value: 7,
                     },
                   ]}
+                /> */}
+                <MasterOrderStatus
+                  getStatusOrder={getStatusOrder}
+                  status={data?.status_order || ""}
                 />
               </Form.Item>
             </Col>
@@ -447,13 +482,22 @@ export default function ModalEditOrder({
 
           <Row justify="end" align="middle">
             <Button
+              icon={<PiCheckCircle />}
+              variant="solid"
+              color="green"
+              htmlType="submit"
+              style={{
+                marginRight: 15,
+              }}
+            >
+              {`Update`}
+            </Button>
+
+            <Button
               icon={<IoCloseCircle />}
               type="primary"
               danger
               onClick={handleClose}
-              style={{
-                marginRight: 15,
-              }}
             >
               {`Close`}
             </Button>

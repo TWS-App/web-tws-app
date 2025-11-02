@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 
 // Antd Components
-import { Form, Image, Spin } from "antd";
+import { Button, Form, Image, InputNumber, Radio, Row, Spin } from "antd";
 
 // Service
 import { Images, imageServices } from "@/api/services/image/service";
@@ -21,6 +21,7 @@ import { BiCart } from "react-icons/bi";
 
 // FORMATTER
 import { formatPrice } from "@/utils/function/price";
+import { notifyWarning } from "@/utils/notification/notifications";
 
 // CODE
 export default function ProductDetail({
@@ -30,8 +31,8 @@ export default function ProductDetail({
 }) {
   // DISPATCH
   const dispatch = useDispatch();
+
   // PROPS
-  // const { id } = use(params);
   const { id } = useParams();
 
   // Data
@@ -72,20 +73,9 @@ export default function ProductDetail({
 
       setData(result);
 
-      form.setFieldsValue({
-        category: result?.category,
-        code: result?.code,
-        colors: result?.colors?.length > 0 ? result.colors : [],
-        variants: result?.variants?.length > 0 ? result.variants : [],
-        description: result?.description,
-        details: result?.details,
-        discount: result?.discount,
-        is_colors: result.is_color,
-        is_ready: result.is_ready,
-        is_variants: result.is_variants,
-        price: result.price,
-        product_name: result?.product_name,
-      });
+      setTimeout(() => {
+        handleForm(result);
+      }, 500);
     } catch (err) {
     } finally {
       setLoading(false);
@@ -112,18 +102,57 @@ export default function ProductDetail({
     } catch (error) {}
   };
 
+  // Handle Form
+  const handleForm = (values: any) => {
+    const result = values;
+
+    form.setFieldsValue({
+      category: result?.category,
+      code: result?.code,
+      colors: result?.colors?.length > 0 ? result.colors : [],
+      variants: result?.variants?.length > 0 ? result.variants : [],
+      description: result?.description,
+      details: result?.details,
+      discount: result?.discount,
+      is_colors: result.is_color,
+      is_ready: result.is_ready,
+      is_variants: result.is_variants,
+      price: result.price,
+      product_name: result?.product_name,
+    });
+  };
+
+  // If No Data Found
   if (!data) {
     return <p className="text-center mt-20">Product not found.</p>;
   }
 
+  // Loading
   if (loading) {
     <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm rounded-lg">
       <Spin size="large" />
     </div>;
   }
 
+  // On Finish
+  const onFinish = (value: any) => {
+    const _data = value;
+
+    console.log("Finish: ", _data);
+    handleAdd(_data);
+  };
+
+  // On Finish Failed
+  const onFinishFailed = (value: any) => {
+    const _data = value;
+
+    console.log("Finish: ", _data);
+    notifyWarning("Incomplete", _data.errorFields[0].errors);
+  };
+
   // Handle Add
-  const handleAdd = () => {
+  const handleAdd = (values: any) => {
+    const _data = values;
     console.log("Qty: ", quantity);
 
     dispatch(
@@ -131,12 +160,17 @@ export default function ProductDetail({
         id: Number(data?.id),
         name: data.product_name,
         price: Number(data.price),
-        variant: selectedVar,
-        quantity: quantity,
+        variant: _data?.variants,
+        color: _data?.colors,
+        quantity: _data?.qty,
         image: mainImage,
         type: "product",
+        version: _data?.version,
+        discount: data?.discount || 0,
       })
     );
+
+    form.resetFields();
   };
 
   return (
@@ -182,7 +216,7 @@ export default function ProductDetail({
 
         {/* Info */}
         <div className="col-span-4">
-          <h1 className="text-3xl font-bold text-black mb-4">
+          <h1 className="text-5xl font-bold text-black mb-4">
             {data.product_name}
           </h1>
           <div className="text-gray-500 mb-6">
@@ -191,7 +225,11 @@ export default function ProductDetail({
                 {formatPrice(Number(data.price))}
               </span>
             )}
-            <span className="text-2xl font-semibold text-black">
+            <span
+              className={`text-3xl font-bold ${
+                data?.discount ? "text-red-500" : "text-black"
+              }`}
+            >
               {formatPrice(
                 data?.discount
                   ? Number(data?.price) - Number(data.discount)
@@ -211,10 +249,48 @@ export default function ProductDetail({
             ))} */}
           </ul>
 
+          {/* <div className="mb-4">
+            <h3 className="font-semibold mb-2 text-black">Colors:</h3>
+            <div className="flex gap-2">
+              {(data?.colors ?? []).map((variant: any) => (
+                <button
+                  key={variant}
+                  onClick={() => setSelectedVar(variant)}
+                  className={`px-4 py-2 border border-black rounded ${
+                    selectedVar === variant
+                      ? "bg-gray-700 text-white hover:bg-gray-950 hover:text-shadow-amber-100"
+                      : "bg-white text-black hover:bg-blue-500 hover:text-white"
+                  } cursor-pointer`}
+                >
+                  {variant}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="mb-4">
             <h3 className="font-semibold mb-2 text-black">Variants:</h3>
             <div className="flex gap-2">
-              {(data?.colors ?? []).map((variant: any) => (
+              {(data?.variants ?? []).map((variant: any) => (
+                <button
+                  key={variant}
+                  onClick={() => setSelectedVar(variant)}
+                  className={`px-4 py-2 border border-black rounded ${
+                    selectedVar === variant
+                      ? "bg-gray-700 text-white hover:bg-gray-950 hover:text-shadow-amber-100"
+                      : "bg-white text-black hover:bg-blue-500 hover:text-white"
+                  } cursor-pointer`}
+                >
+                  {variant}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2 text-black">Versions:</h3>
+            <div className="flex gap-2">
+              {(data?.versions ?? []).map((variant: any) => (
                 <button
                   key={variant}
                   onClick={() => setSelectedVar(variant)}
@@ -240,30 +316,148 @@ export default function ProductDetail({
               className="w-50 px-3 py-2 border rounded text-black"
             />
           </div>
-          {/* <div className="flex items-center gap-3 mb-4">
-            <button
-              onClick={() => setQty(Math.max(1, qty - 1))}
-              className="px-3 py-1 border rounded bg-gray-400 hover:bg-gray-500 cursor-pointer"
-            >
-              -
-            </button>
-            <span className="px-16 py-1 items-center rounded bg-gray-400">
-              {qty}
-            </span>
-            <button
-              onClick={() => setQty(qty + 1)}
-              className="px-3 py-1 border rounded bg-gray-400 hover:bg-gray-500 cursor-pointer"
-            >
-              +
-            </button>
-          </div> */}
 
           <button
             onClick={handleAdd}
             className="flex items-center gap-2 bg-blue-600 px-3 py-2 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer"
           >
             <BiCart /> Add to Cart
-          </button>
+          </button> */}
+
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            className="space-y-4"
+          >
+            <Form.Item
+              label={<span className="font-semibold text-black">Colors:</span>}
+              name="colors"
+              hidden={data.is_colors ? false : true}
+              rules={[
+                {
+                  required: data.is_colors ? true : false,
+                  message: "Please, Choose a Color!",
+                },
+              ]}
+            >
+              <Radio.Group
+                optionType="button"
+                buttonStyle="solid"
+                className="flex flex-wrap gap-2"
+                // onChange={(e) => setSelectedVar(e.target.value)}
+              >
+                {(data.colors ?? []).map((color: string) => (
+                  <Radio.Button key={color} value={color}>
+                    {color}
+                  </Radio.Button>
+                ))}
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item
+              label={
+                <span className="font-semibold text-black">Variants:</span>
+              }
+              name="variants"
+              hidden={data.variants.length > 0 ? false : true}
+              rules={[
+                {
+                  required: data.variants?.length > 0 ? true : false,
+                  message: "Please, Choose a Variant!",
+                },
+              ]}
+            >
+              <Radio.Group
+                optionType="button"
+                buttonStyle="solid"
+                className="flex flex-wrap gap-2"
+                // onChange={(e) => setSelectedVar(e.target.value)}
+              >
+                {(data.variants ?? []).map((variant: string) => (
+                  <Radio.Button key={variant} value={variant}>
+                    {variant}
+                  </Radio.Button>
+                ))}
+              </Radio.Group>
+            </Form.Item>
+
+            {/* Versions */}
+            <Form.Item
+              label={
+                <span className="font-semibold text-black">Versions:</span>
+              }
+              name="version"
+              hidden={data.versions?.length > 0 ? false : true}
+              rules={[
+                {
+                  required: data.versions?.length > 0 ? true : false,
+                  message: "Please, Choose a Versions!",
+                },
+              ]}
+            >
+              <Radio.Group
+                optionType="button"
+                buttonStyle="solid"
+                className="flex flex-wrap gap-2"
+                // onChange={(e) => setSelectedVar(e.target.value)}
+              >
+                {(data.versions ?? []).map((version: string) => (
+                  <Radio.Button key={version} value={version}>
+                    {version}
+                  </Radio.Button>
+                ))}
+              </Radio.Group>
+              {/* <div className="flex flex-wrap gap-2">
+                {data.versions.map((version: string) => (
+                  <button
+                    key={version}
+                    type="button"
+                    className={`px-3 py-1 border rounded transition ${
+                      form.getFieldValue("version") === version
+                        ? "bg-blue-500 text-white border-blue-500"
+                        : "border-gray-400 hover:border-blue-400"
+                    }`}
+                  >
+                    {version}
+                  </button>
+                ))}
+              </div> */}
+            </Form.Item>
+
+            <Form.Item
+              label="Quantity"
+              name="qty"
+              rules={[
+                {
+                  required: true,
+                  message: "Please, Input a Qty!",
+                },
+              ]}
+            >
+              <InputNumber
+                placeholder="Quantity"
+                formatter={(value: any) => {
+                  return formatPrice(value);
+                }}
+                min={1}
+              />
+            </Form.Item>
+
+            <Row justify="start">
+              <Button
+                icon={<BiCart />}
+                htmlType="submit"
+                className="flex items-center gap-2 bg-blue-600 px-3 py-2 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer"
+                // onClick={handleAdd}
+                color="blue"
+                variant="solid"
+              >
+                Add to Cart
+              </Button>
+            </Row>
+          </Form>
         </div>
       </div>
     </section>

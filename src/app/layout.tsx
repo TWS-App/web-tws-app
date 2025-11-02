@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "YUSAN STORE App",
+  title: "YHUSAN STORE App",
   description: "App for your dedicated services",
   icons: {
     icon: "/favicon.ico",

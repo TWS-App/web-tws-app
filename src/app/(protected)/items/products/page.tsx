@@ -18,6 +18,7 @@ export default function DashboardPage() {
         <div className="text-blue-500 dark:text-blue-500 ">
           <FiShoppingBag />
         </div>
+        
         <span className="font-medium text-gray-700 dark:text-gray-200">
           PRODUCT LIST
         </span>

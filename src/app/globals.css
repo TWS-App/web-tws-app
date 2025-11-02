@@ -37,3 +37,18 @@ body {
     margin: 0;
   }
 }
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .print:hidden {
+    display: none !important;
+  }
+
+  @page {
+    size: A4;
+  }
+}

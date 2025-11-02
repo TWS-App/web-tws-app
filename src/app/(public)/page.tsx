@@ -1,20 +1,22 @@
+// Page Components
 import ReviewSection from "@/layout/Review/review";
 import CategoriesSection from "../components/olds/category";
 import HotCollections from "../components/olds/collections";
 import CreateSection from "../components/olds/create";
 import HomeFooter from "../components/footer/footer";
 import MarketSection from "../components/olds/market";
-import Navbar from "../components/navbar/navbar-home";
 import ServiceTWS from "@/layout/Banner/bannerService";
 import SparepartTWS from "@/layout/Sparepart/Sparepart";
+import Navbar from "../components/navbar/navbar-home";
 import HeroBanner from "@/layout/Banner/hero";
 import CategorySelection from "@/layout/Category/category";
 import BrandLogos from "@/layout/Banner/logobanner";
 
+// CODE
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center h-full w-full pb-1 gap-1 sm:pt-20">
-      <main className="flex flex-col row-start-2 items-center sm:items-start bg-white m-auto">
+    <div className="flex flex-col min-h-screen font-sans bg-white">
+      <main className="flex-1 flex flex-col items-center w-full overflow-x-hidden">
         <Navbar />
 
         <HeroBanner />
@@ -40,9 +42,10 @@ export default function Home() {
           }}
         />
 
-        {/* <MarketSection /> */}
+        {/* <MarketSection />
 
         <ReviewSection />
+         */}
       </main>
     </div>
   );
