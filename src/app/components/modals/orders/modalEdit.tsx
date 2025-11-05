@@ -76,7 +76,7 @@ export default function ModalEditOrder({
 
         setTimeout(() => {
           handleFormField(dataEdit);
-        }, 500);
+        }, 1500);
       } else {
         setOpen(true);
       }
@@ -110,7 +110,9 @@ export default function ModalEditOrder({
       }
     } catch (err) {
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
     }
   };
 
@@ -123,9 +125,16 @@ export default function ModalEditOrder({
       email: value?.email,
       address: value.address,
       id: value?.id,
-      order_number: value?.order_number || "YHSN2510300001",
+      order_number: value?.order_number || " - ",
       total_harga: value?.total_harga,
       total_order: value?.total_order,
+      payment_type: value?.payment_name,
+      payment_id: value?.payment_type,
+      payment_status: value?.payment_status,
+      shipment: value?.shipment,
+      shipment_number: value?.shipment_number,
+      status_id: value?.status_order,
+      status_order: value?.status_order_name,
     });
   };
 
@@ -187,7 +196,8 @@ export default function ModalEditOrder({
     console.log(value);
 
     form.setFieldsValue({
-      status_order: value.id,
+      status_order: value.label,
+      status_id: value.id,
     });
   };
 
@@ -202,10 +212,25 @@ export default function ModalEditOrder({
 
   // Handle Submit
   const handleSubmit = async (value: any) => {
+    const values = value;
+
     try {
-      const body = value;
+      const body = {
+        order_number: values.order_number,
+        status_order: values.status_order,
+        total_order: values.total_order,
+        order_date: values?.order_date ?? new Date(),
+        total_harga: values?.total_harga,
+        payment_status: values?.payment_status,
+        customer_name: values?.customer_name,
+        address: values.address,
+        phone_number: values.phone_number,
+        email: values.email,
+        shipment: values.shipment,
+        payment_type: values?.payment_id,
+        payment_date: values?.payment_status == 1 ? new Date() : null,
+      };
       const id = Number(data?.id);
-      delete body["id"];
 
       const result = await orderHeaderService.update(id, body);
 
@@ -310,6 +335,16 @@ export default function ModalEditOrder({
                 />
               </Form.Item>
             </Col>
+
+            <Col xs={24} sm={24} md={8} lg={8} xxl={8} xl={8}>
+              <Form.Item name="payment_type" label="Payment">
+                <Input placeholder="Payment" readOnly />
+              </Form.Item>
+
+              <Form.Item name="payment_id" hidden label="Payment">
+                <Input placeholder="Payment" readOnly />
+              </Form.Item>
+            </Col>
           </Row>
 
           <Col span={24}>
@@ -324,11 +359,15 @@ export default function ModalEditOrder({
 
           <Divider
             className="divider-form"
-            style={{ margin: "15px 0px 10px", background: "#EBEDF3" }}
-          />
+            orientation="left"
+            orientationMargin={0}
+            style={{ margin: "15px 0px 10px", borderColor: "#000000" }}
+          >
+            Edit Status
+          </Divider>
 
           <Row justify="start" gutter={30}>
-            <Col xs={24} sm={24} md={12} lg={12} xxl={12} xl={12}>
+            <Col xs={24} sm={12} md={12} lg={8} xxl={8} xl={8}>
               <Form.Item name="payment_status" label="Payment Status">
                 <Select
                   placeholder="Payment Status"
@@ -360,7 +399,7 @@ export default function ModalEditOrder({
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={24} md={12} lg={12} xxl={12} xl={12}>
+            <Col xs={24} sm={12} md={12} lg={8} xxl={8} xl={8}>
               <Form.Item name="status_order" label="Status Order">
                 {/* <Select
                   placeholder="Status Order"
@@ -402,13 +441,69 @@ export default function ModalEditOrder({
                   status={data?.status_order || ""}
                 />
               </Form.Item>
+
+              <Form.Item label="Shipment Name" name="shipment_name" >
+                <Input placeholder="Shipment Name" />
+              </Form.Item>
+
+              <Form.Item label="Status Name" name="status_id" hidden>
+                <Input placeholder="Status Order" />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12} md={12} lg={8} xxl={8} xl={8}>
+              <Form.Item name="shipment" label="Shipment Status">
+                <Select
+                  placeholder="Shipping Status"
+                  allowClear
+                  showSearch
+                  options={[
+                    {
+                      label: "Wait for Payment",
+                      value: 0,
+                    },
+                    {
+                      label: "Waiting",
+                      value: 1,
+                    },
+                    {
+                      label: "On Shipping",
+                      value: 2,
+                    },
+                    {
+                      label: "Pending",
+                      value: 3,
+                    },
+                    // {
+                    //   label: "Unpaid ( Outstanding )",
+                    //   value: 3,
+                    // },
+                    // {
+                    //   label: "Refund",
+                    //   value: 4,
+                    // },
+                    {
+                      label: "Cancelled",
+                      value: 4,
+                    },
+                  ]}
+                />
+              </Form.Item>
+
+              <Form.Item label="Shipment Number" name="shipment_number">
+                <Input placeholder="Shipment Number" />
+              </Form.Item>
             </Col>
           </Row>
 
           <Divider
             className="divider-form"
-            style={{ margin: "15px 0px 10px", background: "#EBEDF3" }}
-          />
+            orientation="left"
+            orientationMargin={0}
+            style={{ margin: "15px 0px 10px", borderColor: "#000000" }}
+          >
+            Detail Orders
+          </Divider>
 
           <div className="relative min-h-[200px]">
             {loading ? (
@@ -426,11 +521,11 @@ export default function ModalEditOrder({
                     <tr>
                       <th className="py-3 px-4 text-center">No.</th>
                       <th className="py-3 px-4 text-left">Product</th>
-                      <th className="py-3 px-4 text-right">Price</th>
-                      <th className="py-3 px-4 text-right">Discount</th>
                       <th className="py-3 px-4 text-left">Colors</th>
                       <th className="py-3 px-4 text-left">Variants</th>
                       <th className="py-3 px-4 text-center">Qty</th>
+                      <th className="py-3 px-4 text-right">Price</th>
+                      <th className="py-3 px-4 text-right">Discount</th>
                       <th className="py-3 px-4 text-right">Total</th>
                     </tr>
                   </thead>
@@ -439,7 +534,7 @@ export default function ModalEditOrder({
                     {details.map((items: any) => (
                       <tr
                         key={items?.id}
-                        className="border-b border-gray-700 hover:bg-gray-700/50"
+                        className="border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer"
                       >
                         <td className="py-3 px-4">
                           <p className="font-semibold">{items?.id}</p>
@@ -447,16 +542,18 @@ export default function ModalEditOrder({
                         <td className="py-3 px-4">
                           <p className="font-bold">{items.product_name}</p>
                         </td>
+                        <td className="py-3 px-4">{items?.colors}</td>
+                        <td className="py-3 px-4">{`${items?.variants} - ${
+                          items?.versions ?? ""
+                        }`}</td>
+                        <td className="py-3 px-4 text-center">
+                          {formatPrice(items.qty)}
+                        </td>
                         <td className="py-3 px-4 text-right">
                           {formatPrice(items.price || 0)}
                         </td>
                         <td className="py-3 px-4 text-right">
                           {formatPrice(items.discount || 0)}
-                        </td>
-                        <td className="py-3 px-4">{items?.colors}</td>
-                        <td className="py-3 px-4">{items?.variants}</td>
-                        <td className="py-3 px-4 text-center">
-                          {formatPrice(items.qty)}
                         </td>
                         <td className="py-3 px-4 text-right">
                           {formatPrice(items.total)}
@@ -465,12 +562,6 @@ export default function ModalEditOrder({
                     ))}
                   </tbody>
                 </table>
-
-                <Pagination
-                  data={details}
-                  loading={loading}
-                  totalPages={details?.length}
-                />
               </div>
             )}
           </div>

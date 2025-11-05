@@ -9,15 +9,20 @@ import {
   InputNumber,
   Modal,
   Row,
+  Select,
   Spin,
   Typography,
 } from "antd";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
-import { PiFileFill } from "react-icons/pi";
-import { OrderHeader } from "@/api/services/orders/serviceHeader";
+import { PiCheckCircle, PiFileFill } from "react-icons/pi";
+import {
+  OrderHeader,
+  orderHeaderService,
+} from "@/api/services/orders/serviceHeader";
 import { orderDetailsService } from "@/api/services/orders/serviceDetails";
 import Pagination from "../../pagination/pagination";
 import { formatPrice } from "@/utils/function/price";
+import MasterOrderStatus from "../../masters/status/orderStatus";
 
 // INTERFACE
 interface ModalProps {
@@ -76,8 +81,10 @@ export default function ModalViewOrder({
     setLoading(true);
 
     try {
+      const header = await orderHeaderService.getById(dataEdit?.id);
       const result = await orderDetailsService.getAll();
 
+      console.log("Fetch Headers: ", header);
       console.log("Fetch res: ", result);
 
       setData(result);
@@ -107,6 +114,16 @@ export default function ModalViewOrder({
       email: value?.email,
       address: value.address,
       id: value?.id,
+      order_number: value?.order_number || " - ",
+      total_harga: value?.total_harga,
+      total_order: value?.total_order,
+      payment_type: value?.payment_name,
+      payment_id: value?.payment_type,
+      payment_status: value?.payment_status,
+      shipment: value?.shipment,
+      shipment_number: value?.shipment_number,
+      status_id: value?.status_order,
+      status_order: value?.status_order_name,
     });
   };
 
@@ -162,6 +179,15 @@ export default function ModalViewOrder({
       //     padding: 30,
       //     borderRadius: 10,
       //   },
+    });
+  };
+
+  const getStatusOrder = (value: any) => {
+    console.log(value);
+
+    form.setFieldsValue({
+      status_order: value.label,
+      status_id: value.id,
     });
   };
 
@@ -283,8 +309,144 @@ export default function ModalViewOrder({
 
           <Divider
             className="divider-form"
-            style={{ margin: "15px 0px 10px", background: "#EBEDF3" }}
+            style={{ margin: "15px 0px 10px", background: "#000000" }}
           />
+
+          <Row justify="start" gutter={30}>
+            <Col xs={24} sm={12} md={12} lg={8} xxl={8} xl={8}>
+              <Form.Item name="payment_status" label="Payment Status">
+                <Select
+                  placeholder="Payment Status"
+                  allowClear
+                  showSearch
+                  options={[
+                    {
+                      label: "Paid ( Confirmed )",
+                      value: 1,
+                    },
+                    {
+                      label: "Pending",
+                      value: 2,
+                    },
+                    {
+                      label: "Unpaid ( Outstanding )",
+                      value: 3,
+                    },
+                    {
+                      label: "Refund",
+                      value: 4,
+                    },
+                    {
+                      label: "Cancelled",
+                      value: 5,
+                    },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12} md={12} lg={8} xxl={8} xl={8}>
+              <Form.Item name="status_order" label="Status Order">
+                {/* <Select
+                  placeholder="Status Order"
+                  allowClear
+                  showSearch
+                  options={[
+                    {
+                      label: "Ordered",
+                      value: 1,
+                    },
+                    {
+                      label: "On Packaging",
+                      value: 2,
+                    },
+                    {
+                      label: "On Shipping",
+                      value: 3,
+                    },
+                    {
+                      label: "Pending",
+                      value: 4,
+                    },
+                    {
+                      label: "Completed ( Closed )",
+                      value: 5,
+                    },
+                    {
+                      label: "Refunded",
+                      value: 6,
+                    },
+                    {
+                      label: "Cancelled",
+                      value: 7,
+                    },
+                  ]}
+                /> */}
+                <MasterOrderStatus
+                  getStatusOrder={getStatusOrder}
+                  status={data?.status_order || ""}
+                  isDisable={true}
+                />
+              </Form.Item>
+
+              <Form.Item label="Status Name" name="status_id" hidden>
+                <Input placeholder="Status Order" />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12} md={12} lg={8} xxl={8} xl={8}>
+              <Form.Item name="shipment" label="Shipment Status">
+                <Select
+                  placeholder="Shipping Status"
+                  allowClear
+                  showSearch
+                  options={[
+                    {
+                      label: "Wait for Payment",
+                      value: 0,
+                    },
+                    {
+                      label: "Waiting",
+                      value: 1,
+                    },
+                    {
+                      label: "On Shipping",
+                      value: 2,
+                    },
+                    {
+                      label: "Pending",
+                      value: 3,
+                    },
+                    // {
+                    //   label: "Unpaid ( Outstanding )",
+                    //   value: 3,
+                    // },
+                    // {
+                    //   label: "Refund",
+                    //   value: 4,
+                    // },
+                    {
+                      label: "Cancelled",
+                      value: 3,
+                    },
+                  ]}
+                />
+              </Form.Item>
+
+              <Form.Item label="Shipment Number" name="shipment_number">
+                <Input placeholder="Shipment Number" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Divider
+            className="divider-form"
+            orientation="left"
+            orientationMargin={0}
+            style={{ margin: "15px 0px 10px", borderColor: "#000000" }}
+          >
+            Detail Orders
+          </Divider>
 
           <div className="relative min-h-[200px]">
             {loading ? (

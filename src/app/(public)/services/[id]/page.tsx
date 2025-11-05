@@ -102,7 +102,7 @@ export default function ProductDetail({
   const [loadingBtn, setLoadingBtn] = useState(false);
 
   // FORMS
-  const [form] = Form.useForm();
+  // const [form] = Form.useForm();
 
   // USE EFFECTS
   useEffect(() => {
@@ -126,20 +126,20 @@ export default function ProductDetail({
 
       setData(result);
 
-      form.setFieldsValue({
-        category: result?.category,
-        code: result?.code,
-        colors: result?.colors?.length > 0 ? result.colors : [],
-        variants: result?.variants?.length > 0 ? result.variants : [],
-        description: result?.description,
-        details: result?.details,
-        discount: result?.discount,
-        is_colors: result.is_color,
-        is_ready: result.is_ready,
-        is_variants: result.is_variants,
-        price: result.price,
-        product_name: result?.product_name,
-      });
+      // form.setFieldsValue({
+      //   category: result?.category,
+      //   code: result?.code,
+      //   colors: result?.colors?.length > 0 ? result.colors : [],
+      //   variants: result?.variants?.length > 0 ? result.variants : [],
+      //   description: result?.description,
+      //   details: result?.details,
+      //   discount: result?.discount,
+      //   is_colors: result.is_color,
+      //   is_ready: result.is_ready,
+      //   is_variants: result.is_variants,
+      //   price: result.price,
+      //   product_name: result?.product_name,
+      // });
     } catch (err) {
     } finally {
       setLoading(false);

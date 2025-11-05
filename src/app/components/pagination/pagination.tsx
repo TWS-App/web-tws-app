@@ -33,7 +33,7 @@ export default function Pagination({
         <div className="flex justify-between items-center mt-4">
           {/* Rows per page */}
           <div className="flex items-center gap-2">
-            <label htmlFor="rows" className="text-sm text-gray-400">
+            <label htmlFor="rows" className="text-sm text-white">
               Rows per page:
             </label>
 
@@ -62,7 +62,11 @@ export default function Pagination({
               ))}
             </select>
 
-            {`Showing ${page} to ${rowsPerPage || totalPages} of ${totalPages} entries`}
+            <p className="text-white">
+              {`Showing ${page} to ${
+                rowsPerPage || totalPages
+              } of ${totalPages} entries`}
+            </p>
           </div>
 
           {/* Page navigation */}
@@ -76,7 +80,7 @@ export default function Pagination({
                 });
               }}
               disabled={!previous}
-              className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
+              className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 hover:text-blue-400 transition cursor-pointer disabled:opacity-50"
             >
               Prev
             </button>
@@ -108,7 +112,7 @@ export default function Pagination({
                 });
               }}
               disabled={!next}
-              className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
+              className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 hover:text-blue-400 transition cursor-pointer disabled:opacity-50"
             >
               Next
             </button>

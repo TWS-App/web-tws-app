@@ -9,7 +9,7 @@ export const API_CONFIG: CreateAxiosDefaults = {
   timeout: Number(process.env.NEXT_PUBLIC_API_TIMEOUT) || 30000,
 };
 
-console.log("Alamat: ", _api);
+// console.log("Alamat: ", _api);
 
 interface ApiContextType {
   api: ReturnType<typeof axios.create>;

@@ -171,6 +171,8 @@ export default function CheckoutPage() {
       phone_number: _body.phone_number,
       total_harga: subtotal,
       total_order: cart.length,
+      status_order: 1,
+      shipment: 0,
     };
 
     sessionStorage.setItem("checkoutData", JSON.stringify(formData));
@@ -187,7 +189,7 @@ export default function CheckoutPage() {
         for (let i = 0; i < cart.length; i++) {
           const details = {
             colors: cart[i].color,
-            discount: cart[i]?.discount,
+            discount: cart[i]?.discount || 0,
             header_id: res?.id,
             price: cart[i].price,
             product_id: cart[i].type === "product" ? cart[i].id : null,

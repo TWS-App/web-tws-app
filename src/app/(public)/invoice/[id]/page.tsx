@@ -8,7 +8,7 @@ import { useReactToPrint } from "react-to-print";
 import { RootState } from "@/stores";
 
 // Antd Components
-import { Image } from "antd";
+import { Col, Divider, Form, Image, Modal, Row, Typography } from "antd";
 import { BiHome, BiPrinter } from "react-icons/bi";
 
 // Service
@@ -21,6 +21,12 @@ import {
 // Utils
 import { formatPrice } from "@/utils/function/price";
 import { formatTime } from "@/utils/function/time";
+
+// Text Styles
+const textForm = {
+  fontWeight: 750,
+  padding: "5px 0px 0px",
+};
 
 // CODE
 export default function InvoicePage() {
@@ -38,6 +44,9 @@ export default function InvoicePage() {
   const [data, setData] = useState<OrderHeader>();
   const [details, setDetails] = useState<[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // FORM
+  const [form] = Form.useForm();
 
   // Use Effects
   useEffect(() => {
@@ -116,99 +125,226 @@ export default function InvoicePage() {
   );
 
   return (
-    <div className="bg-white text-black min-h-screen py-10 px-20">
+    <div className="bg-black text-black min-h-screen py-10 px-20">
       <div
         ref={printRef}
-        className="max-w-4xl mx-auto border border-gray-300 p-10 rounded-lg shadow-md"
+        className="max-w-4xl mx-auto border bg-white border-gray-300 p-10 rounded-lg shadow-md"
       >
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex justify-center gap-2">
-            <Image
-              src="/images/assets/MainLogo.png"
-              alt="Logo"
-              preview={false}
-              width={30}
-              height={30}
-              style={{
-                background: "#03a9f4",
-              }}
+        <Form
+          name="invoice-form"
+          className="invoice-form"
+          key="invoice-form"
+          form={form}
+          labelAlign="left"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          style={{
+            maxWidth: 1000,
+          }}
+          autoComplete="off"
+          layout="horizontal"
+        >
+          {/* Header */}
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex justify-center gap-2">
+              <Image
+                src="/images/assets/MainLogo.png"
+                alt="Logo"
+                preview={false}
+                width={30}
+                height={30}
+                style={{
+                  background: "#03a9f4",
+                }}
+              />
+              <h1 className="text-3xl font-bold">Yhusan Store</h1>
+            </div>
+
+            <div className="text-right">
+              <p className="text-lg font-semibold">
+                Invoice #{data?.order_number || id}
+              </p>
+              <p className="text-gray-500">
+                {formatTime(
+                  data?.order_date || new Date().toLocaleDateString("id-ID")
+                )}
+              </p>
+            </div>
+          </div>
+
+          {/* Buyer Info */}
+          <div className="mb-6">
+            <h2 className="font-semibold mb-2">Buyer Information</h2>
+
+            <Divider
+              className="divider-form"
+              style={{ margin: "10px 0px 5px", backgroundColor: "#000000" }}
             />
-            <h1 className="text-3xl font-bold">Yhusan Store</h1>
+
+            <Row style={{ width: "100%", margin: 0, height: 30 }}>
+              <Col span={12} className="col-room-no">
+                <Form.Item
+                  label="Customer Name"
+                  className="customer_name"
+                  labelCol={{ span: 12 }}
+                  wrapperCol={{ span: 12 }}
+                >
+                  <Typography className="text-room-no" style={textForm}>
+                    {data?.customer_name}
+                  </Typography>
+                </Form.Item>
+              </Col>
+
+              <Col span={12} className="col-room-no">
+                <Form.Item
+                  label="Payment"
+                  className="payment"
+                  labelCol={{ span: 12 }}
+                  wrapperCol={{ span: 12 }}
+                >
+                  <Typography className="text-room-no" style={textForm}>
+                    {`${data?.payment_name} - ${
+                      data?.payment_status == 1 ? "PAID" : "UNPAID"
+                    }`}
+                  </Typography>
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row style={{ width: "100%", margin: 0, height: 30 }}>
+              <Col span={12}>
+                <Form.Item
+                  label="E-Mail"
+                  className="email"
+                  labelCol={{ span: 12 }}
+                  wrapperCol={{ span: 12 }}
+                >
+                  <Typography className="text-adult" style={textForm}>
+                    {data?.email}
+                  </Typography>
+                </Form.Item>
+              </Col>
+
+              <Col span={12}>
+                <Form.Item
+                  label="Payment Date"
+                  className="paydate"
+                  labelCol={{ span: 12 }}
+                  wrapperCol={{ span: 12 }}
+                >
+                  <Typography className="text-adult" style={textForm}>
+                    {data?.payment_date
+                      ? formatTime(data?.payment_date)
+                      : " UNPAID "}
+                  </Typography>
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row style={{ width: "100%", margin: 0, height: 30 }}>
+              <Col span={12}>
+                <Form.Item
+                  label="Phone Number"
+                  className="phone"
+                  labelCol={{ span: 12 }}
+                  wrapperCol={{ span: 12 }}
+                >
+                  <Typography className="text-adult" style={textForm}>
+                    {data?.phone_number}
+                  </Typography>
+                </Form.Item>
+              </Col>
+
+              <Col span={12}>
+                <Form.Item
+                  label="Total Price"
+                  className="total"
+                  labelCol={{ span: 12 }}
+                  wrapperCol={{ span: 12 }}
+                >
+                  <Typography className="text-adult" style={textForm}>
+                    Rp {formatPrice(data?.total_harga ?? 0)}
+                  </Typography>
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row style={{ width: "100%", margin: 0, height: 30 }}>
+              <Col span={12}>
+                <Form.Item
+                  label="Address"
+                  name="address"
+                  labelCol={{ span: 12 }}
+                  wrapperCol={{ span: 12 }}
+                >
+                  <Typography className="text-room-price" style={textForm}>
+                    {data?.address}
+                  </Typography>
+                </Form.Item>
+              </Col>
+            </Row>
           </div>
 
-          <div className="text-right">
-            <p className="text-lg font-semibold">
-              Invoice #{data?.order_number || id}
-            </p>
-            <p className="text-gray-500">
-              {formatTime(
-                data?.order_date || new Date().toLocaleDateString("id-ID")
-              )}
-            </p>
-          </div>
-        </div>
+          {/* Divider */}
+          <Divider
+            className="divider-form"
+            orientation="left"
+            orientationMargin={0}
+            style={{ margin: "10px 0px 5px", borderColor: "#000000" }}
+          >
+            Product List
+          </Divider>
 
-        {/* Buyer Info */}
-        <div className="mb-6">
-          <h2 className="font-semibold mb-2">Buyer Information</h2>
-          <p>{`Name: ${data?.customer_name}`}</p>
-          <p>{`Email: ${data?.email || " - "}`}</p>
-          <p>{`Address: ${data?.address}`}</p>
-
-          <p>Payment: {data?.payment_name || " - "}</p>
-        </div>
-
-        {/* Divider */}
-        <hr className="border-gray-300 my-6" />
-
-        {/* Product Table */}
-        <table className="w-full text-left">
-          <thead>
-            <tr className="border-b border-gray-300">
-              <th className="py-2">Product</th>
-              <th className="py-2">Detail</th>
-              <th className="py-2 text-center">Qty</th>
-              <th className="py-2 text-right">Price</th>
-              <th className="py-2 text-right">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {details.map((item: any, index: number) => (
-              <tr key={index} className="border-b border-gray-200">
-                <td className="py-2">
-                  {item?.product_name} / {item.colors}
-                </td>
-                <td className="py-2">
-                  {item?.variants} {item.versions}
-                </td>
-                <td className="py-2 text-center">{item.qty}</td>
-                <td className="py-2 text-right">{formatPrice(item.price)}</td>
-                <td className="py-2 text-right">{formatPrice(item.total)}</td>
+          {/* Product Table */}
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-gray-300">
+                <th className="py-2">Items</th>
+                <th className="py-2">Colors</th>
+                <th className="py-2">Details</th>
+                <th className="py-2 text-center">Qty</th>
+                <th className="py-2 text-right">Price</th>
+                <th className="py-2 text-right">Total</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {details.map((item: any, index: number) => (
+                <tr key={index} className="border-b border-gray-200">
+                  <td className="py-2">{item?.product_name}</td>
+                  <td className="py-2">{item.colors}</td>
+                  <td className="py-2">
+                    {item?.variants} {item.versions}
+                  </td>
+                  <td className="py-2 text-center">{item.qty}</td>
+                  <td className="py-2 text-right">{formatPrice(item.price)}</td>
+                  <td className="py-2 text-right">{formatPrice(item.total)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-        {/* Summary */}
-        <div className="text-right mt-6">
-          <div className="flex justify-between text-black text-lg font-semibold">
-            <span>Subtotal</span>
-            <span>Rp {formatPrice(Number(data?.total_harga))}</span>
+          {/* Summary */}
+          <div className="text-right mt-6">
+            <div className="flex justify-between text-black text-lg font-semibold">
+              <span>Subtotal</span>
+              <span>Rp {formatPrice(Number(data?.total_harga))}</span>
+            </div>
+
+            <div className="flex justify-between text-black text-lg font-semibold">
+              <span>Discount</span>
+              <span>Rp {formatPrice(discount)}</span>
+            </div>
+
+            <div className="border-t border-gray-700 my-4" />
+
+            <div className="flex justify-between text-black text-xl font-bold">
+              <span>TOTAL</span>
+              <span>Rp {formatPrice(data?.total_harga || 0)}</span>
+            </div>
           </div>
 
-          <div className="flex justify-between text-black text-lg font-semibold">
-            <span>Discount</span>
-            <span>{formatPrice(discount)}</span>
-          </div>
-
-          <div className="border-t border-gray-700 my-4" />
-
-          <div className="flex justify-between text-black text-lg font-semibold">
-            <span>TOTAL</span>
-            <span>{formatPrice(data?.total_harga || 0)}</span>
-          </div>
-        </div>
+          {/* Footer Buttons */}
+        </Form>
       </div>
 
       {/* Footer Buttons */}

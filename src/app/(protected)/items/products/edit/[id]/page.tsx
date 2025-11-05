@@ -2,7 +2,7 @@
 
 // REACT COMPONENTS
 import React, { useEffect, useState } from "react";
-import { redirect, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 // Antd Componetns
 import {
@@ -49,6 +49,7 @@ import { formatPrice } from "@/utils/function/price";
 // Notifications
 import { notifyWarning } from "@/utils/notification/notifications";
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
+import { NextResponse } from "next/server";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -104,7 +105,7 @@ export default function EditProduct() {
       console.log("Edit: ", result);
 
       if (!result) {
-        redirect("/error/not-found");
+        NextResponse.rewrite(new URL("/error/not-found"));
       } else {
         setData(result);
 

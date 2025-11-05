@@ -89,11 +89,13 @@ export default function ProductsPage() {
       console.log("Fetch res: ", result, resultCat);
 
       if (result?.results?.length > 0) {
-        // setProduct(result.results);
-        setDataProduct(result.results);
+        setProduct(result.results);
+        setBulks(result.results);
+        // setDataProduct(result.results);
       } else {
-        // setProduct([]);
-        setDataProduct([]);
+        setBulks([]);
+        setProduct([]);
+        // setDataProduct([]);
       }
 
       if (resultCat?.length) {
@@ -109,20 +111,20 @@ export default function ProductsPage() {
         setDataImage(resultImg);
       }
 
-      const mergedProducts = result.results.map((product: any) => {
-        const relatedImages = resultImg.filter(
-          (img: any) => img.product_id === product.id
-        );
-        return {
-          ...product,
-          images: relatedImages.map((i: any) => i.url),
-          image: relatedImages[0]?.url || "/images/placeholder.png",
-        };
-      });
+      // const mergedProducts = result.results.map((product: any) => {
+      //   const relatedImages = resultImg.filter(
+      //     (img: any) => img.product_id == product.id
+      //   );
+      //   return {
+      //     ...product,
+      //     images: relatedImages.map((i: any) => i.url),
+      //     image: relatedImages[0]?.url || "/images/placeholder.png",
+      //   };
+      // });
 
-      setProduct(mergedProducts);
-      setBulks(mergedProducts);
       // console.log("merged: ", mergedProducts);
+      // setProduct(mergedProducts);
+      // setBulks(mergedProducts);
 
       setPagination({
         total: result?.total ?? 0,
@@ -162,7 +164,7 @@ export default function ProductsPage() {
             <div className="w-16 h-1 bg-indigo-500 mx-auto mt-2 rounded-full"></div>
           </div>
 
-          <div className="flex justify-center space-x-6 mb-8">
+          <div className="flex flex-wrap justify-center gap-4 mb-8 text-center">
             {categories.map((cat: any) => (
               <button
                 key={cat.id}
@@ -174,24 +176,50 @@ export default function ProductsPage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {product.map((item: any) => (
               <ProductCard key={item.id} item={item} />
             ))}
           </div>
         </div>
 
-        <div className="flex justify-center items-center gap-2 m-auto">
+        <div className="flex justify-center items-center gap-2 m-auto mt-20">
+          <div className="flex items-center gap-2">
+            <label htmlFor="rows" className="text-sm text-white">
+              Rows per page:
+            </label>
+
+            <select
+              id="rows"
+              value={pagination.pageSize}
+              onChange={(e) => {
+                const newSize = Number(e.target.value);
+                const newPage =
+                  pagination.total / newSize < newSize ? 1 : pagination.page;
+
+                fetchData?.({
+                  page: newPage,
+                  pageSize: newSize || 10,
+                });
+              }}
+              className="bg-gray-700 text-white rounded px-2 py-1 cursor-pointer hover:bg-gray-600"
+            >
+              {[5, 10, 20, 50].map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <button
             onClick={() => {
-              // setPage((prev) => Math.max(prev - 1, 1));
-
               fetchData({
                 linkUrl: pagination.previous || null,
               });
             }}
             disabled={!pagination.previous}
-            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
+            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 hover:text-blue-400 transition cursor-pointer disabled:opacity-50"
           >
             Prev
           </button>
@@ -199,12 +227,6 @@ export default function ProductsPage() {
           {[...Array(1)].map((_, i) => (
             <button
               key={i + 1}
-              // onClick={() => {
-              //   onChange?.({
-              //     page: i + 1,
-              //     pageSize: pagination.pageSize || 10,
-              //   });
-              // }}
               className={`px-3 py-1 rounded cursor-pointer transition ${
                 pagination.page === i + 1
                   ? "bg-blue-600 text-white"
@@ -224,7 +246,7 @@ export default function ProductsPage() {
               });
             }}
             disabled={!pagination.next}
-            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer disabled:opacity-50"
+            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 hover:text-blue-400 transition cursor-pointer disabled:opacity-50"
           >
             Next
           </button>

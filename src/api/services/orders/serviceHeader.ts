@@ -9,7 +9,7 @@ export interface OrderHeader {
   id?: number | undefined | null;
   order_date?: string | undefined | null;
   order_number?: string | undefined | null;
-  status_order?: string | undefined | null;
+  status_order?: any | undefined | null;
   shipment?: number | undefined | null;
   address: string | undefined | null;
   customer_name: string | undefined | null;

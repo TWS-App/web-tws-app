@@ -38,13 +38,20 @@ export default function HomeFooter() {
       </div>
 
       {/* Main Footer */}
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-8 xl:grid-cols-8 bg-white py-10 px-6  md:px-16 gap-6 border-t border-gray-200">
+      <div
+        className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 
+      lg:grid-cols-8 xl:grid-cols-8 bg-white py-10 px-6 md:px-16 
+      gap-6 border-t border-gray-200"
+      >
         {/* Brand Column */}
         <div className="col-span-2 text-center sm:text-left">
           <h2 className="text-lg font-bold">YHUSAN DIGITAL</h2>
-          <p className="text-sm text-gray-600 mb-3">Make Your Audio Great Again</p>
+          <p className="text-sm text-gray-600 mb-3">
+            Make Your Audio Great Again
+          </p>
           <p className="text-sm text-gray-500">
-            Follow semua akun Media Sosial Kita di bawah ini untuk informasi seputar TWS Audio lainnya.
+            Follow semua akun Media Sosial Kita di bawah ini untuk informasi
+            seputar TWS Audio lainnya.
           </p>
 
           <div className="flex gap-3 mt-4">
@@ -162,10 +169,12 @@ export default function HomeFooter() {
           <span className="font-semibold">0821-2995-1421</span>
 
           <p className="text-sm text-gray-600">Email:</p>
-          <span className="font-semibold">yhusansanjaya@gmail.com</span>
+          <span className="font-semibold break-words">
+            yhusansanjaya@gmail.com
+          </span>
         </div>
 
-        <div className="col-span-2 relative w-full pb-[56.25%] h-0 overflow-hidden rounded-lg shadow-lg">
+        <div className="col-span-2 relative w-full aspect-video overflow-hidden rounded-lg shadow-lg">
           {/* <div className="mt-4 w-full h-32 bg-gray-200 flex items-center justify-center rounded-md text-gray-500 text-sm"> */}
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d709.8214119706073!2d107.81644920921677!3d-7.271482816901641!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68a5000620ffc5%3A0x9f08ca374ced8a44!2sYHUSAN%20DIGITAL!5e1!3m2!1sen!2sid!4v1760460178724!5m2!1sen!2sid"
@@ -194,9 +203,7 @@ export default function HomeFooter() {
             What We Do
           </a>
         </div>
-        <p className="mt-2 text-xs">
-          &copy; 2025 Digital Versatilities.
-        </p>
+        <p className="mt-2 text-xs">&copy; 2025 Digital Versatilities.</p>
       </div>
     </footer>
   );

@@ -7,23 +7,35 @@ const HeroBanner = () => {
   return (
     <section
       className="relative bg-cover bg-center text-white w-full h-full py-20 px-6 overflow-hidden"
-      style={{
-        backgroundImage: "url('/images/assets/BACKGROUND.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        margin: "22px 0px 0px",
-      }}
+      // style={{
+      //   backgroundImage: "url('/images/assets/BACKGROUND.png')",
+      //   backgroundSize: "cover",
+      //   backgroundPosition: "center",
+      //   backgroundRepeat: "no-repeat",
+      //   margin: "22px 0px 0px",
+      // }}
     >
-      <div className="container mx-auto px-6 py-32 grid grid-cols-3 md:grid-cols-1 items-center">
-        <div className="space-y-6">
-          <Image
-            src="/images/assets/ServiceLogo.png"
-            alt="Logo"
-            height={150}
-            width={150}
-            preview={false}
-          />
+      <div
+        // className="flex flex-wrap justify-between container mx-auto px-6 py-32 items-center"
+        className="flex flex-wrap md:flex-nowrap sm:flex-nowrap justify-between items-center container mx-auto px-6 py-16 md:py-32 relative"
+        style={{
+          backgroundImage: "url('/images/assets/BACKGROUND.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          margin: "22px 0px 0px",
+        }}
+      >
+        <div className="order-1 md:order-1 sm:order-1 space-y-6 flex-1 text-center md:text-left">
+          <div className="flex justify-center">
+            <Image
+              src="/images/assets/ServiceLogo.png"
+              alt="Logo"
+              height={150}
+              width={150}
+              preview={false}
+            />
+          </div>
 
           <h4
             className="font-extrabold leading-tight 
@@ -67,58 +79,61 @@ const HeroBanner = () => {
               }}
             ></Link>
           </div>
+        </div>
 
+        <div className="order-3 md:order-3 sm:order-3 flex flex-col justify-end items-center md:items-start gap-3 mt-10 md:mt-0">
+          <Link
+            href="/services"
+            className="hover:scale-105 rounded-full transition-transform duration-300"
+            style={{
+              backgroundImage: "url('/images/assets/Service_Button1.png')",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              width: "clamp(250px, 42vw, 350px)",
+              height: "clamp(75px, 15vw, 120px)",
+              display: "inline-block",
+            }}
+          ></Link>
+
+          <Link
+            href="/products"
+            className="rounded-full hover:scale-105 transition-transform duration-300"
+            style={{
+              backgroundImage: "url('/images/assets/Service_Button2.png')",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              width: "clamp(250px, 42vw, 350px)",
+              height: "clamp(75px, 15vw, 120px)",
+              display: "inline-block",
+            }}
+          ></Link>
+
+          <Link
+            href="/products"
+            className="rounded-full hover:scale-105 transition-transform duration-300"
+            style={{
+              backgroundImage: "url('/images/assets/Service_Button3.png')",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              width: "clamp(250px, 42vw, 350px)",
+              height: "clamp(75px, 15vw, 120px)",
+              display: "inline-block",
+            }}
+          ></Link>
+        </div>
+
+        <div className="order-2 md:order-2 sm:order-2 flex justify-center md:justify-end flex-1 mt-10 md:mt-0">
           <Image
             src="/images/assets/owner.png"
             alt="Owner"
-            height={150}
-            width={150}
+            height={500}
+            width={500}
             preview={false}
+            className="object-bottom md:object-bottom w-auto h-auto md:h-[500px]"
           />
-
-          <div className="flex flex-col items-start gap-6 pt-8">
-            <Link
-              href="/services"
-              className="hover:scale-105 rounded-full transition-transform duration-300"
-              style={{
-                backgroundImage: "url('/images/assets/Service_Button1.png')",
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                width: "clamp(150px, 22vw, 250px)",
-                height: "clamp(50px, 10vw, 90px)",
-                display: "inline-block",
-              }}
-            ></Link>
-
-            <Link
-              href="/products"
-              className="rounded-full hover:scale-105 transition-transform duration-300"
-              style={{
-                backgroundImage: "url('/images/assets/Service_Button2.png')",
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                width: "clamp(140px, 20vw, 220px)",
-                height: "clamp(45px, 7vw, 70px)",
-                display: "inline-block",
-              }}
-            ></Link>
-
-            <Link
-              href="/products"
-              className="rounded-full hover:scale-105 transition-transform duration-300"
-              style={{
-                backgroundImage: "url('/images/assets/Service_Button3.png')",
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                width: "clamp(140px, 20vw, 220px)",
-                height: "clamp(45px, 7vw, 70px)",
-                display: "inline-block",
-              }}
-            ></Link>
-          </div>
         </div>
       </div>
     </section>

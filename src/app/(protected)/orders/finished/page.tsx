@@ -1,8 +1,12 @@
-import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
-import TableOrders from "@/app/components/tables/orders/table";
+// Antd Components
 import { IoBagCheck } from "react-icons/io5";
 
-export default function OrderCancelPage() {
+// Import Page Components
+import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
+import TableOrders from "@/app/components/tables/orders/table";
+
+// CODE
+export default function OrderFinishedPage() {
   return (
     <div>
       <Breadcrumb

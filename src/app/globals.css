@@ -3,6 +3,27 @@
 @tailwind components;
 @tailwind utilities;
 
+.tab-custom:hover {
+  transform: scale(1.05);
+}
+
+.tab-custom.active:hover {
+  color: #40a9ff !important;
+  color: #fff !important;
+}
+
+.tab-custom.inactive:hover {
+  background-color: #ffffff !important;
+  color: #000 !important;
+}
+
+.ant-tabs-tab {
+  background-color: #ffffff !important;
+}
+
+.ant-tabs-tab .ant-tabs-tab-active {
+  background-color: #40a9ff !important;
+}
 
 :root {
   --background: #ffffff;

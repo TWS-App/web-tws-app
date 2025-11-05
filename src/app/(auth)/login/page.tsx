@@ -1,12 +1,17 @@
 // src/app/(auth)/login/page.tsx
 "use client";
 
+// REACTS
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BiLoader } from "react-icons/bi";
 
+// CODE
 export default function LoginPage() {
+  // React
   const router = useRouter();
+
+  // STATE
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -76,7 +81,7 @@ export default function LoginPage() {
                 type="submit"
                 className="w-full flex justify-center gap-3 bg-blue-600 text-white py-2 rounded-lg hover:bg-purple-600 transition cursor-pointer"
               >
-                {loading ? <BiLoader className="animate-spin size-8" /> : null }
+                {loading ? <BiLoader className="animate-spin size-8" /> : null}
                 Log in
               </button>
             </form>

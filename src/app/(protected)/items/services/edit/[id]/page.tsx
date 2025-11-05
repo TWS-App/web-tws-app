@@ -2,7 +2,8 @@
 
 // REACT COMPONENTS
 import React, { useEffect, useState } from "react";
-import { redirect, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { NextResponse } from "next/server";
 
 // Antd Componetns
 import {
@@ -44,10 +45,10 @@ import MasterCategoryService from "@/app/components/masters/category/categorySer
 
 // Utils
 import { formatPrice } from "@/utils/function/price";
+import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 
 // Notifications
 import { notifyWarning } from "@/utils/notification/notifications";
-import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -103,7 +104,7 @@ export default function EditService() {
       console.log("Edit: ", result);
 
       if (!result) {
-        redirect("/error/not-found");
+        NextResponse.rewrite(new URL("/error/not-found"));
       }
 
       setData(result);

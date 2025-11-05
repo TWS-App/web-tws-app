@@ -2,6 +2,7 @@ import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 import TableOrders from "@/app/components/tables/orders/table";
 import { GiCancel } from "react-icons/gi";
 
+// CODE
 export default function OrderCancelPage() {
   return (
     <div>
