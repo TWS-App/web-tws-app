@@ -18,7 +18,7 @@ export interface Products {
   price: number | undefined | null;
   product_name: string | undefined | null;
   variants: string[];
-  versions?: string[];
+  versions?: any[];
 }
 
 // CODE

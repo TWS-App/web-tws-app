@@ -389,10 +389,10 @@ export default function ProductDetail({
                 <span className="font-semibold text-black">Versions:</span>
               }
               name="version"
-              hidden={data?.versions?.length > 0 ? false : true}
+              hidden={data.versions?.length ? false : true}
               rules={[
                 {
-                  required: data.versions?.length > 0 ? true : false,
+                  required: data.versions?.length ? true : false,
                   message: "Please, Choose a Versions!",
                 },
               ]}

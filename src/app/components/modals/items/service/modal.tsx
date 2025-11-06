@@ -260,9 +260,9 @@ export default function ServiceItemsModal({
           className="space-y-4"
         >
           <div className="flex flex-wrap justify-center gap-4 mb-8 text-center">
-            {categories.map((cat: any) => (
+            {categories.map((cat: any, idx: number) => (
               <button
-                key={cat?.id}
+                key={cat?.id ?? idx}
                 className="text-gray-600 hover:text-purple-600 font-medium cursor-pointer transition-colors"
                 onClick={() => onFilter(cat)}
               >
@@ -272,9 +272,12 @@ export default function ServiceItemsModal({
           </div>
 
           <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {(data ?? []).map((item: any) => (
-              <div className="w-full block self-center-safe text-center group">
-                <div key={item.id} className="text-center">
+            {(data ?? []).map((item: any, idx: number) => (
+              <div
+                key={item?.id ?? idx}
+                className="w-full block self-center-safe text-center group"
+              >
+                <div key={item?.id ?? idx} className="text-center">
                   {item?.images && item?.images?.length > 0 ? (
                     <Image
                       src={item?.images[0]?.url || "error"}
