@@ -9,15 +9,21 @@ import { RootState } from "@/stores";
 import { removeFromCart, updateQuantity } from "@/stores/cart/cart";
 
 // Antd Components
-import { Image } from "antd";
+import { Button, Image } from "antd";
 import { BiMinus, BiPlus } from "react-icons/bi";
 import { CgClose } from "react-icons/cg";
 import { FaMinusCircle, FaPlusCircle, FaShoppingCart } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
-import { IoAddCircle, IoCloseCircle, IoRemoveCircle } from "react-icons/io5";
+import {
+  IoAddCircle,
+  IoCloseCircle,
+  IoHome,
+  IoRemoveCircle,
+} from "react-icons/io5";
 
 // UTILS
 import { formatPrice } from "@/utils/function/price";
+import { RiHeadphoneFill } from "react-icons/ri";
 
 // CODE
 export default function CartPage() {
@@ -51,12 +57,18 @@ export default function CartPage() {
       <h1 className="text-2xl font-bold mb-8 text-black">Shopping Cart</h1>
 
       {cartItems.length === 0 ? (
-        <div className="flex justify-center items-center mt-28">
+        <div className="flex justify-center items-center mt-28 bg-gray-600 p-5 rounded-2xl">
           <FaCartShopping size={75} />
 
-          <p className="p-6 text-black">
+          <p className="p-6 text-white">
             Your cart is empty. Please add a product or services.
           </p>
+
+          <Link href="/products">
+            <Button icon={<RiHeadphoneFill />} color="geekblue" variant="solid">
+              Products
+            </Button>
+          </Link>
         </div>
       ) : (
         <div className="space-y-6">

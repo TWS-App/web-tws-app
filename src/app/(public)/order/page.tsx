@@ -8,7 +8,17 @@ import { useRouter } from "next/navigation";
 import { clearCart } from "@/stores/cart/cart";
 
 // Antd Components
-import { Button, Col, Divider, Form, Image, Input, Modal, Row } from "antd";
+import {
+  Button,
+  Col,
+  Divider,
+  Form,
+  Image,
+  Input,
+  Modal,
+  Result,
+  Row,
+} from "antd";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 // Utils
@@ -20,6 +30,8 @@ import { notifyWarning } from "@/utils/notification/notifications";
 import { orderHeaderService } from "@/api/services/orders/serviceHeader";
 import { orderDetailsService } from "@/api/services/orders/serviceDetails";
 import MasterProvince from "@/app/components/masters/region/province";
+import { RiHeadphoneFill } from "react-icons/ri";
+import Link from "next/link";
 
 // CONST
 const { confirm } = Modal;
@@ -148,6 +160,8 @@ export default function CheckoutPage() {
   // On Finish
   const onFinish = (value: any) => {
     setLoadingBtn(true);
+
+    console.log("CART: ", cart);
     showModalConfirm(value);
   };
 
@@ -171,14 +185,9 @@ export default function CheckoutPage() {
       phone_number: _body.phone_number,
       total_harga: subtotal,
       total_order: cart.length,
-      status_order: 1,
-      shipment: 0,
+      // status_order: 1,
+      // shipment: 0,
     };
-
-    sessionStorage.setItem("checkoutData", JSON.stringify(formData));
-    const generatedOrderId = "INV25100001";
-
-    console.log("🧾 Order ID:", generatedOrderId, body);
 
     try {
       const res = await orderHeaderService.create(body);
@@ -199,6 +208,7 @@ export default function CheckoutPage() {
             variants: cart[i].variant,
           };
 
+          console.log("Details: ", details);
           try {
             const results = await orderDetailsService.create(details);
 
@@ -213,6 +223,30 @@ export default function CheckoutPage() {
 
     setLoadingBtn(false);
   };
+
+  if (cart.length === 0) {
+    return (
+      <div className="container w-full flex justify-center items-center mt-28">
+        <Result
+          status="404"
+          className="w-3/4 bg-white p-5 rounded-2xl"
+          title="Cart Empty"
+          subTitle="Sorry, Your Cart is Empty! Please, add a Product and try again later!"
+          extra={
+            <Link href="/products">
+              <Button
+                icon={<RiHeadphoneFill />}
+                color="geekblue"
+                variant="solid"
+              >
+                Products
+              </Button>
+            </Link>
+          }
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white justify-center">

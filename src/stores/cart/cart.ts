@@ -32,8 +32,8 @@ const cartSlice = createSlice({
           item.variant === action.payload.variant
       );
 
-      console.log("Dispatch Payload: ", action.payload);
-      console.log("Dispatch Existing: ", existing);
+      // console.log("Dispatch Payload: ", action.payload);
+      // console.log("Dispatch Existing: ", existing);
 
       if (existing) {
         existing.quantity += action.payload.quantity;

@@ -104,7 +104,7 @@ export default function EditService() {
       console.log("Edit: ", result);
 
       if (!result) {
-        NextResponse.rewrite(new URL("/error/not-found"));
+        NextResponse.rewrite(new URL("/errorpage/not-found"));
       }
 
       setData(result);

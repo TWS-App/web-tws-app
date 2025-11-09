@@ -16,11 +16,6 @@ export default function ErrorLayout({
   // STATE
   const [open, setOpen] = useState(false);
 
-  // USEEFFECTS
-  useEffect(() => {
-    console.log(open);
-  }, [open]);
-
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar open={open} setOpen={setOpen} />

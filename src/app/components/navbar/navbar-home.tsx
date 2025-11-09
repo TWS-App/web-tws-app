@@ -24,8 +24,8 @@ const menu = [
   { icon: <FaCogs />, label: "PRODUCT", href: "/products" },
   { icon: <FaTools />, label: "SERVICES TWS", href: "/services" },
   // { icon: <FaQuestionCircle />, label: "Tutorial Pairing", href: "/tutorial" },
-  { icon: <FaWhatsapp />, label: "CONTACT", href: "/contact" },
-  { icon: <PiMapPinAreaFill />, label: "LOCATION", href: "/location" },
+  { icon: <FaWhatsapp />, label: "CONTACT", href: "/#contact" },
+  { icon: <PiMapPinAreaFill />, label: "LOCATION", href: "/#location" },
 ];
 
 // CODE
@@ -116,13 +116,13 @@ export default function Navbar() {
         <ul className="hidden md:flex items-center gap-6 text-sm font-medium">
           {menu.map((item, index) => (
             <li key={index}>
-              <a
+              <Link
                 href={item.href}
                 className="flex items-center gap-2 px-3 py-2 hover:bg-yellow-400 rounded-full transition hover:scale-105 cursor-pointer"
               >
                 {item.icon}
                 <span>{item.label}</span>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

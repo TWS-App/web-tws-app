@@ -105,7 +105,7 @@ export default function EditProduct() {
       console.log("Edit: ", result);
 
       if (!result) {
-        NextResponse.rewrite(new URL("/error/not-found"));
+        NextResponse.rewrite(new URL("/errorpage/not-found"));
       } else {
         setData(result);
 

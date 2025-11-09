@@ -13,17 +13,22 @@ import { IoHome } from "react-icons/io5";
 export default function InternalError() {
   return (
     <div className="flex flex-col justify-center items-center h-[80vh] text-center text-white bg-gray-900">
-      <WarningOutlined style={{ fontSize: 60, color: "#ff7875" }} />
-      <h1 className="text-3xl font-bold mt-4">500 - Internal Server Error</h1>
-      <p className="text-gray-400 mt-2">
-        Something went wrong while loading this page.
-      </p>
-      <div className="mt-6 flex gap-3">
-        <Link href="/">
-          <Button icon={<IoHome size={24} />} type="primary">
-            Back to Home
-          </Button>
-        </Link>
+      <div className="container flex flex-col justify-center items-center border-2 w-3/4 h-3/4 m-auto bg-amber-50 rounded-2xl">
+        <WarningOutlined style={{ fontSize: 60, color: "#d32029" }} />
+        <h1 className="text-3xl text-black font-bold mt-4">
+          500 - Internal Server Error
+        </h1>
+        <p className="text-black mt-2">
+          Something went wrong while loading this page.
+        </p>
+
+        <div className="mt-6 flex gap-3">
+          <Link href="/">
+            <Button icon={<IoHome size={24} />} type="primary">
+              Back to Home
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   );

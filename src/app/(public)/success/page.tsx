@@ -20,7 +20,7 @@ export default function SuccessPage() {
   const params = useSearchParams();
   const orderId = params.get("orderId");
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
   console.log(orderId);
@@ -40,14 +40,19 @@ export default function SuccessPage() {
   // Fetch Data
   const fetchData = async (value: any) => {
     setLoading(true);
+
     try {
       const res = await orderHeaderService.getById(value);
 
       console.log("Res: ", res);
+      setData(res);
     } catch (error) {
+      setData(null);
       //
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 750);
     }
   };
 
@@ -61,52 +66,54 @@ export default function SuccessPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white px-6">
-      {/* Animated success icon */}
-      <div
-        className="text-green-500"
-        // initial={{ scale: 0 }}
-        // animate={{ scale: 1 }}
-        // transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
-      >
-        <BiCheckCircle className="text-green-500 w-24 h-24 mb-6" />
-      </div>
-
-      {/* Success message */}
-      <h1
-        // initial={{ opacity: 0, y: 20 }}
-        // animate={{ opacity: 1, y: 0 }}
-        // transition={{ delay: 0.2 }}
-        className="text-3xl font-bold mb-2"
-      >
-        Transaction Successful!
-      </h1>
-
-      <p
-        // initial={{ opacity: 0, y: 20 }}
-        // animate={{ opacity: 1, y: 0 }}
-        // transition={{ delay: 0.4 }}
-        className="text-gray-400 mb-8 text-center max-w-md"
-      >
-        Thank you for your purchase! Your order with ID ={" "}
-        {orderId || "ORD250900001"} is created and will be processed immediately
-        after we have confirm your payment.
-      </p>
-
-      {/* Buttons */}
-      <div className="flex gap-4">
-        <button
-          onClick={handlePrint}
-          className="flex justify-center align-baseline bg-blue-600 hover:bg-blue-700 px-6 py-3 gap-3 rounded-lg font-semibold transition cursor-pointer"
+      <div className="flex flex-col justify-center items-center m-auto p-4 bg-white w-3/4 h-full rounded-2xl">
+        {/* Animated success icon */}
+        <div
+          className="text-green-500"
+          // initial={{ scale: 0 }}
+          // animate={{ scale: 1 }}
+          // transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
         >
-          <RiPrinterFill size={24} /> Print Invoice
-        </button>
+          <BiCheckCircle className="text-green-500 w-24 h-24 mb-6" />
+        </div>
 
-        <button
-          onClick={() => router.push("/")}
-          className="flex justify-center align-baseline bg-gray-700 hover:bg-gray-600 px-6 py-3 gap-3 rounded-lg font-semibold transition cursor-pointer"
+        {/* Success message */}
+        <h1
+          // initial={{ opacity: 0, y: 20 }}
+          // animate={{ opacity: 1, y: 0 }}
+          // transition={{ delay: 0.2 }}
+          className="text-3xl font-bold mb-2 text-green-500"
         >
-          <IoHome size={20} /> Back to Home
-        </button>
+          Transaction Successful!
+        </h1>
+
+        <p
+          // initial={{ opacity: 0, y: 20 }}
+          // animate={{ opacity: 1, y: 0 }}
+          // transition={{ delay: 0.4 }}
+          className="text-gray-800 mb-8 text-center max-w-md"
+        >
+          Thank you for your purchase! Your order with ID ={" "}
+          {data?.order_number || "#######"} is created and will be processed
+          immediately after we have confirm your payment.
+        </p>
+
+        {/* Buttons */}
+        <div className="flex gap-4">
+          <button
+            onClick={handlePrint}
+            className="flex justify-center align-baseline bg-green-600 hover:bg-green-500 px-6 py-3 gap-3 rounded-lg font-semibold transition cursor-pointer"
+          >
+            <RiPrinterFill size={24} /> Print Invoice
+          </button>
+
+          <button
+            onClick={() => router.push("/")}
+            className="flex justify-center align-baseline bg-blue-600 hover:bg-blue-500 px-6 py-3 gap-3 rounded-lg font-semibold transition cursor-pointer"
+          >
+            <IoHome size={20} /> Back to Home
+          </button>
+        </div>
       </div>
     </div>
   );

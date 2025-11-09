@@ -36,12 +36,48 @@ async function validatePathWithApi(pathname: string) {
   }
 }
 
+// Routes List
+const VALID_ROUTES = [
+  "/",
+  "/login",
+  "/dashboard",
+  "/profile",
+  "/settings",
+  "/services",
+  "/products",
+  "/tracking",
+  "/cart",
+  "/order",
+  "/items",
+  "/orders",
+  "/success",
+  "/invoice",
+  "/orders/ongoing",
+  "/errorpage/not-found",
+  "/errorpage/internal",
+  "/errorpage/unauthorized",
+  "/items/:path*",
+  "/services/:path*",
+  "/payments/:path*",
+  "/invoices/:path*",
+];
+
+// helper untuk deteksi apakah route valid
+function isValidRoute(pathname: string): boolean {
+  if (VALID_ROUTES.includes(pathname)) return true;
+
+  return VALID_ROUTES.some((r) => pathname.startsWith(r + "/"));
+}
+
 // CODE
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const token = req.cookies.get("token"); // token dummy
+  const token = req.cookies.get("token");
   const ua = req.headers.get("user-agent") || "";
   const isCrawler = isBot(ua);
+
+  console.log("[TEST] Middleware active on:", req.nextUrl.pathname);
+  console.log("Pathname middleware: ", pathname);
 
   // Protection Login
   if (
@@ -54,29 +90,26 @@ export async function middleware(req: NextRequest) {
     }
   }
 
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/favicon") ||
+    pathname.startsWith("/assets") ||
+    pathname.match(/\.(png|jpg|jpeg|svg|gif|ico|webp|css|js|map)$/)
+  ) {
+    return NextResponse.next();
+  }
+
   // If Not Found
-  // const editMatch = pathname.match(/\/edit\/([^/]+)/);
   const editMatch = pathname.match(/\/edit\/([^/]+)(?:\/|$)/);
 
   console.log("Edit match: ", editMatch);
   console.log("Token: ", token);
 
+  // Find Match
   if (editMatch) {
     const id = editMatch[1];
 
-    console.log("ID: ", id);
-
-    if (!id || !/^[a-zA-Z0-9_-]+$/.test(id)) {
-      console.log("ID: ", req.url);
-
-      return NextResponse.rewrite(new URL("/error/not-found", req.url));
-    }
-  }
-
-  if (editMatch) {
-    const id = editMatch[1];
-
-    // Basic format validation (allow common id chars; adjust as needed)
     if (!id || !/^[a-zA-Z0-9_-]+$/.test(id)) {
       // invalid format -> show not-found
       return isCrawler
@@ -97,17 +130,33 @@ export async function middleware(req: NextRequest) {
     }
   }
 
+  const isValid = isValidRoute(pathname);
+
+  console.log("Validation Routes: ", isValid);
+
+  // IS VALID
+  if (!isValid) {
+    const notFoundUrl = new URL("/errorpage/not-found", req.nextUrl.origin);
+
+    return NextResponse.rewrite(notFoundUrl);
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/profile/:path*",
-    "/items/:path*",
-    "/services/:path*",
-    "/payments/:path*",
-    "/invoices/:path*",
-    "/error/:path*",
+    "/((?!_next|api|favicon.ico|assets|.*\\..*).*)",
+    // "/protected/:path*",
+    // "/public/:path*",
+    // "/auth/:path*",
+    // "/items/:path*",
+    // "/dashboard/:path*",
+    // "/profile/:path*",
+    // "/items/:path*",
+    // "/services/:path*",
+    // "/payments/:path*",
+    // "/invoices/:path*",
+    // "/errorpage/:path*",
   ],
 };
