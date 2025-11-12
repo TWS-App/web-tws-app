@@ -4,6 +4,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { NextResponse } from "next/server";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/stores";
 
 // Antd Componetns
 import {
@@ -51,6 +53,10 @@ import { formatPrice } from "@/utils/function/price";
 // Notifications
 import { notifyWarning } from "@/utils/notification/notifications";
 
+interface CustomUploadFile extends UploadFile {
+  order_view?: number;
+}
+
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 const getBase64 = (file: FileType): Promise<string> =>
@@ -69,10 +75,12 @@ export default function EditProduct() {
   // React
   const { id } = useParams();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const editData = useSelector((state: RootState) => state.editData.data);
 
   // STATE
   const [data, setData] = useState<Products>();
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [fileList, setFileList] = useState<CustomUploadFile[]>([]);
 
   // Boolean
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -96,6 +104,7 @@ export default function EditProduct() {
     setLoading(true);
 
     console.log("ID: ", values, id);
+    console.log("Data: ", editData);
     const _id = values > 0 ? values : id;
 
     try {
@@ -247,13 +256,19 @@ export default function EditProduct() {
     router.push("/items/products");
   };
 
-  const handleUploadChange = ({ fileList }: { fileList: UploadFile[] }) => {
+  const handleUploadChange = ({
+    fileList,
+  }: {
+    fileList: CustomUploadFile[];
+  }) => {
+    console.log("File List: ", fileList);
     setFileList(fileList);
   };
 
   // Handle upload to API
   const handleUpload = async () => {
     setUploading(true);
+
     try {
       const product_id = Number(id) > 0 ? Number(id) : data?.id;
 
@@ -261,7 +276,8 @@ export default function EditProduct() {
         if (file.originFileObj) {
           await imageServices.upload(
             file.originFileObj as File,
-            Number(product_id)
+            Number(product_id),
+            file?.order_view || 0
           );
         }
       }
@@ -274,7 +290,7 @@ export default function EditProduct() {
   };
 
   // Preview Image
-  const handlePreview = async (file: UploadFile) => {
+  const handlePreview = async (file: CustomUploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
     }
@@ -558,6 +574,35 @@ export default function EditProduct() {
               beforeUpload={() => false}
               onPreview={handlePreview}
               onChange={handleUploadChange}
+              itemRender={(originNode, file: any) => (
+                <div className="flex flex-col items-center">
+                  {originNode}
+
+                  <InputNumber
+                    min={0}
+                    max={10000}
+                    size="small"
+                    value={file.order_view ?? 0}
+                    onChange={(value) => {
+                      let newList = [...fileList];
+
+                      newList = newList.map((f: any, idx: number) => {
+                        if (f.uid === file.uid)
+                          return { ...f, order_view: value };
+                        if (f.order_view === value)
+                          return { ...f, order_view: f.order_view! + 1 + idx };
+                        return f;
+                      });
+
+                      setFileList(newList);
+                    }}
+                    style={{ marginTop: 6, width: 70 }}
+                  />
+                  <Typography.Text type="secondary" style={{ fontSize: 10 }}>
+                    Order View
+                  </Typography.Text>
+                </div>
+              )}
             >
               <div className="flex flex-col items-center justify-center h-full hover:text-blue-700">
                 <PiUploadDuotone
@@ -588,7 +633,7 @@ export default function EditProduct() {
               onClick={handleUpload}
               disabled={fileList.length === 0}
               style={{
-                marginTop: 12,
+                marginTop: 60,
               }}
             >
               {uploading ? "Uploading..." : "Upload to Server"}

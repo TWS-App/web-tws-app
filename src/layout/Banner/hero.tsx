@@ -52,7 +52,7 @@ const HeroBanner = () => {
             </p>
 
             {/* Tombol */}
-            <div className="flex flex-wrap justify-center gap-4 pt-4">
+            <div className="flex flex-wrap justify-center gap-2 pt-4">
               <Link
                 href="/services"
                 className="hover:scale-105 rounded-full transition-transform duration-300"
@@ -84,7 +84,7 @@ const HeroBanner = () => {
           </div>
 
           <div className="order-3 md:order-3 sm:order-3 gap-3 mt-10 md:mt-0">
-            <div className="w-full flex flex-col justify-end items-end w-xs:justify-center sm:justify-center">
+            <div className="w-full flex flex-col justify-end items-end w-xs:justify-center sm:justify-center mt-5">
               <Link
                 href="/services"
                 className="hover:scale-105 rounded-full transition-transform duration-300"
@@ -134,7 +134,7 @@ const HeroBanner = () => {
               src="/images/assets/owner.png"
               alt="Owner"
               height={500}
-              width={500}
+              width={550}
               preview={false}
               className="object-bottom md:object-bottom w-auto h-auto md:h-[500px]"
             />

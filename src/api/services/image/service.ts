@@ -13,6 +13,7 @@ export interface Images {
   service_id: number | undefined | null;
   uploaded_at: string | undefined | null;
   url: string | undefined | null;
+  order_view?: number | undefined | null;
 }
 
 // CODE
@@ -37,12 +38,15 @@ export const imageServices = {
     }
   },
 
-  async upload(file: File, product_id: number) {
+  async upload(file: File, product_id: number, order_view?: number) {
     try {
       const formData = new FormData();
 
       formData.append("file", file);
       formData.append("product_id", String(product_id));
+      if (order_view !== undefined) {
+        formData.append("order_view", String(order_view));
+      }
 
       const response = await api.post("/image/upload", formData, {
         headers: {
@@ -58,12 +62,15 @@ export const imageServices = {
     }
   },
 
-  async uploadService(file: File, product_id: number) {
+  async uploadService(file: File, product_id: number, order_view?: number) {
     try {
       const formData = new FormData();
 
       formData.append("file", file);
       formData.append("service_id", String(product_id));
+      if (order_view !== undefined) {
+        formData.append("order_view", String(order_view));
+      }
 
       const response = await api.post("/image/upload", formData, {
         headers: {

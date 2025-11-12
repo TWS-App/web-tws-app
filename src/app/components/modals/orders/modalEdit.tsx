@@ -68,6 +68,7 @@ export default function ModalEditOrder({
   // USE EFFECTS
   useEffect(() => {
     if (isOpen) {
+      setOpen(true);
       // console.log("Data Edit: ", dataEdit);
 
       if (dataEdit?.id > 0) {
@@ -77,8 +78,6 @@ export default function ModalEditOrder({
         setTimeout(() => {
           handleFormField(dataEdit);
         }, 1500);
-      } else {
-        setOpen(true);
       }
     } else {
       setOpen(false);
@@ -87,7 +86,6 @@ export default function ModalEditOrder({
 
   // FETCH DATA DETAILS
   const fetchDetails = async (value: any) => {
-    setOpen(true);
     setLoading(true);
 
     try {
@@ -442,7 +440,7 @@ export default function ModalEditOrder({
                 />
               </Form.Item>
 
-              <Form.Item label="Shipment Name" name="shipment_name" >
+              <Form.Item label="Shipment Name" name="shipment_name">
                 <Input placeholder="Shipment Name" />
               </Form.Item>
 

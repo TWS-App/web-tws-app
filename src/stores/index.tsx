@@ -1,25 +1,36 @@
 "use client";
 
-import { configureStore } from "@reduxjs/toolkit";
+// REACT REDUX
 import { Provider } from "react-redux";
-import cartReducer from "./cart/cart";
+import { configureStore } from "@reduxjs/toolkit";
 import logger from "redux-logger";
-import storageSession from "redux-persist/lib/storage/session";
 import { persistReducer, persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
-import storage from "./storage/storage";
+
+// ICONS
 import { BiLoader } from "react-icons/bi";
+
+// Reduces
+import cartReducer from "./cart/cart";
+import storage from "./storage/storage";
+import editReducer from "./edit/edit";
+// import storageSession from "redux-persist/lib/storage/session";
 
 const persistConfig = {
   key: "cart",
   storage: storage,
 };
 
+// CART REDUCER
 const persistedCartReducer = persistReducer(persistConfig, cartReducer);
+
+// EDIT REDUCER
+const persistedEditReducer = persistReducer(persistConfig, editReducer);
 
 export const store = configureStore({
   reducer: {
     cart: persistedCartReducer,
+    editData: persistedEditReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

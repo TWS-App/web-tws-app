@@ -1,5 +1,7 @@
+// REACT-REDUX
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+// INTERFACE
 interface CartItem {
   id: number;
   name: string | undefined | null;
@@ -21,6 +23,7 @@ const initialState: CartState = {
   items: [],
 };
 
+// CODE
 const cartSlice = createSlice({
   name: "cart",
   initialState,

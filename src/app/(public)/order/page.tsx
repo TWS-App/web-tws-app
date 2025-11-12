@@ -3,8 +3,11 @@
 // REACT
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/stores";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+// REDUX
+import { RootState } from "@/stores";
 import { clearCart } from "@/stores/cart/cart";
 
 // Antd Components
@@ -20,18 +23,24 @@ import {
   Row,
 } from "antd";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { RiHeadphoneFill } from "react-icons/ri";
+
+// SERVICE
+import { orderHeaderService } from "@/api/services/orders/serviceHeader";
+import { orderDetailsService } from "@/api/services/orders/serviceDetails";
 
 // Utils
 import { formatPrice } from "@/utils/function/price";
+
+// Components
 import MasterPaymentList from "@/app/components/masters/payment/payment";
+import MasterProvince from "@/app/components/masters/region/province";
+import MasterCity from "@/app/components/masters/region/city";
+import MasterKecamatan from "@/app/components/masters/region/kecamatan";
+import MasterVillage from "@/app/components/masters/region/village";
 
 // Notifications
 import { notifyWarning } from "@/utils/notification/notifications";
-import { orderHeaderService } from "@/api/services/orders/serviceHeader";
-import { orderDetailsService } from "@/api/services/orders/serviceDetails";
-import MasterProvince from "@/app/components/masters/region/province";
-import { RiHeadphoneFill } from "react-icons/ri";
-import Link from "next/link";
 
 // CONST
 const { confirm } = Modal;
@@ -56,6 +65,13 @@ export default function CheckoutPage() {
     address: "",
     phone_number: "",
     payment: "",
+  });
+
+  const [address, setAddress] = useState({
+    province: null,
+    city: null,
+    camat: null,
+    village: null,
   });
 
   // State collapse
@@ -99,27 +115,64 @@ export default function CheckoutPage() {
   const getProvince = (value: any) => {
     console.log(value);
 
+    setAddress({
+      province: value?.id,
+      city: address.city,
+      camat: address.camat,
+      village: address.village,
+    });
+
     form.setFieldsValue({
-      province: value.id,
+      province: value.value,
     });
   };
 
-  // Validations
-  const validateFields = (fields: string[]) => {
-    const newErrors: { [key: string]: string } = {};
-    fields.forEach((f) => {
-      if (!formData[f as keyof typeof formData]) {
-        newErrors[f] = "This field is required";
-      }
+  // Handle City
+  const getCity = (value: any) => {
+    console.log(value);
+
+    setAddress({
+      province: address.province,
+      city: value.id,
+      camat: address.camat,
+      village: address.village,
     });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+
+    form.setFieldsValue({
+      city: value.value,
+    });
   };
 
-  const handleContinue = (fields: string[], nextStep: number) => {
-    if (validateFields(fields)) {
-      setStep(nextStep);
-    }
+  // Handle Camat
+  const getCamat = (value: any) => {
+    console.log(value);
+
+    setAddress({
+      province: address.province,
+      city: address.city,
+      camat: value.id,
+      village: address.village,
+    });
+
+    form.setFieldsValue({
+      camat: value.value,
+    });
+  };
+
+  // Handle Village
+  const getVillage = (value: any) => {
+    console.log(value);
+
+    setAddress({
+      province: address.province,
+      city: address.city,
+      camat: address.camat,
+      village: value.id,
+    });
+
+    form.setFieldsValue({
+      village: value.value,
+    });
   };
 
   // SHOW MODAL CONFIRM
@@ -174,10 +227,19 @@ export default function CheckoutPage() {
   // Handle Submit
   const handleSubmit = async (values: any) => {
     const _body = values;
-    console.log("Submit: ", _body);
+    const _address =
+      _body?.address +
+      ", " +
+      _body.village +
+      ", " +
+      _body.camat +
+      ", " +
+      _body.city +
+      ", " +
+      _body.province;
 
     const body = {
-      address: _body?.address,
+      address: _address,
       customer_name: _body.customer_name,
       email: _body.email,
       payment_status: 0,
@@ -188,6 +250,8 @@ export default function CheckoutPage() {
       // status_order: 1,
       // shipment: 0,
     };
+
+    console.log("Submit: ", _body);
 
     try {
       const res = await orderHeaderService.create(body);
@@ -205,7 +269,8 @@ export default function CheckoutPage() {
             service_id: cart[i].type === "service" ? cart[i].id : null,
             qty: cart[i].quantity,
             total: cart[i].price * cart[i].quantity,
-            variants: cart[i].variant,
+            variants:
+              (cart[i]?.variant?.length ?? 0) > 0 ? cart[i].variant : null,
           };
 
           console.log("Details: ", details);
@@ -318,12 +383,16 @@ export default function CheckoutPage() {
 
               <Divider
                 className="form-divider"
-                style={{ margin: "15px 0px", borderColor: "#EBEDF3" }}
+                style={{
+                  margin: "15px 0px",
+                  borderColor: "#EBEDF3",
+                  color: "#FFFFFF",
+                }}
               >
                 {`Address`}
               </Divider>
 
-              {/* <Form.Item
+              <Form.Item
                 name="province"
                 label={<span className="text-white">Province</span>}
                 rules={[
@@ -334,7 +403,58 @@ export default function CheckoutPage() {
                 ]}
               >
                 <MasterProvince getProvince={getProvince} prov="" />
-              </Form.Item> */}
+              </Form.Item>
+
+              <Form.Item
+                name="city"
+                label={<span className="text-white">Kabupaten/Kota</span>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a Kabupaten/Kota!",
+                  },
+                ]}
+              >
+                <MasterCity
+                  prov_id={address.province}
+                  getCity={getCity}
+                  prov=""
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="camat"
+                label={<span className="text-white">Kecamatan</span>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a Kecamatan!",
+                  },
+                ]}
+              >
+                <MasterKecamatan
+                  city_id={address.city}
+                  getCamat={getCamat}
+                  prov=""
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="village"
+                label={<span className="text-white">Kelurahan/Desa</span>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a Kelurahan/Desa!",
+                  },
+                ]}
+              >
+                <MasterVillage
+                  camat_id={address.camat}
+                  getVillage={getVillage}
+                  prov=""
+                />
+              </Form.Item>
 
               <Form.Item
                 name="address"

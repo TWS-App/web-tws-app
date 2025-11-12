@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+// Dispatch
+import { useDispatch } from "react-redux";
+
 // Services
 import { productServices } from "@/api/services/product/product";
 import api from "@/api/context/config";
@@ -21,6 +24,7 @@ import Pagination from "../../pagination/pagination";
 import type { Client } from "./types/types";
 import { formatPrice } from "@/utils/function/price";
 import { randomColors } from "@/utils/constans/colors";
+import { addEditData } from "@/stores/edit/edit";
 
 const clients: Client[] = [
   {
@@ -110,7 +114,9 @@ const clients: Client[] = [
 
 // CODE
 export default function TableProducts() {
+  // Reacts
   const route = useRouter();
+  const dispatch = useDispatch();
 
   // DATA STATE
   const [data, setData] = useState([]);
@@ -167,6 +173,8 @@ export default function TableProducts() {
   // Handle Edit
   const handleEdit = (values: any) => {
     console.log(values);
+
+    dispatch(addEditData(values));
 
     route.push(`/items/products/edit/${values.id}`);
   };

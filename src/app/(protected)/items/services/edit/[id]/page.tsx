@@ -50,6 +50,10 @@ import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 // Notifications
 import { notifyWarning } from "@/utils/notification/notifications";
 
+interface CustomUploadFile extends UploadFile {
+  order_view?: number;
+}
+
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 const getBase64 = (file: FileType): Promise<string> =>
@@ -71,7 +75,7 @@ export default function EditService() {
 
   // STATE
   const [data, setData] = useState<Services>();
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [fileList, setFileList] = useState<CustomUploadFile[]>([]);
 
   // Boolean
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -242,7 +246,11 @@ export default function EditService() {
     router.push("/items/products");
   };
 
-  const handleUploadChange = ({ fileList }: { fileList: UploadFile[] }) => {
+  const handleUploadChange = ({
+    fileList,
+  }: {
+    fileList: CustomUploadFile[];
+  }) => {
     setFileList(fileList);
   };
 
@@ -256,7 +264,8 @@ export default function EditService() {
         if (file.originFileObj) {
           await imageServices.uploadService(
             file.originFileObj as File,
-            Number(product_id)
+            Number(product_id),
+            file?.order_view || 0
           );
         }
       }
@@ -269,7 +278,7 @@ export default function EditService() {
   };
 
   // Preview Image
-  const handlePreview = async (file: UploadFile) => {
+  const handlePreview = async (file: CustomUploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
     }
@@ -553,6 +562,35 @@ export default function EditService() {
               beforeUpload={() => false}
               onPreview={handlePreview}
               onChange={handleUploadChange}
+              itemRender={(originNode, file: any) => (
+                <div className="flex flex-col items-center">
+                  {originNode}
+
+                  <InputNumber
+                    min={0}
+                    max={10000}
+                    size="small"
+                    value={file.order_view ?? 0}
+                    onChange={(value) => {
+                      let newList = [...fileList];
+
+                      newList = newList.map((f: any, idx: number) => {
+                        if (f.uid === file.uid)
+                          return { ...f, order_view: value };
+                        if (f.order_view === value)
+                          return { ...f, order_view: f.order_view! + 1 + idx };
+                        return f;
+                      });
+
+                      setFileList(newList);
+                    }}
+                    style={{ marginTop: 6, width: 70 }}
+                  />
+                  <Typography.Text type="secondary" style={{ fontSize: 10 }}>
+                    Order View
+                  </Typography.Text>
+                </div>
+              )}
             >
               <div className="flex flex-col items-center justify-center h-full hover:text-blue-700">
                 <PiUploadDuotone
@@ -583,7 +621,7 @@ export default function EditService() {
               onClick={handleUpload}
               disabled={fileList.length === 0}
               style={{
-                marginTop: 12,
+                marginTop: 60,
               }}
             >
               {uploading ? "Uploading..." : "Upload to Server"}

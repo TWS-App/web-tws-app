@@ -5,7 +5,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 // SERVICES
-import { Products, productServices } from "@/api/services/product/product";
+import { orderDetailsService } from "@/api/services/orders/serviceDetails";
+import { orderHeaderService } from "@/api/services/orders/serviceHeader";
 
 // ANTD Components
 import {
@@ -30,18 +31,22 @@ import {
   PiX,
   PiXCircle,
 } from "react-icons/pi";
+import { FiPlusCircle } from "react-icons/fi";
 
 // Appe Components
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 import MasterCategoryProduct from "@/app/components/masters/category/categoryProduct";
 
+// Page Components
+import ServiceItemsModal from "@/app/components/modals/items/service/modal";
+import MasterProvince from "@/app/components/masters/region/province";
+import MasterCity from "@/app/components/masters/region/city";
+import MasterPaymentList from "@/app/components/masters/payment/payment";
+import MasterKecamatan from "@/app/components/masters/region/kecamatan";
+import MasterVillage from "@/app/components/masters/region/village";
+
 // Utils
 import { formatPrice } from "@/utils/function/price";
-import { orderDetailsService } from "@/api/services/orders/serviceDetails";
-import { orderHeaderService } from "@/api/services/orders/serviceHeader";
-import MasterPaymentList from "@/app/components/masters/payment/payment";
-import { FiPlusCircle } from "react-icons/fi";
-import ServiceItemsModal from "@/app/components/modals/items/service/modal";
 
 // Interface
 type Form = {
@@ -88,6 +93,13 @@ export default function CreateOrderPage() {
   const [discount, setDiscount] = useState(0);
   const [total, setTotal] = useState(0);
 
+  const [address, setAddress] = useState({
+    province: null,
+    city: null,
+    camat: null,
+    village: null,
+  });
+
   const [open, setOpen] = useState(false);
   const [loadingBtn, setLoadingBtn] = useState(false);
 
@@ -105,10 +117,19 @@ export default function CreateOrderPage() {
 
   const handleSubmit = async (values: any) => {
     const _body = values;
-    console.log("Submitting product payload:", _body);
+    const _address =
+      _body?.address +
+      ", " +
+      _body.village +
+      ", " +
+      _body.camat +
+      ", " +
+      _body.city +
+      ", " +
+      _body.province;
 
     const body = {
-      address: _body?.address,
+      address: _address,
       customer_name: _body.customer_name,
       email: _body.email,
       payment_status: 0,
@@ -119,6 +140,8 @@ export default function CreateOrderPage() {
       status_order: 1,
       shipment: 0,
     };
+
+    console.log("Submitting product payload:", body);
 
     try {
       const res = await orderHeaderService.create(body);
@@ -152,6 +175,70 @@ export default function CreateOrderPage() {
     } finally {
       setLoadingBtn(false);
     }
+  };
+
+  // Handle Province
+  const getProvince = (value: any) => {
+    console.log(value);
+
+    setAddress({
+      province: value?.id,
+      city: address.city,
+      camat: address.camat,
+      village: address.village,
+    });
+
+    form.setFieldsValue({
+      province: value.value,
+    });
+  };
+
+  // Handle City
+  const getCity = (value: any) => {
+    console.log(value);
+
+    setAddress({
+      province: address.province,
+      city: value.id,
+      camat: address.camat,
+      village: address.village,
+    });
+
+    form.setFieldsValue({
+      city: value.value,
+    });
+  };
+
+  // Handle Camat
+  const getCamat = (value: any) => {
+    console.log(value);
+
+    setAddress({
+      province: address.province,
+      city: address.city,
+      camat: value.id,
+      village: address.village,
+    });
+
+    form.setFieldsValue({
+      camat: value.value,
+    });
+  };
+
+  // Handle Village
+  const getVillage = (value: any) => {
+    console.log(value);
+
+    setAddress({
+      province: address.province,
+      city: address.city,
+      camat: address.camat,
+      village: value.id,
+    });
+
+    form.setFieldsValue({
+      village: value.value,
+    });
   };
 
   // Handle Open
@@ -330,6 +417,36 @@ export default function CreateOrderPage() {
           <Row justify="start" gutter={30}>
             <Col span={12}>
               <Form.Item
+                name="province"
+                label={<span className="text-black">Province</span>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a Province!",
+                  },
+                ]}
+              >
+                <MasterProvince getProvince={getProvince} prov="" />
+              </Form.Item>
+
+              <Form.Item
+                name="city"
+                label={<span className="text-black">Kabupaten/Kota</span>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a Kabupaten/Kota!",
+                  },
+                ]}
+              >
+                <MasterCity
+                  prov_id={address.province}
+                  getCity={getCity}
+                  prov=""
+                />
+              </Form.Item>
+
+              <Form.Item
                 name="address"
                 label="Address"
                 rules={[
@@ -344,6 +461,42 @@ export default function CreateOrderPage() {
                   allowClear
                   showCount
                   placeholder="Address"
+                />
+              </Form.Item>
+            </Col>
+
+            <Col span={12}>
+              <Form.Item
+                name="camat"
+                label={<span className="text-black">Kecamatan</span>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a Kecamatan!",
+                  },
+                ]}
+              >
+                <MasterKecamatan
+                  city_id={address.city}
+                  getCamat={getCamat}
+                  prov=""
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="village"
+                label={<span className="text-black">Kelurahan/Desa</span>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a Kelurahan/Desa!",
+                  },
+                ]}
+              >
+                <MasterVillage
+                  camat_id={address.camat}
+                  getVillage={getVillage}
+                  prov=""
                 />
               </Form.Item>
             </Col>

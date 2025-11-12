@@ -18,10 +18,47 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "YHUSAN STORE App",
-  description: "App for your dedicated services",
-  icons: {
-    icon: "/favicon.ico",
+  title: {
+    default: "Yhusan Digital | TWS Audio Specialist",
+    template: "%s | Yhusan Digital",
+  },
+  description:
+    "Perbaikan TWS rusak dengan part original dan kualitas terbaik. Yhusan Digital, spesialis audio terpercaya.",
+  keywords: [
+    "Yhusan Digital",
+    "TWS",
+    "Audio",
+    "Repair",
+    "Sparepart",
+    "Bluetooth Earphone",
+  ],
+  authors: [{ name: "Yhusan Digital Team", url: "https://yhusan-digital.com" }],
+  openGraph: {
+    title: "Yhusan Digital | TWS Audio Specialist",
+    description:
+      "Layanan perbaikan TWS dengan part original dan garansi resmi.",
+    url: "https://yhusan-digital.com",
+    siteName: "Yhusan Digital",
+    images: [
+      {
+        url: "https://yhusan-digital.com/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Yhusan Digital",
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Yhusan Digital | TWS Audio Specialist",
+    description: "Perbaikan TWS dengan part original dan hasil profesional.",
+    images: ["https://yhusan-digital.com/images/og-image.jpg"],
+    creator: "@yhusandigital",
+  },
+  alternates: {
+    canonical: "https://yhusan-digital.com",
   },
 };
 
