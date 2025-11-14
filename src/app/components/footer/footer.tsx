@@ -1,5 +1,6 @@
 "use client";
 
+import { FloatButton } from "antd";
 // Antd Components
 import {
   FaFacebookF,
@@ -14,6 +15,8 @@ import { IoSend } from "react-icons/io5";
 export default function HomeFooter() {
   return (
     <footer className="w-full bg-white text-gray-800">
+      <FloatButton.BackTop />
+
       {/* Subscribe Bar */}
       <div className="border-t border-gray-200 py-8 px-6 md:px-16 flex flex-col md:flex-row items-center justify-between gap-4">
         <div>

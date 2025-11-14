@@ -1,3 +1,6 @@
+// REACTS
+import React from "react";
+
 // Page Components
 import ReviewSection from "@/layout/Review/review";
 import CategoriesSection from "../components/olds/category";
@@ -13,6 +16,7 @@ import CategorySelection from "@/layout/Category/category";
 import BrandLogos from "@/layout/Banner/logobanner";
 
 import Script from "next/script";
+import { FloatButton } from "antd";
 
 // CODE
 export default function Home() {
@@ -99,8 +103,8 @@ export default function Home() {
 
           {/* <MarketSection />
 
-        <ReviewSection />
-         */}
+<ReviewSection />
+*/}
         </main>
       </div>
     </>

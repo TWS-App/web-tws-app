@@ -14,7 +14,7 @@ export interface Images {
   uploaded_at: string | undefined | null;
   url: string | undefined | null;
   order_view?: number | undefined | null;
-}
+};
 
 // CODE
 export const imageServices = {

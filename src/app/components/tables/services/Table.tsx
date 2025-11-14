@@ -230,10 +230,10 @@ export default function TableServices() {
               <thead className="bg-gray-700 text-gray-300">
                 <tr>
                   <th className="py-3 px-4 text-left">Name</th>
-                  {/* <th className="py-3 px-4 text-left">Categories</th> */}
+                  <th className="py-3 px-4 text-left">Categories</th>
                   <th className="py-3 px-4 text-left">{`Price (Rp)`}</th>
                   <th className="py-3 px-4 text-left">{`Discount (Rp)`}</th>
-                  <th className="py-3 px-4 text-left">Last Updated</th>
+                  {/* <th className="py-3 px-4 text-left">Last Updated</th> */}
                   <th className="py-3 px-4 text-left">Ready</th>
                   <th className="py-3 px-4 text-center">Actions</th>
                 </tr>
@@ -250,6 +250,7 @@ export default function TableServices() {
                         <p className="text-gray-400 text-xs">{items?.code}</p>
                       </div>
                     </td>
+                    <td className="py-3 px-4">{items.category_name}</td>
                     <td className="py-3 px-4 text-right">
                       {formatPrice(items.price)}
                     </td>
@@ -265,7 +266,7 @@ export default function TableServices() {
                     <td className="py-3 px-4 text-right">
                       {formatPrice(items?.discount || 0)}
                     </td>
-                    <td className="py-3 px-4">{items?.date}</td>
+                    {/* <td className="py-3 px-4">{items?.date}</td> */}
                     <td className="py-3 px-4 text-center">
                       {items?.is_ready ? (
                         <PiCheckCircle size={24} className="text-green-500" />

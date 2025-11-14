@@ -16,6 +16,7 @@ import api from "@/api/context/config";
 import { Spin, Tag, Tooltip } from "antd";
 import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
+import { PiCheckCircle, PiXCircle } from "react-icons/pi";
 
 // Page Components
 import Pagination from "../../pagination/pagination";
@@ -253,7 +254,8 @@ export default function TableProducts() {
                   <th className="py-3 px-4 text-left">Colors</th>
                   <th className="py-3 px-4 text-left">{`Price (Rp)`}</th>
                   <th className="py-3 px-4 text-left">{`Discount (Rp)`}</th>
-                  <th className="py-3 px-4 text-left">Last Updated</th>
+                  {/* <th className="py-3 px-4 text-left">Last Updated</th> */}
+                  <th className="py-3 px-4 text-left">Ready</th>
                   <th className="py-3 px-4 text-center">Actions</th>
                 </tr>
               </thead>
@@ -292,7 +294,14 @@ export default function TableProducts() {
                     <td className="py-3 px-4 text-right">
                       {formatPrice(items.discount || 0)}
                     </td>
-                    <td className="py-3 px-4">{items.date}</td>
+                    {/* <td className="py-3 px-4">{items.date}</td> */}
+                    <td className="py-3 px-4 text-center">
+                      {items?.is_ready ? (
+                        <PiCheckCircle size={24} className="text-green-500" />
+                      ) : (
+                        <PiXCircle size={24} className="text-red-500" />
+                      )}
+                    </td>
                     <td className="m-auto">
                       <div className="text-center flex justify-center items-center gap-3">
                         <Tooltip title="Edit Data">

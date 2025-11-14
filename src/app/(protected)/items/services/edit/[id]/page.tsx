@@ -243,7 +243,7 @@ export default function EditService() {
 
   // Handle Cancel
   const handleCancel = () => {
-    router.push("/items/products");
+    router.push("/items/services");
   };
 
   const handleUploadChange = ({
@@ -252,6 +252,37 @@ export default function EditService() {
     fileList: CustomUploadFile[];
   }) => {
     setFileList(fileList);
+  };
+
+  // Handle Update
+  const handleUpdateSingleImage = async (file: any) => {
+    setLoading(true);
+    const img_id = file.id;
+    const product_id = Number(id) > 0 ? Number(id) : data?.id;
+    const payload = {
+      id: file?.id,
+      file_name: file?.file_name,
+      file_path: file?.file_path,
+      mime_type: file?.mime_type,
+      order_view: file?.order_view,
+      product_id: file?.product_id,
+      service_id: file?.service_id,
+      uploaded_at: file?.uploaded_at,
+      url: file?.url,
+    };
+
+    console.log("File: ", file);
+    console.log("Body Upload: ", payload);
+
+    if (img_id) {
+      try {
+        await imageServices.update(img_id, payload);
+        fetchImage(product_id);
+      } catch (err) {
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   // Handle upload to API
@@ -562,35 +593,69 @@ export default function EditService() {
               beforeUpload={() => false}
               onPreview={handlePreview}
               onChange={handleUploadChange}
-              itemRender={(originNode, file: any) => (
-                <div className="flex flex-col items-center">
-                  {originNode}
+              itemRender={(originNode, file: any) => {
+                let error = false;
+                const isDuplicate = fileList.some(
+                  (f) => f.uid !== file.uid && f.order_view === file.order_view
+                );
 
-                  <InputNumber
-                    min={0}
-                    max={10000}
-                    size="small"
-                    value={file.order_view ?? 0}
-                    onChange={(value) => {
-                      let newList = [...fileList];
+                return (
+                  <div className="flex flex-col items-center">
+                    {originNode}
 
-                      newList = newList.map((f: any, idx: number) => {
-                        if (f.uid === file.uid)
-                          return { ...f, order_view: value };
-                        if (f.order_view === value)
-                          return { ...f, order_view: f.order_view! + 1 + idx };
-                        return f;
-                      });
+                    <Typography.Text type="secondary" style={{ fontSize: 10 }}>
+                      Order View
+                    </Typography.Text>
 
-                      setFileList(newList);
-                    }}
-                    style={{ marginTop: 6, width: 70 }}
-                  />
-                  <Typography.Text type="secondary" style={{ fontSize: 10 }}>
-                    Order View
-                  </Typography.Text>
-                </div>
-              )}
+                    <InputNumber
+                      min={0}
+                      max={10000}
+                      size="small"
+                      value={file.order_view ?? 0}
+                      onChange={(value) => {
+                        let newList = [...fileList];
+
+                        newList = newList.map((f: any, idx: number) => {
+                          if (f.uid === file.uid)
+                            return { ...f, order_view: value };
+                          if (f.order_view === value)
+                            return {
+                              ...f,
+                              order_view: f.order_view! + 1 + idx,
+                            };
+                          return f;
+                        });
+
+                        setFileList(newList);
+                      }}
+                      style={{ marginTop: 6, width: 70 }}
+                    />
+
+                    {isDuplicate && (
+                      <Typography.Text
+                        type="danger"
+                        style={{ fontSize: 10, marginTop: 4 }}
+                      >
+                        Order sudah digunakan
+                      </Typography.Text>
+                    )}
+
+                    {file?.originFileObj ? null : (
+                      <Button
+                        onClick={() => handleUpdateSingleImage(file)}
+                        variant="solid"
+                        color="volcano"
+                        disabled={error}
+                        style={{
+                          marginTop: 6,
+                        }}
+                      >
+                        Update
+                      </Button>
+                    )}
+                  </div>
+                );
+              }}
             >
               <div className="flex flex-col items-center justify-center h-full hover:text-blue-700">
                 <PiUploadDuotone
@@ -621,7 +686,7 @@ export default function EditService() {
               onClick={handleUpload}
               disabled={fileList.length === 0}
               style={{
-                marginTop: 60,
+                marginTop: 100,
               }}
             >
               {uploading ? "Uploading..." : "Upload to Server"}

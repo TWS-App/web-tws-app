@@ -55,6 +55,12 @@ export default function ServiceCard({ item }: { item: any }) {
               : formatPrice(item.price)}
           </span>
         </div>
+
+        {!item?.is_ready && (
+          <div className="text-red-500">
+            <span className="font-semibold">{`Service is Unavailable`}</span>
+          </div>
+        )}
       </Link>
     </div>
   );

@@ -18,6 +18,7 @@ import {
   Image,
   Input,
   InputNumber,
+  message,
   Modal,
   Row,
   Space,
@@ -86,6 +87,7 @@ export default function EditProduct() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [uploading, setUploading] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [loadingBtn, setLoadingBtn] = useState(false);
 
@@ -195,9 +197,6 @@ export default function EditProduct() {
       console.log("Update Result: ", result);
 
       handleClose();
-      // if (onRefresh) {
-      //   onRefresh(true);
-      // }
     } catch (err) {
       console.error(err);
     } finally {
@@ -256,6 +255,7 @@ export default function EditProduct() {
     router.push("/items/products");
   };
 
+  // Handle Upload Change
   const handleUploadChange = ({
     fileList,
   }: {
@@ -263,6 +263,37 @@ export default function EditProduct() {
   }) => {
     console.log("File List: ", fileList);
     setFileList(fileList);
+  };
+
+  // Handle Update
+  const handleUpdateSingleImage = async (file: any) => {
+    setLoading(true);
+    const img_id = file.id;
+    const product_id = Number(id) > 0 ? Number(id) : data?.id;
+    const payload = {
+      id: file?.id,
+      file_name: file?.file_name,
+      file_path: file?.file_path,
+      mime_type: file?.mime_type,
+      order_view: file?.order_view,
+      product_id: file?.product_id,
+      service_id: file?.service_id,
+      uploaded_at: file?.uploaded_at,
+      url: file?.url,
+    };
+
+    console.log("File: ", file);
+    console.log("Body Upload: ", payload);
+
+    if (img_id) {
+      try {
+        await imageServices.update(img_id, payload);
+        fetchImage(product_id);
+      } catch (err) {
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   // Handle upload to API
@@ -435,7 +466,7 @@ export default function EditProduct() {
           />
 
           <Row justify="space-around" gutter={30}>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item label="Colors">
                 <Form.List
                   name="colors"
@@ -498,7 +529,7 @@ export default function EditProduct() {
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item label="Variants">
                 <Form.List name="variants">
                   {(fields, { add, remove }) => (
@@ -547,6 +578,56 @@ export default function EditProduct() {
                 </Form.List>
               </Form.Item>
             </Col>
+
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+              <Form.Item label="Versions">
+                <Form.List name="versions">
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map(({ key, name, ...restField }) => (
+                        <Row key={key} style={{ display: "flex" }} gutter={30}>
+                          <Col span={12}>
+                            <Form.Item
+                              {...restField}
+                              name={name}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Please input Versions!",
+                                },
+                              ]}
+                            >
+                              <Input placeholder="Color name" />
+                            </Form.Item>
+                          </Col>
+
+                          <Col span={12}>
+                            <Button
+                              shape="circle"
+                              color="danger"
+                              variant="solid"
+                              icon={<PiTrash onClick={() => remove(name)} />}
+                            />
+                          </Col>
+                        </Row>
+                      ))}
+                      <Form.Item>
+                        <Button
+                          type="dashed"
+                          variant="solid"
+                          color="green"
+                          onClick={() => add()}
+                          icon={<PiPlus />}
+                          className="text-white border-gray-500"
+                        >
+                          Add Versions
+                        </Button>
+                      </Form.Item>
+                    </>
+                  )}
+                </Form.List>
+              </Form.Item>
+            </Col>
           </Row>
 
           <Form.Item
@@ -574,35 +655,89 @@ export default function EditProduct() {
               beforeUpload={() => false}
               onPreview={handlePreview}
               onChange={handleUploadChange}
-              itemRender={(originNode, file: any) => (
-                <div className="flex flex-col items-center">
-                  {originNode}
+              itemRender={(originNode, file: any) => {
+                let error = false;
+                const isDuplicate = fileList.some(
+                  (f) => f.uid !== file.uid && f.order_view === file.order_view
+                );
 
-                  <InputNumber
-                    min={0}
-                    max={10000}
-                    size="small"
-                    value={file.order_view ?? 0}
-                    onChange={(value) => {
-                      let newList = [...fileList];
+                return (
+                  <div className="flex flex-col items-center">
+                    {originNode}
 
-                      newList = newList.map((f: any, idx: number) => {
-                        if (f.uid === file.uid)
-                          return { ...f, order_view: value };
-                        if (f.order_view === value)
-                          return { ...f, order_view: f.order_view! + 1 + idx };
-                        return f;
-                      });
+                    <Typography.Text
+                      type="secondary"
+                      style={{ marginTop: 6, fontSize: 10 }}
+                    >
+                      Order View
+                    </Typography.Text>
 
-                      setFileList(newList);
-                    }}
-                    style={{ marginTop: 6, width: 70 }}
-                  />
-                  <Typography.Text type="secondary" style={{ fontSize: 10 }}>
-                    Order View
-                  </Typography.Text>
-                </div>
-              )}
+                    <InputNumber
+                      min={0}
+                      max={10000}
+                      size="small"
+                      status={isDuplicate ? "error" : ""}
+                      value={file.order_view ?? 0}
+                      onChange={(value) => {
+                        if (value === null || value === undefined) {
+                          setFileList((prev) =>
+                            prev.map((f) =>
+                              f.uid === file.uid
+                                ? { ...f, order_view: value }
+                                : f
+                            )
+                          );
+                          return;
+                        }
+
+                        // Cek apakah value sudah dipakai image lain
+                        const duplicate = fileList.some(
+                          (f) => f.uid !== file.uid && f.order_view === value
+                        );
+
+                        if (duplicate) {
+                          error = true;
+                          message.error(
+                            `Order ${value} sudah digunakan gambar lain.`
+                          );
+                          return;
+                        }
+
+                        // Jika aman → update normal
+                        setFileList((prev) =>
+                          prev.map((f) =>
+                            f.uid === file.uid ? { ...f, order_view: value } : f
+                          )
+                        );
+                      }}
+                      style={{ marginTop: 6, width: 70 }}
+                    />
+
+                    {isDuplicate && (
+                      <Typography.Text
+                        type="danger"
+                        style={{ fontSize: 10, marginTop: 4 }}
+                      >
+                        Order sudah digunakan
+                      </Typography.Text>
+                    )}
+
+                    {file?.originFileObj ? null : (
+                      <Button
+                        onClick={() => handleUpdateSingleImage(file)}
+                        variant="solid"
+                        color="volcano"
+                        disabled={error}
+                        style={{
+                          marginTop: 6,
+                        }}
+                      >
+                        Update
+                      </Button>
+                    )}
+                  </div>
+                );
+              }}
             >
               <div className="flex flex-col items-center justify-center h-full hover:text-blue-700">
                 <PiUploadDuotone
@@ -633,7 +768,7 @@ export default function EditProduct() {
               onClick={handleUpload}
               disabled={fileList.length === 0}
               style={{
-                marginTop: 60,
+                marginTop: 100,
               }}
             >
               {uploading ? "Uploading..." : "Upload to Server"}

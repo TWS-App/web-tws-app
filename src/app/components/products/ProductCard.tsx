@@ -90,6 +90,12 @@ export default function ProductCard({ item }: { item: any }) {
               : formatPrice(item.price)}
           </span>
         </div>
+
+        {!item?.is_ready && (
+          <div className="text-red-500">
+            <span className="font-semibold">{`Product is Out of Stock`}</span>
+          </div>
+        )}
       </Link>
     </div>
   );

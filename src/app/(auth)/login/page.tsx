@@ -17,6 +17,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Handle Submit
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -27,6 +28,7 @@ export default function LoginPage() {
       router.push("/dashboard");
     } else {
       setError("Email atau password salah!");
+      setLoading(false);
     }
   };
 

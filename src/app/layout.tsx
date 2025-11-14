@@ -1,12 +1,18 @@
+// REACTS
 import "@ant-design/v5-patch-for-react-19";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { ReduxProvider } from "@/stores";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import HomeFooter from "./components/footer/footer";
+
+// REDUX
+import { ReduxProvider } from "@/stores";
 import { ApiProvider } from "@/api/context/ApiContext";
 
+// COMPONENTS
+import HomeFooter from "./components/footer/footer";
+import "./globals.css";
+
+// FONTS
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -17,6 +23,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// METADATA
 export const metadata: Metadata = {
   title: {
     default: "Yhusan Digital | TWS Audio Specialist",
@@ -31,6 +38,9 @@ export const metadata: Metadata = {
     "Repair",
     "Sparepart",
     "Bluetooth Earphone",
+    "Service TWS",
+    "Servis",
+    "Service",
   ],
   authors: [{ name: "Yhusan Digital Team", url: "https://yhusan-digital.com" }],
   openGraph: {
@@ -60,16 +70,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://yhusan-digital.com",
   },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <head>
+    <html lang="id" className="scroll-smooth">
+      {/* <head>
         <link rel="icon" href="/favicon.ico" />
-      </head>
+      </head> */}
 
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

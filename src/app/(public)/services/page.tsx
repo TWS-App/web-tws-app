@@ -2,6 +2,12 @@
 
 // REACT
 import { useEffect, useState } from "react";
+import Link from "next/link";
+
+// Antd Components
+import { Button, Spin } from "antd";
+import { FaCartShopping } from "react-icons/fa6";
+import { BiHome } from "react-icons/bi";
 
 // Services
 import api from "@/api/context/config";
@@ -51,12 +57,12 @@ const categories = ["All", "Editing", "Service Headphone", "Maintenance"];
 
 export default function ServicePage() {
   // STATE
-  const [service, setService] = useState([]);
+  const [service, setService] = useState<any[]>([]);
   const [bulks, setBulks] = useState([]);
 
   const [dataProduct, setDataProduct] = useState([]);
   const [dataImage, setDataImage] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [pagination, setPagination] = useState({
@@ -110,25 +116,6 @@ export default function ServicePage() {
         setCategories(resultCat);
       }
 
-      if (resultImg?.length) {
-        setDataImage(resultImg);
-      }
-
-      // const mergedProducts = result.results.map((service: any) => {
-      //   const relatedImages = resultImg.filter(
-      //     (img: any) => img.service_id === service.id
-      //   );
-      //   return {
-      //     ...service,
-      //     images: relatedImages.map((i: any) => i.url),
-      //     image: relatedImages[0]?.url || "/images/placeholder.png",
-      //   };
-      // });
-
-      // setService(mergedProducts);
-      // setBulks(mergedProducts);
-      // console.log("merged: ", mergedProducts);
-
       setPagination({
         total: result?.total ?? 0,
         page: result?.page ?? 1,
@@ -138,7 +125,9 @@ export default function ServicePage() {
       });
     } catch (err) {
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -150,13 +139,50 @@ export default function ServicePage() {
     if (values.id == 0) {
       setService(bulks);
     } else {
-      const filtered = _data.filter((items: any) => {
+      const filtered: any[] = _data.filter((items: any) => {
         return items.category === values.id;
       });
 
+      const newCategory: any[] = categories.map((item: any) => {
+        if (item.id === values.id) {
+          return { ...item, selected: true };
+        } else {
+          return { ...item, selected: false };
+        }
+      });
+
+      // console.log(newCategory);
+
+      setCategories(newCategory);
       setService(filtered);
     }
   };
+
+  // if (service.length === 0) {
+  //   return (
+  //     <div className="flex justify-center items-center mt-28 bg-gray-600 p-5 rounded-2xl">
+  //       <FaCartShopping size={75} />
+
+  //       <p className="p-6 text-white">
+  //         Sorry, There are no Products/Services. Please, contact the admin!
+  //       </p>
+
+  //       <Link href="/">
+  //         <Button icon={<BiHome />} color="geekblue" variant="solid">
+  //           Home
+  //         </Button>
+  //       </Link>
+  //     </div>
+  //   );
+  // }
+
+  if (loading) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm rounded-lg">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -172,7 +198,9 @@ export default function ServicePage() {
             {categories.map((cat: any) => (
               <button
                 key={cat?.id}
-                className="text-gray-600 hover:text-purple-600 font-medium cursor-pointer transition-colors"
+                className={`${
+                  cat?.selected ? "text-blue-600 font-bold" : "text-gray-600 font-medium"
+                } hover:text-purple-600  cursor-pointer transition-colors`}
                 onClick={() => onFilter(cat)}
               >
                 {cat?.category_name}
