@@ -2,7 +2,7 @@
 
 // REACTS
 import { useEffect, useRef, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { useReactToPrint } from "react-to-print";
 import { RootState } from "@/stores";
@@ -34,7 +34,9 @@ export default function InvoicePage() {
   const printRef = useRef<HTMLDivElement>(null);
 
   // ID
-  const { id } = useParams();
+  const params = useSearchParams();
+  const par = useParams();
+  const encoded = params.get("d");
   const cart = useSelector((state: RootState) => state.cart.items);
 
   // STATE
@@ -48,6 +50,8 @@ export default function InvoicePage() {
   // FORM
   const [form] = Form.useForm();
 
+  console.log("Params: ", encoded, par);
+
   // Use Effects
   useEffect(() => {
     if (details.length > 0) {
@@ -56,10 +60,22 @@ export default function InvoicePage() {
   }, [details]);
 
   useEffect(() => {
-    if (id) {
-      fetchData(id);
+    console.log("KONTOL: ", encoded, par);
+    console.log("KONTOL: ");
+
+    if (encoded) {
+      try {
+        let _data = JSON.parse(atob(encoded));
+        const _id = String(_data?.id);
+        console.log("Params: ", _data);
+
+        fetchData(_id ?? 0);
+      } catch (e) {
+        // fetchData(id);
+        console.error("Failed to decode:", e);
+      }
     }
-  }, [id]);
+  }, [encoded]);
 
   // Fetch Data
   const fetchData = async (value: any) => {
@@ -72,13 +88,13 @@ export default function InvoicePage() {
 
       if (res.id) {
         try {
-          const result = await orderDetailsService.getAll();
+          const result = await orderDetailsService.getDetailById(res.id ?? 0);
 
-          const filter = result.filter((items: any) => {
-            return items.header_id == res.id;
-          });
+          // const filter = result.filter((items: any) => {
+          //   return items.header_id == res.id;
+          // });
 
-          setDetails(filter);
+          setDetails(result);
         } catch (error) {
           //
         }
@@ -162,7 +178,7 @@ export default function InvoicePage() {
 
             <div className="text-right">
               <p className="text-lg font-semibold">
-                Invoice #{data?.order_number || id}
+                Invoice #{data?.order_number || "#######"}
               </p>
               <p className="text-gray-500">
                 {formatTime(
@@ -203,7 +219,7 @@ export default function InvoicePage() {
                   wrapperCol={{ span: 12 }}
                 >
                   <Typography className="text-room-no" style={textForm}>
-                    {`${data?.payment_name} - ${
+                    {`${data?.payment_name ?? "#####"} - ${
                       data?.payment_status == 1 ? "PAID" : "UNPAID"
                     }`}
                   </Typography>
@@ -269,7 +285,7 @@ export default function InvoicePage() {
               </Col>
             </Row>
 
-            <Row style={{ width: "100%", margin: 0, height: 30 }}>
+            <Row style={{ width: "100%", margin: 0 }}>
               <Col span={12}>
                 <Form.Item
                   label="Address"
@@ -290,7 +306,7 @@ export default function InvoicePage() {
             className="divider-form"
             orientation="left"
             orientationMargin={0}
-            style={{ margin: "10px 0px 5px", borderColor: "#000000" }}
+            style={{ margin: "30px 0px 5px", borderColor: "#000000" }}
           >
             Product List
           </Divider>
@@ -300,7 +316,9 @@ export default function InvoicePage() {
             <thead>
               <tr className="border-b border-gray-300">
                 <th className="py-2">Items</th>
-                <th className="py-2">Colors</th>
+                {data?.is_service === false ? (
+                  <th className="py-2">Colors</th>
+                ) : null}
                 <th className="py-2">Details</th>
                 <th className="py-2 text-center">Qty</th>
                 <th className="py-2 text-right">Price</th>
@@ -310,8 +328,12 @@ export default function InvoicePage() {
             <tbody>
               {details.map((item: any, index: number) => (
                 <tr key={index} className="border-b border-gray-200">
-                  <td className="py-2">{item?.product_name}</td>
-                  <td className="py-2">{item.colors}</td>
+                  <td className="py-2">
+                    {data?.is_service ? item?.service_name : item?.product_name}
+                  </td>
+                  {data?.is_service === false ? (
+                    <td className="py-2">{item.colors}</td>
+                  ) : null}
                   <td className="py-2">
                     {item?.variants} {item.versions}
                   </td>
@@ -327,12 +349,12 @@ export default function InvoicePage() {
           <div className="text-right mt-6">
             <div className="flex justify-between text-black text-lg font-semibold">
               <span>Subtotal</span>
-              <span>Rp {formatPrice(Number(data?.total_harga))}</span>
+              <span>Rp {formatPrice(Number(data?.total_harga ?? 0))}</span>
             </div>
 
             <div className="flex justify-between text-black text-lg font-semibold">
               <span>Discount</span>
-              <span>Rp {formatPrice(discount)}</span>
+              <span>Rp {formatPrice(discount ?? 0)}</span>
             </div>
 
             <div className="border-t border-gray-700 my-4" />

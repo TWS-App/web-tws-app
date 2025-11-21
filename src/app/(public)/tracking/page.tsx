@@ -68,9 +68,9 @@ export default function TrackingPage() {
     }
   };
 
-  // STATUS
-  const getStatusColor = (status: any) => {
-    const _status = status ? status : null;
+  // STATUS ORDER
+  const getStatusColorOrder = (status: any) => {
+    const _status = status ? status.toLowerCase() : null;
 
     switch (_status) {
       case "ordered":
@@ -93,9 +93,61 @@ export default function TrackingPage() {
     }
   };
 
+  // STATUS PAYMENT
+  const getStatusColorPayment = (status: any) => {
+    // console.log("Color: ", status)
+    const _status = status >= 0 ? status : null;
+
+    switch (_status) {
+      case 0:
+        return "orange";
+      case 1:
+        return "green";
+      case 2:
+        return "cyan";
+      case 3:
+        return "magenta";
+      case 4:
+        return "cyan";
+      case 5:
+        return "volcano";
+      case 6:
+        return "red";
+
+      default:
+        return "default";
+    }
+  };
+
+  // PAYMENT STATUS
+  const getPaymentStatus = (value: any) => {
+    // console.log("Status: ", value);
+    const _status = value >= 0 ? value : null;
+
+    switch (_status) {
+      case 0:
+        return "PENDING";
+      case 1:
+        return "PAID";
+      case 2:
+        return "UNPAID";
+      case 3:
+        return "REFUND";
+      case 4:
+        return "CANCEL";
+
+      default:
+        return "UNKNOWN";
+    }
+  };
+
   // Handle Print
   const handlePrint = () => {
-    router.push(`/invoice/${orderData.id}`);
+    const encoded = btoa(JSON.stringify(orderData));
+
+    // console.log(encoded);
+
+    router.push(`/invoice/id?d=${encoded}`);
   };
 
   // Use effects
@@ -123,15 +175,15 @@ export default function TrackingPage() {
   // Fetch Data Order
   const fetchOrder = async (value: any) => {
     try {
-      const res = await orderDetailsService.getAll();
+      const res = await orderDetailsService.getDetailById(value?.id ?? 0);
 
-      const filtering = res.filter((items: any) => {
-        return items.header_id == value?.id;
-      });
+      // const filtering = res.filter((items: any) => {
+      //   return items.header_id == value?.id;
+      // });
 
-      console.log("Details: ", res, filtering);
+      console.log("Details: ", res);
 
-      const disc: Record<number, any> = filtering.reduce(
+      const disc: Record<number, any> = res.reduce(
         (init: any, current: any) => {
           init = current?.discount > 0 ? current.discount : 0;
 
@@ -143,7 +195,7 @@ export default function TrackingPage() {
       setDiscount(Number(disc));
 
       setOrderData(value);
-      setDetails(filtering);
+      setDetails(res);
 
       setTimeout(() => {
         setIsSearch(true);
@@ -349,10 +401,8 @@ export default function TrackingPage() {
                     {`    ${orderData.address}`}
                   </p>
                   <p>
-                    <strong>Status Shipment: </strong>
-                    <Tag color={getStatusColor(orderData?.shipment ?? "")}>
-                      {orderData?.shipment ? orderData.shipment : " - "}
-                    </Tag>
+                    <strong>Phone Number: </strong>
+                    {orderData?.phone_number ? orderData.phone_number : " - "}
                   </p>
                   <p>
                     <strong>Shipment: </strong>
@@ -374,17 +424,33 @@ export default function TrackingPage() {
                     {orderData?.payment_name ?? " - "}
                   </p>
                   <p>
-                    <strong>Payment Date: </strong>{" "}
-                    {formatTime(orderData?.payment_date) ?? " - "}
+                    <strong>Payment Date: </strong>
+                    {orderData?.payment_date
+                      ? formatTime(orderData?.payment_date)
+                      : " - "}
                   </p>
                   <p>
-                    <strong>Paymnet Status: </strong>{" "}
-                    {orderData?.payment_status}
+                    <strong>Payment Status: </strong>
+                    <Tag
+                      color={getStatusColorPayment(
+                        orderData.payment_status ?? ""
+                      )}
+                    >
+                      {orderData?.payment_status >= 0
+                        ? getPaymentStatus(orderData.payment_status)
+                        : " - "}
+                    </Tag>
                   </p>
                   <p>
-                    <strong>Status Order: </strong>
-                    <Tag color={getStatusColor(orderData.status_order ?? "")}>
-                      {orderData.status_order ? orderData.status_order : " - "}
+                    <strong>Order Status: </strong>
+                    <Tag
+                      color={getStatusColorOrder(
+                        orderData.status_order_name ?? ""
+                      )}
+                    >
+                      {orderData?.status_order_name
+                        ? orderData.status_order_name
+                        : " - "}
                     </Tag>
                   </p>
                 </Col>
@@ -406,11 +472,14 @@ export default function TrackingPage() {
               <tbody>
                 {details.map((item: any, index: number) => (
                   <tr key={index} className="border-b border-gray-200">
-                    <td className="py-2">
-                      {item?.product_name} / {item.colors}
+                    <td className="py-2 font-semibold">
+                      {orderData?.is_service
+                        ? item?.service_name
+                        : item?.product_name}
+                      / {item.colors}
                     </td>
                     <td className="py-2">
-                      {item?.variants}{" "}
+                      {item?.variants}
                       {item?.versions ? ", " + item.versions : null}
                     </td>
                     <td className="py-2 text-center">{item.qty}</td>

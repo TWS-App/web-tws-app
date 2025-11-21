@@ -104,13 +104,13 @@ export default function InvoiceModal({
 
       if (res.id) {
         try {
-          const result = await orderDetailsService.getAll();
+          const result = await orderDetailsService.getDetailById(res.id ?? 0);
 
-          const filter = result.filter((items: any) => {
-            return items.header_id == res.id;
-          });
+          // const filter = result.filter((items: any) => {
+          //   return items.header_id == res.id;
+          // });
 
-          setDetails(filter);
+          setDetails(result);
         } catch (error) {
           //
         }
@@ -330,7 +330,7 @@ export default function InvoiceModal({
                 </Col>
               </Row>
 
-              <Row style={{ width: "100%", margin: 0, height: 30 }}>
+              <Row style={{ width: "100%", margin: 0 }}>
                 <Col span={12}>
                   <Form.Item
                     label="Address"
@@ -351,7 +351,7 @@ export default function InvoiceModal({
               className="divider-form"
               orientation="left"
               orientationMargin={0}
-              style={{ margin: "10px 0px 5px", borderColor: "#000000" }}
+              style={{ margin: "30px 0px 5px", borderColor: "#000000" }}
             >
               Product List
             </Divider>
@@ -361,7 +361,9 @@ export default function InvoiceModal({
               <thead>
                 <tr className="border-b border-gray-300">
                   <th className="py-2">Items</th>
-                  <th className="py-2">Colors</th>
+                  {data?.is_service === false ? (
+                    <th className="py-2">Colors</th>
+                  ) : null}
                   <th className="py-2">Details</th>
                   <th className="py-2 text-center">Qty</th>
                   <th className="py-2 text-right">Price</th>
@@ -371,8 +373,14 @@ export default function InvoiceModal({
               <tbody>
                 {details.map((item: any, index: number) => (
                   <tr key={index} className="border-b border-gray-200">
-                    <td className="py-2">{item?.product_name}</td>
-                    <td className="py-2">{item.colors}</td>
+                    <td className="py-2">
+                      {data?.is_service
+                        ? item?.service_name
+                        : item?.product_name}
+                    </td>
+                    {data?.is_service === false ? (
+                      <td className="py-2">{item.colors}</td>
+                    ) : null}
                     <td className="py-2">
                       {item?.variants} {item.versions}
                     </td>

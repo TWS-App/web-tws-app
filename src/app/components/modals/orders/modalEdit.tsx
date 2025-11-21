@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import {
   Button,
   Col,
+  DatePicker,
   Divider,
   Form,
   Input,
@@ -55,12 +56,15 @@ export default function ModalEditOrder({
   children,
 }: ModalProps) {
   // STATES
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [loadingBtn, setLoadingBtn] = useState(false);
   // DATA
   const [data, setData] = useState<OrderHeader>();
   const [details, setDetails] = useState([]);
+
+  // Boolean
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingBtn, setLoadingBtn] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
 
   // FORMS
   const [form] = Form.useForm();
@@ -90,7 +94,7 @@ export default function ModalEditOrder({
 
     try {
       const res = await orderHeaderService.getById(dataEdit?.id);
-      const result = await orderDetailsService.getAll();
+      const result = await orderDetailsService.getDetailById(dataEdit?.id);
 
       console.log("Fetch res: ", result);
 
@@ -189,12 +193,23 @@ export default function ModalEditOrder({
     });
   };
 
+  // GET Payment Status
+  const handleDate = (value: any) => {
+    if (value === 1) {
+      setIsPaid(false);
+    } else {
+      setIsPaid(true);
+    }
+
+    form.resetFields(["payment_date"]);
+  };
+
   // Get Status Order
   const getStatusOrder = (value: any) => {
     console.log(value);
 
     form.setFieldsValue({
-      status_order: value.label,
+      status_order: value.value,
       status_id: value.id,
     });
   };
@@ -215,7 +230,7 @@ export default function ModalEditOrder({
     try {
       const body = {
         order_number: values.order_number,
-        status_order: values.status_order,
+        status_order: values.status_id,
         total_order: values.total_order,
         order_date: values?.order_date ?? new Date(),
         total_harga: values?.total_harga,
@@ -224,7 +239,8 @@ export default function ModalEditOrder({
         address: values.address,
         phone_number: values.phone_number,
         email: values.email,
-        shipment: values.shipment,
+        shipment: values?.shipment,
+        shipment_number: values?.shipment_number,
         payment_type: values?.payment_id,
         payment_date: values?.payment_status == 1 ? new Date() : null,
       };
@@ -371,15 +387,20 @@ export default function ModalEditOrder({
                   placeholder="Payment Status"
                   allowClear
                   showSearch
+                  onChange={handleDate}
                   options={[
+                    {
+                      label: "Pending",
+                      value: 0,
+                    },
                     {
                       label: "Paid ( Confirmed )",
                       value: 1,
                     },
-                    {
-                      label: "Pending",
-                      value: 2,
-                    },
+                    // {
+                    //   label: "Pending",
+                    //   value: 2,
+                    // },
                     {
                       label: "Unpaid ( Outstanding )",
                       value: 3,
@@ -393,6 +414,18 @@ export default function ModalEditOrder({
                       value: 5,
                     },
                   ]}
+                />
+              </Form.Item>
+
+              <Form.Item label="Payment Date" name="payment_date">
+                <DatePicker
+                  placeholder="Payment Date"
+                  format={{
+                    format: "YYYY-MM-DD HH:mm:ss",
+                    type: "mask",
+                  }}
+                  allowClear
+                  disabled={isPaid}
                 />
               </Form.Item>
             </Col>
@@ -440,50 +473,58 @@ export default function ModalEditOrder({
                 />
               </Form.Item>
 
-              <Form.Item label="Shipment Name" name="shipment_name">
-                <Input placeholder="Shipment Name" />
-              </Form.Item>
-
               <Form.Item label="Status Name" name="status_id" hidden>
                 <Input placeholder="Status Order" />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xxl={8} xl={8}>
-              <Form.Item name="shipment" label="Shipment Status">
+              <Form.Item name="shipment" label="Shipment Name">
                 <Select
-                  placeholder="Shipping Status"
+                  placeholder="Shipment Name"
                   allowClear
                   showSearch
                   options={[
+                    // {
+                    //   label: "Wait for Payment",
+                    //   value: 0,
+                    // },
+                    // {
+                    //   label: "Waiting",
+                    //   value: 1,
+                    // },
+                    // {
+                    //   label: "On Shipping",
+                    //   value: 2,
+                    // },
+                    // {
+                    //   label: "Pending",
+                    //   value: 3,
+                    // },
                     {
-                      label: "Wait for Payment",
-                      value: 0,
-                    },
-                    {
-                      label: "Waiting",
+                      label: "JNE",
                       value: 1,
                     },
                     {
-                      label: "On Shipping",
+                      label: "J&T",
                       value: 2,
                     },
                     {
-                      label: "Pending",
+                      label: "SHOPEE EXPRESS",
                       value: 3,
                     },
-                    // {
-                    //   label: "Unpaid ( Outstanding )",
-                    //   value: 3,
-                    // },
-                    // {
-                    //   label: "Refund",
-                    //   value: 4,
-                    // },
                     {
-                      label: "Cancelled",
+                      label: "ANTERAJA",
                       value: 4,
                     },
+                    {
+                      label: "SI CEPAT",
+                      value: 5,
+                    },
+                    // {
+                    //   label: "Cancelled",
+                    //   value: 4,
+                    // },
                   ]}
                 />
               </Form.Item>
@@ -519,7 +560,9 @@ export default function ModalEditOrder({
                     <tr>
                       <th className="py-3 px-4 text-center">No.</th>
                       <th className="py-3 px-4 text-left">Product</th>
-                      <th className="py-3 px-4 text-left">Colors</th>
+                      {data?.is_service === false ? (
+                        <th className="py-2">Colors</th>
+                      ) : null}
                       <th className="py-3 px-4 text-left">Variants</th>
                       <th className="py-3 px-4 text-center">Qty</th>
                       <th className="py-3 px-4 text-right">Price</th>
@@ -538,12 +581,18 @@ export default function ModalEditOrder({
                           <p className="font-semibold">{items?.id}</p>
                         </td>
                         <td className="py-3 px-4">
-                          <p className="font-bold">{items.product_name}</p>
+                          <p className="font-bold">
+                            {data?.is_service
+                              ? items?.service_name
+                              : items?.product_name}
+                          </p>
                         </td>
-                        <td className="py-3 px-4">{items?.colors}</td>
-                        <td className="py-3 px-4">{`${items?.variants} - ${
-                          items?.versions ?? ""
-                        }`}</td>
+                        {data?.is_service === false ? (
+                          <td className="py-2">{items.colors}</td>
+                        ) : null}
+                        <td className="py-3 px-4">{`${
+                          items?.variants ?? ""
+                        } - ${items?.versions ?? ""}`}</td>
                         <td className="py-3 px-4 text-center">
                           {formatPrice(items.qty)}
                         </td>

@@ -230,15 +230,25 @@ export default function TableOrders() {
   const [loading, setLoading] = useState(false);
 
   // FETCH DATA
-  const fetchData = async () => {
+  const fetchData = async (values: any) => {
     setLoading(true);
     try {
       const result = await orderHeaderService.getAll();
 
-      console.log("Fetch res: ", data);
+      // console.log("Fetch res: ", data);
 
       if (result?.length > 0) {
-        setData(result);
+        const prod = result.filter((items: any) => {
+          if (values === "product") {
+            return !items.is_service;
+          } else {
+            return items.is_service;
+          }
+        });
+
+        console.log("Filter: ", prod);
+
+        setData(prod);
       } else {
         setData([]);
       }
@@ -250,7 +260,7 @@ export default function TableOrders() {
 
   // USEEFFECTS
   useEffect(() => {
-    fetchData();
+    fetchData(activeKey);
   }, []);
 
   // Handle Edit
@@ -264,17 +274,17 @@ export default function TableOrders() {
     console.log(values);
 
     setActiveKey(values);
-    fetchData();
+    fetchData(values);
   };
 
   // Handle Refresh
   const handleRefresh = () => {
-    fetchData();
+    fetchData(activeKey);
   };
 
   // Handle Add Order
   const handleCreate = () => {
-    router.push("/orders/ongoing/create")
+    router.push("/orders/ongoing/create");
   };
 
   // Handle View
@@ -331,6 +341,7 @@ export default function TableOrders() {
       okButtonProps: {
         className: "submit-btn",
         type: "primary",
+        danger: true,
       },
 
       cancelButtonProps: {
@@ -355,7 +366,7 @@ export default function TableOrders() {
 
       console.log("Delete result: ", result);
 
-      fetchData();
+      fetchData(activeKey);
     } catch (error) {}
   };
 

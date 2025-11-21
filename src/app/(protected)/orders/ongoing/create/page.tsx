@@ -139,6 +139,7 @@ export default function CreateOrderPage() {
       total_order: cart.length,
       status_order: 1,
       shipment: 0,
+      is_service: true,
     };
 
     console.log("Submitting product payload:", body);
@@ -167,13 +168,22 @@ export default function CreateOrderPage() {
 
             console.log("Res details: ", results);
 
-            router.push(`/success?orderId=${res.id}`);
-          } catch (error: any) {}
+            const encoded = btoa(JSON.stringify(res));
+            router.push(`/success?d=${encoded}`);
+          } catch (error: any) {
+            console.log(error);
+          } finally {
+            setTimeout(() => {
+              setLoadingBtn(false);
+            }, 1000);
+          }
         }
       }
     } catch (error) {
     } finally {
-      setLoadingBtn(false);
+      setTimeout(() => {
+        setLoadingBtn(false);
+      }, 1000);
     }
   };
 
@@ -304,9 +314,7 @@ export default function CreateOrderPage() {
 
     confirm({
       className: "modals-confirm",
-      title: `Are you sure want to Create a new Data Product ${
-        _data.product_name || " - "
-      }?`,
+      title: `Are you sure want to Create a New Service Order?`,
       okText: "Confirm",
       cancelText: "Cancel",
       centered: true,

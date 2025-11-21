@@ -41,17 +41,26 @@ export const metadata: Metadata = {
     "Service TWS",
     "Servis",
     "Service",
+    "Reparasi TWS",
+    "Service TWS Bandung",
+    "Servis TWS Bandung",
+    "Service TWS Garut",
+    "Servis TWS Garut",
+    "Service TWS Jawa Barat",
+    "Servis TWS Jawa Barat",
   ],
-  authors: [{ name: "Yhusan Digital Team", url: "https://yhusan-digital.com" }],
+  authors: [
+    { name: "Yhusan Digital Team", url: "https://www.yhusan-digital.com" },
+  ],
   openGraph: {
     title: "Yhusan Digital | TWS Audio Specialist",
     description:
       "Layanan perbaikan TWS dengan part original dan garansi resmi.",
-    url: "https://yhusan-digital.com",
+    url: "https://www.yhusan-digital.com",
     siteName: "Yhusan Digital",
     images: [
       {
-        url: "https://yhusan-digital.com/images/og-image.jpg",
+        url: "https://www.yhusan-digital.com/images/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Yhusan Digital",

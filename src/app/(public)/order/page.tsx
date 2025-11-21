@@ -1,7 +1,7 @@
 "use client";
 
 // REACT
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -21,6 +21,7 @@ import {
   Modal,
   Result,
   Row,
+  Spin,
 } from "antd";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { RiHeadphoneFill } from "react-icons/ri";
@@ -55,7 +56,7 @@ export default function CheckoutPage() {
 
   // Data
   const [submitData, setSubmitData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [loadingBtn, setLoadingBtn] = useState(false);
 
   const cart = useSelector((state: RootState) => state.cart.items);
@@ -96,6 +97,13 @@ export default function CheckoutPage() {
 
   // FORMS
   const [form] = Form.useForm();
+
+  // EFFECTS
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
 
   // TOGGLE
   const toggle = (key: keyof typeof open) => {
@@ -247,6 +255,7 @@ export default function CheckoutPage() {
       phone_number: _body.phone_number,
       total_harga: subtotal,
       total_order: cart.length,
+      is_service: false,
       // status_order: 1,
       // shipment: 0,
     };
@@ -280,13 +289,24 @@ export default function CheckoutPage() {
             console.log("Res details: ", results);
 
             dispatch(clearCart());
-            router.push(`/success?orderId=${res.id}`);
-          } catch (error: any) {}
+            const encoded = btoa(JSON.stringify(res));
+            router.push(`/success?d=${encoded}`);
+          } catch (error: any) {
+            console.log(error);
+          } finally {
+            setTimeout(() => {
+              setLoadingBtn(false);
+            }, 1000);
+          }
         }
       }
-    } catch (error) {}
-
-    setLoadingBtn(false);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setTimeout(() => {
+        setLoadingBtn(false);
+      }, 1000);
+    }
   };
 
   if (cart.length === 0) {
@@ -309,6 +329,15 @@ export default function CheckoutPage() {
             </Link>
           }
         />
+      </div>
+    );
+  }
+
+  // Loading
+  if (loading) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm rounded-lg">
+        <Spin size="large" />
       </div>
     );
   }

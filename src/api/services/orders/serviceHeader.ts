@@ -21,6 +21,7 @@ export interface OrderHeader {
   phone_number: string | undefined | null;
   total_harga: number | undefined | null;
   total_order: number | undefined | null;
+  is_service?: boolean | undefined | null;
 }
 
 // CODE
@@ -70,7 +71,7 @@ export const orderHeaderService = {
   async delete(id: number) {
     try {
       await api.delete(`/transaction/header/${id}`);
-      notifySuccess("Order deleted successfully!");
+      notifySuccess("Order cancelled successfully!");
     } catch (error: any) {
       throw error;
     }

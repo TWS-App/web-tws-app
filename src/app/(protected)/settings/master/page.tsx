@@ -5,6 +5,7 @@ import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 import Link from "next/link";
 import { FaBox, FaTags } from "react-icons/fa";
 import { BsCreditCard2BackFill, BsLayersFill } from "react-icons/bs";
+import { LiaShippingFastSolid } from "react-icons/lia";
 
 const masterItems = [
   {
@@ -21,6 +22,11 @@ const masterItems = [
     name: "Payment List",
     href: "/settings/master/payments",
     icon: <BsCreditCard2BackFill size={22} />,
+  },
+  {
+    name: "Shipment List",
+    href: "/settings/master/shipments",
+    icon: <LiaShippingFastSolid size={24} />,
   },
 ];
 
