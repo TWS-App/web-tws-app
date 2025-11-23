@@ -35,7 +35,7 @@ export const productServices = {
 
   async getById(id: number) {
     try {
-      const response = await api.get(`/products/${id}`);
+      const response = await api.get(`/products/id/${id}`);
 
       return response.data;
     } catch (error: any) {
@@ -66,7 +66,7 @@ export const productServices = {
 
   async update(id: number, data: any) {
     try {
-      const response = await api.put(`/products/${id}`, data);
+      const response = await api.put(`/products/id/${id}`, data);
 
       notifySuccess("Products updated successfully!");
       return response.data;
@@ -77,7 +77,7 @@ export const productServices = {
 
   async delete(id: number) {
     try {
-      await api.delete(`/products/${id}`);
+      await api.delete(`/products/id/${id}`);
       notifySuccess("Products deleted successfully!");
     } catch (error: any) {
       throw error;

@@ -31,7 +31,7 @@ export const servicesService = {
 
   async getById(id: number) {
     try {
-      const response = await api.get(`/services/${id}`);
+      const response = await api.get(`/services/id/${id}`);
 
       return response.data;
     } catch (error: any) {
@@ -52,7 +52,7 @@ export const servicesService = {
 
   async update(id: number, data: any) {
     try {
-      const response = await api.put(`/services/${id}`, data);
+      const response = await api.put(`/services/id/${id}`, data);
 
       notifySuccess("Services updated successfully!");
       return response.data;
@@ -63,7 +63,7 @@ export const servicesService = {
 
   async delete(id: number) {
     try {
-      await api.delete(`/services/${id}`);
+      await api.delete(`/services/id/${id}`);
       notifySuccess("Services deleted successfully!");
     } catch (error: any) {
       throw error;

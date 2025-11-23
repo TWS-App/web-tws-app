@@ -27,13 +27,11 @@ import { HiViewfinderCircle } from "react-icons/hi2";
 import { FaTrashCan } from "react-icons/fa6";
 
 // Utils
-import { Orders } from "./types/types";
 
 // Page Components
 import Pagination from "@/app/components/pagination/pagination";
-import ModalViewOrder from "../../modals/orders/modalView";
-import ModalEditOrder from "../../modals/orders/modalEdit";
-import InvoiceModal from "../../modals/invoice/invoice";
+import ModalViewOrder from "@/app/components/modals/orders/modalView";
+import InvoiceModal from "../../../modals/invoice/invoice";
 
 import ModalCategoryProduct from "@/app/components/modals/master/category/modal";
 import { styleActive, styleInactive } from "@/utils/styles/styles";
@@ -42,174 +40,11 @@ import { styleActive, styleInactive } from "@/utils/styles/styles";
 import { orderStatus } from "@/utils/constans/orderStatus";
 import { formatTime } from "@/utils/function/time";
 
-const clients: Orders[] = [
-  {
-    id: 1,
-    address: "Jl. Sudirman No. 123, Jakarta",
-    customer_name: "Budi Santoso",
-    email: "budi@example.com",
-    order_date: "2025-09-20",
-    order_number: "ORD-20250920-001",
-    payment_date: "2025-09-21",
-    payment_status: 1,
-    payment_type: 2,
-    phone_number: "081234567890",
-    shipment: 1,
-    status_order: "On Shipping",
-    total_harga: 250000,
-    total_order: 2,
-  },
-  {
-    id: 2,
-    address: "Jl. Malioboro No. 45, Yogyakarta",
-    customer_name: "Siti Aminah",
-    email: "siti@example.com",
-    order_date: "2025-09-19",
-    order_number: "ORD-20250919-002",
-    payment_date: null,
-    payment_status: 0,
-    payment_type: 1,
-    phone_number: "081987654321",
-    shipment: 0,
-    status_order: "Pending",
-    total_harga: 500000,
-    total_order: 5,
-  },
-  {
-    id: 3,
-    address: "Jl. Asia Afrika No. 88, Bandung",
-    customer_name: "Andi Wijaya",
-    email: "andi@example.com",
-    order_date: "2025-09-18",
-    order_number: "ORD-20250918-003",
-    payment_date: "2025-09-18",
-    payment_status: 1,
-    payment_type: 3,
-    phone_number: "085612345678",
-    shipment: 2,
-    status_order: "Delivered",
-    total_harga: 1200000,
-    total_order: 1,
-  },
-  {
-    id: 4,
-    address: "Jl. Diponegoro No. 55, Surabaya",
-    customer_name: "Rahmat Hidayat",
-    email: "rahmat@example.com",
-    order_date: "2025-09-17",
-    order_number: "ORD-20250917-004",
-    payment_date: "2025-09-18",
-    payment_status: 1,
-    payment_type: 2,
-    phone_number: "082134567890",
-    shipment: 1,
-    status_order: "Cancel",
-    total_harga: 750000,
-    total_order: 3,
-  },
-  {
-    id: 5,
-    address: "Jl. Gajah Mada No. 12, Medan",
-    customer_name: "Maria Ulfa",
-    email: "maria@example.com",
-    order_date: "2025-09-16",
-    order_number: "ORD-20250916-005",
-    payment_date: null,
-    payment_status: 0,
-    payment_type: 1,
-    phone_number: "081345678912",
-    shipment: 0,
-    status_order: "Pending",
-    total_harga: 980000,
-    total_order: 4,
-  },
-  {
-    id: 6,
-    address: "Jl. Pemuda No. 30, Semarang",
-    customer_name: "Ahmad Fauzi",
-    email: "ahmad@example.com",
-    order_date: "2025-09-15",
-    order_number: "ORD-20250915-006",
-    payment_date: "2025-09-15",
-    payment_status: 1,
-    payment_type: 3,
-    phone_number: "085798765432",
-    shipment: 2,
-    status_order: "Delivered",
-    total_harga: 1350000,
-    total_order: 6,
-  },
-  {
-    id: 7,
-    address: "Jl. Veteran No. 88, Malang",
-    customer_name: "Nur Aini",
-    email: "nuraini@example.com",
-    order_date: "2025-09-14",
-    order_number: "ORD-20250914-007",
-    payment_date: null,
-    payment_status: 0,
-    payment_type: 2,
-    phone_number: "081245678900",
-    shipment: 0,
-    status_order: "Pending",
-    total_harga: 420000,
-    total_order: 2,
-  },
-  {
-    id: 8,
-    address: "Jl. Ahmad Yani No. 20, Makassar",
-    customer_name: "Hendra Gunawan",
-    email: "hendra@example.com",
-    order_date: "2025-09-13",
-    order_number: "ORD-20250913-008",
-    payment_date: "2025-09-14",
-    payment_status: 1,
-    payment_type: 1,
-    phone_number: "082134567800",
-    shipment: 1,
-    status_order: "On Shipping",
-    total_harga: 670000,
-    total_order: 3,
-  },
-  {
-    id: 9,
-    address: "Jl. Kartini No. 50, Denpasar",
-    customer_name: "Putri Maharani",
-    email: "putri@example.com",
-    order_date: "2025-09-12",
-    order_number: "ORD-20250912-009",
-    payment_date: "2025-09-12",
-    payment_status: 1,
-    payment_type: 2,
-    phone_number: "081356789012",
-    shipment: 2,
-    status_order: "Delivered",
-    total_harga: 890000,
-    total_order: 5,
-  },
-  {
-    id: 10,
-    address: "Jl. Merdeka No. 77, Palembang",
-    customer_name: "Dewi Lestari",
-    email: "dewi@example.com",
-    order_date: "2025-09-11",
-    order_number: "ORD-20250911-010",
-    payment_date: "2025-09-11",
-    payment_status: 1,
-    payment_type: 3,
-    phone_number: "081478901234",
-    shipment: 2,
-    status_order: "Delivered",
-    total_harga: 1500000,
-    total_order: 7,
-  },
-];
-
 // Modals
 const { confirm } = Modal;
 
 // CODE
-export default function TableOrders() {
+export default function TableOrderFinish() {
   // React
   const router = useRouter();
 
@@ -241,6 +76,7 @@ export default function TableOrders() {
         : await orderHeaderService.getPaginated({
             page: params?.page ? params.page : pagination.page,
             page_size: params?.pageSize ? params.pageSize : pagination.pageSize,
+            status: 5,
           });
 
       // console.log("Fetch res: ", data);
@@ -597,12 +433,12 @@ export default function TableOrders() {
             children: (
               <div className="w-full">
                 <div className="flex justify-end items-center mb-4 gap-4">
-                  <button
+                  {/* <button
                     onClick={handleCreate}
                     className="flex items-center gap-2 px-3 py-2 text-white bg-green-700 rounded hover:bg-green-600  transition cursor-pointer"
                   >
                     <FiPlusCircle /> Add New Service Order
-                  </button>
+                  </button> */}
 
                   <button
                     onClick={handleRefresh}
@@ -657,14 +493,14 @@ export default function TableOrders() {
                             >
                               <td className="py-3 px-4 min-w-[100px]">
                                 <span className="grid grid-cols-3 content-center justify-center gap-3">
-                                  <button
+                                  {/* <button
                                     onClick={() => handleEdit(items)}
                                     className="text-blue-400 hover:text-blue-600 cursor-pointer"
                                   >
                                     <Tooltip title="Edit Orders">
                                       <FiEdit size={16} />
                                     </Tooltip>
-                                  </button>
+                                  </button> */}
 
                                   <button
                                     onClick={() => handlePrint(items)}
@@ -786,12 +622,12 @@ export default function TableOrders() {
         onRefresh={handleRefresh}
       />
 
-      <ModalEditOrder
+      {/* <ModalEditOrder
         isOpen={edit}
         dataEdit={dataEdit}
         isClose={handleClose}
         onRefresh={handleRefresh}
-      />
+      /> */}
 
       <InvoiceModal
         isOpen={printView}

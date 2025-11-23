@@ -210,7 +210,7 @@ export default function EditProduct() {
 
     confirm({
       className: "modals-confirm",
-      title: `Are you sure want to update category "${
+      title: `Are you sure want to update Products "${
         values?.product_name || " - "
       }"?`,
       okText: "Confirm",
@@ -225,6 +225,25 @@ export default function EditProduct() {
       okButtonProps: { className: "submit-btn", type: "primary" },
       cancelButtonProps: { className: "cancel-btn", type: "default" },
       width: 700,
+    });
+  };
+
+  // Handle Delete
+  const handleBeforeDelete = async (value: any) => {
+    console.log("Delete: ", value);
+
+    return new Promise<boolean>((resolve) => {
+      confirm({
+        title: "Are you sure want to Delete this Image?",
+        // content: "This image will be removed.",
+        okText: "Delete",
+        cancelText: "Cancel",
+        centered: true,
+        onOk: () => {
+          handleDelete(value);
+        },
+        onCancel: () => resolve(false),
+      });
     });
   };
 
@@ -317,6 +336,23 @@ export default function EditProduct() {
     } catch (error) {
     } finally {
       setUploading(false);
+    }
+  };
+
+  // Handle Delete
+  const handleDelete = async (file: any) => {
+    console.log("Files: ", file);
+    
+    try {
+      if (file?.id) {
+        await imageServices.delete(file.id, file);
+      }
+
+      return true;
+    } catch (err) {
+      console.error("Delete error:", err);
+      message.error("Failed to delete image. Please try again!");
+      return false;
     }
   };
 
@@ -547,7 +583,7 @@ export default function EditProduct() {
                                 },
                               ]}
                             >
-                              <Input placeholder="Color name" />
+                              <Input placeholder="Variant's name" />
                             </Form.Item>
                           </Col>
 
@@ -597,7 +633,7 @@ export default function EditProduct() {
                                 },
                               ]}
                             >
-                              <Input placeholder="Color name" />
+                              <Input placeholder="Version's name" />
                             </Form.Item>
                           </Col>
 
@@ -655,6 +691,7 @@ export default function EditProduct() {
               beforeUpload={() => false}
               onPreview={handlePreview}
               onChange={handleUploadChange}
+              onRemove={handleBeforeDelete}
               itemRender={(originNode, file: any) => {
                 let error = false;
                 const isDuplicate = fileList.some(

@@ -21,7 +21,7 @@ export const masterPaymentServices = {
 
   async getById(id: number) {
     try {
-      const response = await api.get(`/master/payment-list/${id}`);
+      const response = await api.get(`/master/payment-list/id/${id}`);
 
       return response.data;
     } catch (error: any) {
@@ -42,7 +42,7 @@ export const masterPaymentServices = {
 
   async update(id: any, data: any) {
     try {
-      const response = await api.put(`/master/payment-list/${id}`, data);
+      const response = await api.put(`/master/payment-list/id/${id}`, data);
 
       notifySuccess("Master Payment updated successfully!");
       return response.data;
@@ -53,7 +53,7 @@ export const masterPaymentServices = {
 
   async delete(id: number) {
     try {
-      await api.delete(`/master/payment-list/${id}`);
+      await api.delete(`/master/payment-list/id/${id}`);
       notifySuccess("Master Payment deleted successfully!");
     } catch (error: any) {
       throw error;

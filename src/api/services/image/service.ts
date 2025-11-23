@@ -14,7 +14,7 @@ export interface Images {
   uploaded_at: string | undefined | null;
   url: string | undefined | null;
   order_view?: number | undefined | null;
-};
+}
 
 // CODE
 export const imageServices = {
@@ -30,7 +30,7 @@ export const imageServices = {
 
   async getById(id: number) {
     try {
-      const response = await api.get(`/image/${id}`);
+      const response = await api.get(`/image/id/${id}`);
 
       return response.data;
     } catch (error: any) {
@@ -88,7 +88,7 @@ export const imageServices = {
 
   async update(id: number, data: any) {
     try {
-      const response = await api.put(`/image/${id}`, data);
+      const response = await api.put(`/image/id/${id}`, data);
 
       notifySuccess("Images updated successfully!");
       return response.data;
@@ -97,9 +97,9 @@ export const imageServices = {
     }
   },
 
-  async delete(id: number) {
+  async delete(id: number, data: any) {
     try {
-      await api.delete(`/image/${id}`);
+      await api.delete(`/image/id/${id}`, data);
       notifySuccess("Images deleted successfully!");
     } catch (error: any) {
       throw error;

@@ -330,7 +330,7 @@ export default function CreateProductPage() {
                           },
                         ]}
                       >
-                        <Input placeholder="Color name" />
+                        <Input placeholder="Color's name" />
                       </Form.Item>
                       <Button
                         shape="circle"
@@ -373,11 +373,11 @@ export default function CreateProductPage() {
                         rules={[
                           {
                             required: true,
-                            message: "Please input color name!",
+                            message: "Please input variant's name!",
                           },
                         ]}
                       >
-                        <Input placeholder="Color name" />
+                        <Input placeholder="Variant's name" />
                       </Form.Item>
                       <Button
                         shape="circle"

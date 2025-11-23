@@ -32,7 +32,7 @@ export const categoryProductServices = {
 
   async getById(id: number) {
     try {
-      const response = await api.get(`/category/product-list/${id}`);
+      const response = await api.get(`/category/product-list/id/${id}`);
 
       return response.data;
     } catch (error: any) {
@@ -55,7 +55,7 @@ export const categoryProductServices = {
 
   async update(id: any, data: any) {
     try {
-      const response = await api.put(`/category/product-list/${id}`, data);
+      const response = await api.put(`/category/product-list/id/${id}`, data);
 
       notifySuccess("Category updated successfully!");
       return response.data;
@@ -67,7 +67,7 @@ export const categoryProductServices = {
 
   async delete(id: number) {
     try {
-      await api.delete(`/category/product-list/${id}`);
+      await api.delete(`/category/product-list/id/${id}`);
       notifySuccess("Category deleted successfully!");
     } catch (error: any) {
       // notifyError("Error deleting category", error.message);
@@ -89,7 +89,7 @@ export const categoryServiceServices = {
 
   async getById(id: number) {
     try {
-      const response = await api.get(`/category/service-list/${id}`);
+      const response = await api.get(`/category/service-list/id/${id}`);
 
       return response.data;
     } catch (error: any) {
@@ -111,7 +111,7 @@ export const categoryServiceServices = {
 
   async update(id: any, data: any) {
     try {
-      const response = await api.put(`/category/service-list/${id}`, data);
+      const response = await api.put(`/category/service-list/id/${id}`, data);
 
       notifySuccess("Category updated successfully!");
       return response.data;
@@ -122,7 +122,7 @@ export const categoryServiceServices = {
 
   async delete(id: number) {
     try {
-      await api.delete(`/category/service-list/${id}`);
+      await api.delete(`/category/service-list/id/${id}`);
       notifySuccess("Category deleted successfully!");
     } catch (error: any) {
       throw error;

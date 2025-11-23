@@ -12,7 +12,7 @@ import { servicesService } from "@/api/services/service/service";
 // Antd Components
 import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
-import { Spin } from "antd";
+import { Modal, Spin } from "antd";
 
 // Page Components
 import Pagination from "../../pagination/pagination";
@@ -106,6 +106,8 @@ const clients: Client[] = [
   },
 ];
 
+const { confirm } = Modal;
+
 // CODE
 export default function TableServices() {
   // Route
@@ -163,6 +165,46 @@ export default function TableServices() {
     fetchData({ page: pagination.page, pageSize: pagination.pageSize });
   }, []);
 
+  // SHOW MODAL CONFIRM
+  const showModalConfirm = (value: any) => {
+    const _data = value;
+
+    console.log("Submit: ", _data);
+
+    confirm({
+      className: "modals-confirm",
+      title: `Are you sure want to Delete ${_data.service_name}?`,
+      okText: "Confirm",
+      cancelText: "Cancel",
+      centered: true,
+
+      onOk() {
+        handleDelete(_data);
+      },
+
+      onCancel() {
+        // setLoadingBtn(false);
+      },
+
+      okButtonProps: {
+        className: "submit-btn",
+        type: "primary",
+        danger: true,
+      },
+
+      cancelButtonProps: {
+        className: "cancel-btn",
+        type: "default",
+      },
+
+      width: 750,
+      //   bodyStyle: {
+      //     padding: 30,
+      //     borderRadius: 10,
+      //   },
+    });
+  };
+
   // Handle Edit
   const handleEdit = (values: any) => {
     console.log(values);
@@ -170,10 +212,17 @@ export default function TableServices() {
     route.push(`/items/services/edit/${values.id}`);
   };
 
-  const handleDelete = (values: number) => {
-    if (confirm("Are you sure you want to delete this client?")) {
-      alert(`Deleted client with ID: ${values}`);
-    }
+  // Handle Delete
+  const handleDelete = async (value: any) => {
+    const _id = value?.id;
+
+    try {
+      const result = await servicesService.delete(_id);
+
+      console.log("Delete result: ", result);
+
+      fetchData({ page: pagination.page, pageSize: pagination.pageSize });
+    } catch (error) {}
   };
 
   // Handle Refresh
@@ -282,7 +331,7 @@ export default function TableServices() {
                         <FiEdit size={24} />
                       </button>
                       <button
-                        onClick={() => handleDelete(items?.id)}
+                        onClick={() => showModalConfirm(items?.id)}
                         className="text-red-400 hover:text-red-600 cursor-pointer"
                       >
                         <FiTrash2 size={24} />

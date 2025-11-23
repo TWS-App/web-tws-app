@@ -40,7 +40,7 @@ export const orderDetailsService = {
 
   async getById(id: number) {
     try {
-      const response = await api.get(`/transaction/details/${id}`);
+      const response = await api.get(`/transaction/details/id/${id}`);
 
       return response.data;
     } catch (error: any) {
@@ -50,7 +50,7 @@ export const orderDetailsService = {
 
   async getDetailById(id: number) {
     try {
-      const response = await api.get(`/transaction/details/header/${id}`);
+      const response = await api.get(`/transaction/details/header/id/${id}`);
 
       return response.data;
     } catch (error: any) {
@@ -71,7 +71,7 @@ export const orderDetailsService = {
 
   async update(id: number, data: any) {
     try {
-      const response = await api.put(`/transaction/details/${id}`, data);
+      const response = await api.put(`/transaction/details/id/${id}`, data);
 
       notifySuccess("Detail's Order updated successfully!");
       return response.data;
@@ -82,7 +82,7 @@ export const orderDetailsService = {
 
   async delete(id: number) {
     try {
-      await api.delete(`/transaction/details/${id}`);
+      await api.delete(`/transaction/details/id/${id}`);
       notifySuccess("Detail's Order deleted successfully!");
     } catch (error: any) {
       throw error;

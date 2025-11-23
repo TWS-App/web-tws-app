@@ -13,7 +13,7 @@ import { productServices } from "@/api/services/product/product";
 import api from "@/api/context/config";
 
 // Antd Components
-import { Spin, Tag, Tooltip } from "antd";
+import { Modal, Spin, Tag, Tooltip } from "antd";
 import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
 import { PiCheckCircle, PiXCircle } from "react-icons/pi";
@@ -113,6 +113,8 @@ const clients: Client[] = [
   },
 ];
 
+const { confirm } = Modal;
+
 // CODE
 export default function TableProducts() {
   // Reacts
@@ -171,6 +173,46 @@ export default function TableProducts() {
     fetchData({ page: pagination.page, pageSize: pagination.pageSize });
   }, []);
 
+  // SHOW MODAL CONFIRM
+  const showModalConfirm = (value: any) => {
+    const _data = value;
+
+    console.log("Submit: ", _data);
+
+    confirm({
+      className: "modals-confirm",
+      title: `Are you sure want to Delete ${_data.product_name}?`,
+      okText: "Confirm",
+      cancelText: "Cancel",
+      centered: true,
+
+      onOk() {
+        handleDelete(_data);
+      },
+
+      onCancel() {
+        // setLoadingBtn(false);
+      },
+
+      okButtonProps: {
+        className: "submit-btn",
+        type: "primary",
+        danger: true,
+      },
+
+      cancelButtonProps: {
+        className: "cancel-btn",
+        type: "default",
+      },
+
+      width: 750,
+      //   bodyStyle: {
+      //     padding: 30,
+      //     borderRadius: 10,
+      //   },
+    });
+  };
+
   // Handle Edit
   const handleEdit = (values: any) => {
     console.log(values);
@@ -180,10 +222,17 @@ export default function TableProducts() {
     route.push(`/items/products/edit/${values.id}`);
   };
 
-  const handleDelete = (values: number) => {
-    if (confirm("Are you sure you want to delete this client?")) {
-      alert(`Deleted client with ID: ${values}`);
-    }
+  // DELETE
+  const handleDelete = async (value: any) => {
+    const _id = value?.id;
+
+    try {
+      const result = await productServices.delete(_id);
+
+      console.log("Delete result: ", result);
+
+      fetchData({ page: pagination.page, pageSize: pagination.pageSize });
+    } catch (error) {}
   };
 
   // Handle Refresh
@@ -315,7 +364,7 @@ export default function TableProducts() {
 
                         <Tooltip title="Delete Data?">
                           <button
-                            onClick={() => handleDelete(items)}
+                            onClick={() => showModalConfirm(items)}
                             className="text-red-400 hover:text-red-600 cursor-pointer"
                           >
                             <FiTrash2 size={20} />

@@ -3,7 +3,7 @@ import { IoBagCheck } from "react-icons/io5";
 
 // Import Page Components
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
-import TableOrders from "@/app/components/tables/orders/table";
+import TableOrderFinish from "@/app/components/tables/orders/finish/Table";
 
 // CODE
 export default function OrderFinishedPage() {
@@ -23,7 +23,7 @@ export default function OrderFinishedPage() {
         </span>
       </h1>
 
-      <TableOrders />
+      <TableOrderFinish />
     </div>
   );
 }

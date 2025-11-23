@@ -21,7 +21,7 @@ import {
   Typography,
 } from "antd";
 import { BiCheckCircle, BiPrinter } from "react-icons/bi";
-import { IoHome } from "react-icons/io5";
+import { IoHome, IoSyncOutline } from "react-icons/io5";
 import { RiPrinterFill } from "react-icons/ri";
 
 // Services
@@ -135,6 +135,28 @@ export default function TrackingPage() {
         return "REFUND";
       case 4:
         return "CANCEL";
+
+      default:
+        return "UNKNOWN";
+    }
+  };
+
+  // GET SHIPMENT
+  const getShipment = (value: any) => {
+    // console.log("Status: ", value);
+    const _status = value >= 0 ? value : null;
+
+    switch (_status) {
+      case 1:
+        return "JNE";
+      case 2:
+        return "J&T";
+      case 3:
+        return "SHOPEE EXPRESS";
+      case 4:
+        return "ANTERAJA";
+      case 5:
+        return "SI CEPAT";
 
       default:
         return "UNKNOWN";
@@ -306,7 +328,7 @@ export default function TrackingPage() {
 
   if (isSearch) {
     return (
-      <div className="container flex justify-center h-full m-auto mt-8 w-full">
+      <div className="container w-full h-full flex justify-center m-auto mt-8">
         {noData ? (
           <div className="w-full h-full m-auto bg-amber-50">
             <Result
@@ -406,9 +428,20 @@ export default function TrackingPage() {
                   </p>
                   <p>
                     <strong>Shipment: </strong>
-                    {`   ${orderData?.shipment_name ?? ""} - ${
-                      orderData?.shipment_id ?? ""
-                    }`}
+                    <Tag
+                      color={orderData?.shipment > 0 ? "#87d068" : "default"}
+                      key={orderData.id}
+                      style={{
+                        // fontSize: ,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {`   ${
+                        orderData?.shipment
+                          ? getShipment(orderData.shipment)
+                          : ""
+                      } - ${orderData?.shipment_number ?? ""}`}
+                    </Tag>
                   </p>
                 </Col>
 

@@ -20,7 +20,7 @@ export const masterShipmentServices = {
 
   async getById(id: number) {
     try {
-      const response = await api.get(`/master/shipment-list/${id}`);
+      const response = await api.get(`/master/shipment-list/id/${id}`);
 
       return response.data;
     } catch (error: any) {
@@ -41,7 +41,7 @@ export const masterShipmentServices = {
 
   async update(id: any, data: any) {
     try {
-      const response = await api.put(`/master/shipment-list/${id}`, data);
+      const response = await api.put(`/master/shipment-list/id/${id}`, data);
 
       notifySuccess("Master Shipment updated successfully!");
       return response.data;
@@ -52,7 +52,7 @@ export const masterShipmentServices = {
 
   async delete(id: number) {
     try {
-      await api.delete(`/master/payment-list/${id}`);
+      await api.delete(`/master/payment-list/id/${id}`);
       notifySuccess("Master Shipment deleted successfully!");
     } catch (error: any) {
       throw error;

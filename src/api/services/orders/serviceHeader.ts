@@ -36,9 +36,21 @@ export const orderHeaderService = {
     }
   },
 
+  async getPaginated(params: ApiParams) {
+    try {
+      const response = await api.get("/transaction/header/paginated/", {
+        params,
+      });
+
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  },
+
   async getById(id: number) {
     try {
-      const response = await api.get(`/transaction/header/${id}`);
+      const response = await api.get(`/transaction/header/id/${id}`);
 
       return response.data;
     } catch (error: any) {
@@ -59,7 +71,7 @@ export const orderHeaderService = {
 
   async update(id: number, data: any) {
     try {
-      const response = await api.put(`/transaction/header/${id}`, data);
+      const response = await api.put(`/transaction/header/id/${id}`, data);
 
       notifySuccess("Order updated successfully!");
       return response.data;
@@ -70,7 +82,7 @@ export const orderHeaderService = {
 
   async delete(id: number) {
     try {
-      await api.delete(`/transaction/header/${id}`);
+      await api.delete(`/transaction/header/id/${id}`);
       notifySuccess("Order cancelled successfully!");
     } catch (error: any) {
       throw error;
