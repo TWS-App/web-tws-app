@@ -113,8 +113,8 @@ export async function middleware(req: NextRequest) {
     if (!id || !/^[a-zA-Z0-9_-]+$/.test(id)) {
       // invalid format -> show not-found
       return isCrawler
-        ? NextResponse.redirect(new URL("/error/not-found", req.url))
-        : NextResponse.rewrite(new URL("/error/not-found", req.url));
+        ? NextResponse.redirect(new URL("/errorpage/not-found", req.url))
+        : NextResponse.rewrite(new URL("/errorpage/not-found", req.url));
     }
 
     // Optional: validate existence using API endpoint (configurable)
@@ -123,8 +123,8 @@ export async function middleware(req: NextRequest) {
       // If validation API replies false (exists === false) => show not found
       if (ok && !exists) {
         return isCrawler
-          ? NextResponse.redirect(new URL("/error/not-found", req.url))
-          : NextResponse.rewrite(new URL("/error/not-found", req.url));
+          ? NextResponse.redirect(new URL("/errorpage/not-found", req.url))
+          : NextResponse.rewrite(new URL("/errorpage/not-found", req.url));
       }
       // if ok===false (validate failed), we do nothing (fail-open) to avoid false negatives
     }

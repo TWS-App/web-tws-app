@@ -5,12 +5,28 @@ import Link from "next/link";
 // import Image from "next/image";
 // Antd Components
 import { Carousel, Image } from "antd";
+import { VscLoading } from "react-icons/vsc";
 
 // Utils
 import { formatPrice } from "@/utils/function/price";
 
 // CODE
-export default function ServiceCard({ item }: { item: any }) {
+export default function ServiceCard({
+  item,
+  loading,
+}: {
+  item: any;
+  loading: boolean;
+}) {
+  if (loading) {
+    return (
+      <div className="absolute inset-0 flex flex-col gap-3 items-center justify-center bg-gray-900/40 rounded-lg">
+        <VscLoading className="animate-spin text-[#108ee9]" size={100} />
+        Searching...
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
       <Link

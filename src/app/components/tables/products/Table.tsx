@@ -13,7 +13,7 @@ import { productServices } from "@/api/services/product/product";
 import api from "@/api/context/config";
 
 // Antd Components
-import { Modal, Spin, Tag, Tooltip } from "antd";
+import { Input, Modal, Spin, Tag, Tooltip } from "antd";
 import { FiEdit, FiTrash2, FiRefreshCcw } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
 import { PiCheckCircle, PiXCircle } from "react-icons/pi";
@@ -26,6 +26,7 @@ import type { Client } from "./types/types";
 import { formatPrice } from "@/utils/function/price";
 import { randomColors } from "@/utils/constans/colors";
 import { addEditData } from "@/stores/edit/edit";
+import { IoCloseCircle } from "react-icons/io5";
 
 const clients: Client[] = [
   {
@@ -123,6 +124,8 @@ export default function TableProducts() {
 
   // DATA STATE
   const [data, setData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
+
   const [loading, setLoading] = useState(false);
 
   const [pagination, setPagination] = useState({
@@ -145,6 +148,7 @@ export default function TableProducts() {
         : await productServices.getAll({
             page: params?.page ? params.page : pagination.page,
             page_size: params?.pageSize ? params.pageSize : pagination.pageSize,
+            search: params?.search ?? null,
           });
 
       console.log("Fetch res: ", result, params);
@@ -172,6 +176,15 @@ export default function TableProducts() {
   useEffect(() => {
     fetchData({ page: pagination.page, pageSize: pagination.pageSize });
   }, []);
+
+  // SEARCH FUNCTION
+  const onSearch = () => {
+    fetchData({
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      search: searchQuery,
+    });
+  };
 
   // SHOW MODAL CONFIRM
   const showModalConfirm = (value: any) => {
@@ -269,21 +282,48 @@ export default function TableProducts() {
 
   return (
     <div className="bg-gray-800 rounded-lg shadow p-4 text-white">
-      {/* Header with Refresh */}
-      <div className="flex justify-end items-center mb-4 gap-4">
-        <Link
-          href="/items/products/create"
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition cursor-pointer"
-        >
-          <FaPlus /> Add New Product
-        </Link>
+      <div className="flex justify-between">
+        <div className="justify-start items-center mb-4 gap-4">
+          <Input.Search
+            placeholder="Search Product..."
+            enterButton="Search"
+            value={searchQuery ?? ""}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            autoFocus
+            loading={loading}
+            suffix={
+              <IoCloseCircle
+                className="text-black hover:text-red-500 cursor-pointer"
+                size={24}
+                onClick={() => {
+                  setSearchQuery(null);
+                  fetchData({
+                    page: pagination.page,
+                    pageSize: pagination.pageSize,
+                    search: null,
+                  });
+                }}
+              />
+            }
+            onSearch={onSearch}
+          />
+        </div>
 
-        <button
-          onClick={handleRefresh}
-          className="flex items-center gap-2 px-3 py-2 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer"
-        >
-          <FiRefreshCcw /> Refresh
-        </button>
+        <div className="flex justify-end items-center mb-4 gap-4">
+          <Link
+            href="/items/products/create"
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition cursor-pointer"
+          >
+            <FaPlus /> Add New Product
+          </Link>
+
+          <button
+            onClick={handleRefresh}
+            className="flex items-center gap-2 px-3 py-2 bg-gray-700 rounded hover:bg-gray-600 transition cursor-pointer"
+          >
+            <FiRefreshCcw /> Refresh
+          </button>
+        </div>
       </div>
 
       <div className="relative min-h-[200px]">

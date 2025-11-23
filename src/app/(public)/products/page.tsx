@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 // ANTD COMPONENTS
-import { Button, Spin } from "antd";
+import { Button, Input, Spin, Tooltip } from "antd";
 import { BiHome } from "react-icons/bi";
+import { IoCloseCircle } from "react-icons/io5";
+import { PiMagnifyingGlassFill } from "react-icons/pi";
 import { FaCartShopping } from "react-icons/fa6";
 
 // Services
@@ -56,10 +58,11 @@ export default function ProductsPage() {
   // STATE
   const [product, setProduct] = useState<any[]>([]);
   const [bulks, setBulks] = useState([]);
-
-  const [dataProduct, setDataProduct] = useState([]);
-  const [dataImage, setDataImage] = useState([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
+
+  // Loading
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [pagination, setPagination] = useState({
@@ -87,10 +90,10 @@ export default function ProductsPage() {
         : await productServices.getAll({
             page: params?.page ? params.page : pagination.page,
             page_size: params?.pageSize ? params.pageSize : pagination.pageSize,
+            search: params?.search ?? null,
           });
 
       const resultCat = await categoryProductServices.getAll();
-      const resultImg = await imageServices.getAll();
 
       console.log("Fetch res: ", result, resultCat);
 
@@ -153,6 +156,17 @@ export default function ProductsPage() {
     }
   };
 
+  // SEARCH FUNCTION
+  const onSearch = () => {
+    setIsSearchOpen(false);
+
+    fetchData({
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      search: searchQuery,
+    });
+  };
+
   // if (product.length === 0) {
   //   return (
   //     <div className="flex justify-center items-center mt-28 bg-gray-600 p-5 rounded-2xl">
@@ -184,9 +198,75 @@ export default function ProductsPage() {
       <section className="min-h-screen bg-white pt-28 pb-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-blue-600">Products</h1>
+            <div className="flex justify-center gap-2">
+              <h1 className="text-3xl font-bold text-[#108ee9]">Products</h1>
+
+              <Tooltip title="Search?">
+                <PiMagnifyingGlassFill
+                  className="text-[#108ee9] hover:text-[#046cc2] hover:scale-105 transition-colors cursor-pointer"
+                  size={28}
+                  onClick={() => setIsSearchOpen(true)}
+                />
+              </Tooltip>
+            </div>
+
             <div className="w-16 h-1 bg-indigo-500 mx-auto mt-2 rounded-full"></div>
           </div>
+
+          {isSearchOpen && (
+            <div
+              className="fixed inset-0 bg-black/40 backdrop-blur-md flex justify-center items-start pt-24 z-50"
+              onClick={() => {
+                setIsSearchOpen(false);
+                setSearchQuery("");
+                setProduct(bulks);
+              }}
+            >
+              <div
+                className="bg-white w-11/12 md:w-1/2 p-4 rounded-xl shadow-lg flex items-center gap-3"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Input.Search
+                  placeholder="Search Product..."
+                  enterButton="Search"
+                  value={searchQuery ?? ""}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                  loading={loading}
+                  size="large"
+                  suffix={
+                    <IoCloseCircle
+                      className="text-black hover:text-red-500 cursor-pointer"
+                      size={24}
+                      onClick={() => setIsSearchOpen(false)}
+                    />
+                  }
+                  onSearch={onSearch}
+                />
+                {/* <input
+                  type="text"
+                  placeholder="Search product..."
+                  className="w-full outline-none text-lg text-gray-700"
+                  value={searchQuery ?? ""}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                />
+
+                <IoCloseCircle
+                  className="text-black hover:text-red-500 cursor-pointer"
+                  size={24}
+                  onClick={() => setIsSearchOpen(false)}
+                />
+
+                <button
+                  onClick={onSearch}
+                  className="px-3 py-1 bg-[#1554ad] text-white rounded-lg hover:bg-[#1668dc] cursor-pointer"
+                >
+                  Search
+                </button> */}
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-wrap justify-center gap-4 mb-8 text-center">
             {categories.map((cat: any) => (
