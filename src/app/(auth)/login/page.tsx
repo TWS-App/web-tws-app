@@ -39,9 +39,9 @@ export default function LoginPage() {
           {/* Left Image */}
           <div className="hidden md:block w-1/2">
             <img
-              src="/images/featured-04.jpg"
+              src="/ServiceLogo.png"
               alt="Login"
-              className="object-cover w-full h-full"
+              className="object-cover w-full h-full bg-gray-600"
             />
           </div>
 
@@ -81,7 +81,7 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                className="w-full flex justify-center gap-3 bg-blue-600 text-white py-2 rounded-lg hover:bg-purple-600 transition cursor-pointer"
+                className="w-full flex justify-center gap-3 bg-[#03a9f4] text-white py-2 rounded-lg hover:bg-[#0068a8] transition cursor-pointer"
               >
                 {loading ? <BiLoader className="animate-spin size-8" /> : null}
                 Log in

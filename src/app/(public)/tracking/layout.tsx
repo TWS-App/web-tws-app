@@ -1,11 +1,13 @@
-"use client";
+// METADATA
+export const metadata = {
+  title: "Track Order | Yhusan Digital",
+  alternates: {
+    canonical: "https://yhusan-digital.com/tracking",
+  },
+};
 
-// REACTS
-import { useEffect, useState } from "react";
-
-// Page Components
-import Navbar from "@/app/components/navbar/cartbar";
-import Sidebar from "@/app/components/sidebar";
+// PAGE COMPONENTS
+import TrackingClientLayout from "./layout.client";
 
 // CODE
 export default function TrackingLayout({
@@ -13,23 +15,5 @@ export default function TrackingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // STATE
-  const [open, setOpen] = useState(false);
-
-  // USEEFFECTS
-  useEffect(() => {
-    console.log(open);
-  }, [open]);
-
-  return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar open={open} setOpen={setOpen} />
-
-      <div className="flex-1 flex flex-col">
-        <Navbar onToggleSidebar={() => setOpen(!open)} />
-
-        <main>{children}</main>
-      </div>
-    </div>
-  );
+  return <TrackingClientLayout>{children}</TrackingClientLayout>;
 }

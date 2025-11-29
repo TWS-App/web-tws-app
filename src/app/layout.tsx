@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     creator: "@yhusandigital",
   },
   alternates: {
-    canonical: "https://yhusan-digital.com",
+    canonical: "https://yhusan-digital.com/",
   },
   icons: {
     icon: "/favicon.ico",
@@ -86,6 +86,7 @@ export const metadata: Metadata = {
   },
 };
 
+// CODE
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

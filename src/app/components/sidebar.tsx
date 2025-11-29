@@ -54,7 +54,7 @@ export default function Sidebar({
             <Link href="/tracking" className="text-black hover:text-blue-500">
               Tracking Order
             </Link>
-            <Link href="/contact" className="text-black hover:text-blue-500">
+            <Link href="/#contact" className="text-black hover:text-blue-500">
               Contact
             </Link>
           </nav>
