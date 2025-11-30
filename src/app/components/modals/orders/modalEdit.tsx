@@ -33,6 +33,7 @@ import Pagination from "../../pagination/pagination";
 // Utils
 import { formatPrice } from "@/utils/function/price";
 import MasterOrderStatus from "../../masters/status/orderStatus";
+import MasterShipment from "../../masters/shipment/shipment";
 
 // INTERFACE
 interface ModalProps {
@@ -79,9 +80,9 @@ export default function ModalEditOrder({
         fetchDetails(dataEdit);
         setData(dataEdit);
 
-        setTimeout(() => {
-          handleFormField(dataEdit);
-        }, 1500);
+        // setTimeout(() => {
+        //   handleFormField(dataEdit);
+        // }, 1500);
       }
     } else {
       setOpen(false);
@@ -99,6 +100,12 @@ export default function ModalEditOrder({
       console.log("Fetch res: ", result);
 
       // setData(result);
+
+      if (res) {
+        setTimeout(() => {
+          handleFormField(res);
+        }, 1500);
+      }
 
       if (result?.length > 0) {
         const filter = result.filter((items: any) => {
@@ -214,6 +221,16 @@ export default function ModalEditOrder({
     });
   };
 
+  // Get Shipment
+  const getShipment = (value: any) => {
+    console.log(value);
+
+    form.setFieldsValue({
+      shipment: value.value,
+      shipment_id: value.id,
+    });
+  };
+
   // Handle Close
   const handleClose = () => {
     form.resetFields();
@@ -239,10 +256,11 @@ export default function ModalEditOrder({
         address: values.address,
         phone_number: values.phone_number,
         email: values.email,
-        shipment: values?.shipment,
+        shipment: values?.shipment_id,
         shipment_number: values?.shipment_number,
         payment_type: values?.payment_id,
         payment_date: values?.payment_status == 1 ? new Date() : null,
+        is_service: values?.is_service === true ? true : false,
       };
       const id = Number(data?.id);
 
@@ -480,7 +498,11 @@ export default function ModalEditOrder({
 
             <Col xs={24} sm={12} md={12} lg={8} xxl={8} xl={8}>
               <Form.Item name="shipment" label="Shipment Name">
-                <Select
+                <MasterShipment
+                  getShipment={getShipment}
+                  status={data?.shipment || 0}
+                />
+                {/* <Select
                   placeholder="Shipment Name"
                   allowClear
                   showSearch
@@ -526,7 +548,11 @@ export default function ModalEditOrder({
                     //   value: 4,
                     // },
                   ]}
-                />
+                /> */}
+              </Form.Item>
+
+              <Form.Item label="Shipment ID" hidden name="shipment_id">
+                <Input placeholder="Shipment ID" />
               </Form.Item>
 
               <Form.Item label="Shipment Number" name="shipment_number">

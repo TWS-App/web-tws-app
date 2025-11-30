@@ -6,6 +6,7 @@ import Link from "next/link";
 
 // Antd Components
 import { Carousel, Image } from "antd";
+import { VscLoading } from "react-icons/vsc";
 
 // Utils
 import { formatPrice } from "@/utils/function/price";
@@ -16,12 +17,26 @@ const contentStyle = {
 };
 
 // CODE
-export default function ProductCard({ item }: { item: any }) {
+export default function ProductCard({
+  item,
+  loading,
+}: {
+  item: any;
+  loading: boolean;
+}) {
   // const onChange = (currentSlide: number) => {
   //   console.log(currentSlide);
   // };
 
-  console.log("Items: ", item?.images);
+  // console.log("Items: ", item?.images);
+  if (loading) {
+    return (
+      <div className="absolute inset-0 flex flex-col gap-3 items-center justify-center bg-gray-900/40 rounded-lg">
+        <VscLoading className="animate-spin text-[#108ee9]" size={100} />
+        Searching...
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">

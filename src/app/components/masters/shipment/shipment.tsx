@@ -1,19 +1,18 @@
 // Import React Components
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 // SERVICES
-import { orderStatusServices } from "@/api/services/master/orderStatus";
 
 // Import Ant Design's Components
 import { Button, Divider, Row, Select, Space } from "antd";
 import { BiRefresh } from "react-icons/bi";
+import { masterShipmentServices } from "@/api/services/master/shipment";
 
 // INTERFACE
 interface MasterProps {
-  status: string;
+  status: number;
   isDisable?: boolean;
-  getStatusOrder: (value: any) => void;
+  getShipment: (value: any) => void;
   children?: React.ReactNode;
 }
 
@@ -26,14 +25,14 @@ interface CategoryOption {
 }
 
 // CODE
-export default function MasterOrderStatus({
-  getStatusOrder,
+export default function MasterShipment({
+  getShipment,
   status,
   isDisable,
   children,
 }: MasterProps) {
   // STATE MANAGEMENT
-  const [statusOrder, setStatusOrder] = useState<number | null>(null);
+  const [shipment, setShipment] = useState<number | null>(null);
   const [optionValue, setOptionValue] = useState<CategoryOption[]>([]);
   // Loading
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +42,7 @@ export default function MasterOrderStatus({
     setIsLoading(true);
 
     try {
-      const result = await orderStatusServices.getAll();
+      const result = await masterShipmentServices.getAll();
 
       // console.log("Fetch res: ", result);
 
@@ -58,11 +57,11 @@ export default function MasterOrderStatus({
           id: value?.id,
           key: value?.id,
           value: value?.id,
-          label: value?.status_name,
+          label: value?.name,
         }));
 
         setOptionValue(optionFilter);
-        setStatusOrder(null);
+        setShipment(null);
       } else {
         setOptionValue([]);
       }
@@ -85,7 +84,7 @@ export default function MasterOrderStatus({
       // console.log(category);
       handleEdit(status, optionValue);
     } else {
-      setStatusOrder(null);
+      setShipment(null);
     }
 
     return () => {
@@ -100,8 +99,8 @@ export default function MasterOrderStatus({
 
     // console.log("INI CODE ", _allKeys);
 
-    setStatusOrder(_value);
-    getStatusOrder({
+    setShipment(_value);
+    getShipment({
       value: _allKeys?.label,
       id: _allKeys?.id,
     });
@@ -115,25 +114,25 @@ export default function MasterOrderStatus({
 
     console.log("Value Edit: ", _names);
 
-    setStatusOrder(_names);
+    setShipment(_names);
 
     setIsLoading(false);
   };
 
   // Handle Change
   const handleClear = () => {
-    setStatusOrder(null);
+    setShipment(null);
   };
 
   return (
     <Select
-      className="status-order-select"
-      key="status-order-select"
+      className="status-shipment-select"
+      key="status-shipment-select"
       allowClear
       showSearch
       disabled={isDisable}
-      value={statusOrder}
-      placeholder="Select Payment Type!"
+      value={shipment}
+      placeholder="Select Shipment!"
       loading={isLoading}
       variant="outlined"
       onChange={handleChange}

@@ -16,6 +16,7 @@ import {
   Image,
   Input,
   InputNumber,
+  message,
   Modal,
   Row,
   Space,
@@ -219,6 +220,25 @@ export default function EditService() {
     });
   };
 
+  // Handle Delete
+  const handleBeforeDelete = async (value: any) => {
+    console.log("Delete: ", value);
+
+    return new Promise<boolean>((resolve) => {
+      confirm({
+        title: "Are you sure want to Delete this Image?",
+        // content: "This image will be removed.",
+        okText: "Delete",
+        cancelText: "Cancel",
+        centered: true,
+        onOk: () => {
+          handleDelete(value);
+        },
+        onCancel: () => resolve(false),
+      });
+    });
+  };
+
   // Handle Close
   const handleClose = () => {
     form.resetFields();
@@ -305,6 +325,23 @@ export default function EditService() {
     } catch (error) {
     } finally {
       setUploading(false);
+    }
+  };
+
+  // Handle Delete
+  const handleDelete = async (file: any) => {
+    console.log("Files: ", file);
+
+    try {
+      if (file?.id > 0) {
+        await imageServices.delete(file.id);
+      }
+
+      return true;
+    } catch (err) {
+      console.error("Delete error:", err);
+      message.error("Failed to delete image. Please try again!");
+      return false;
     }
   };
 
@@ -593,6 +630,7 @@ export default function EditService() {
               beforeUpload={() => false}
               onPreview={handlePreview}
               onChange={handleUploadChange}
+              onRemove={handleBeforeDelete}
               itemRender={(originNode, file: any) => {
                 let error = false;
                 const isDuplicate = fileList.some(
@@ -613,20 +651,36 @@ export default function EditService() {
                       size="small"
                       value={file.order_view ?? 0}
                       onChange={(value) => {
-                        let newList = [...fileList];
+                        if (value === null || value === undefined) {
+                          setFileList((prev) =>
+                            prev.map((f) =>
+                              f.uid === file.uid
+                                ? { ...f, order_view: value }
+                                : f
+                            )
+                          );
+                          return;
+                        }
 
-                        newList = newList.map((f: any, idx: number) => {
-                          if (f.uid === file.uid)
-                            return { ...f, order_view: value };
-                          if (f.order_view === value)
-                            return {
-                              ...f,
-                              order_view: f.order_view! + 1 + idx,
-                            };
-                          return f;
-                        });
+                        // Cek apakah value sudah dipakai image lain
+                        const duplicate = fileList.some(
+                          (f) => f.uid !== file.uid && f.order_view === value
+                        );
 
-                        setFileList(newList);
+                        if (duplicate) {
+                          error = true;
+                          message.error(
+                            `Order ${value} sudah digunakan gambar lain.`
+                          );
+                          return;
+                        }
+
+                        // Jika aman → update normal
+                        setFileList((prev) =>
+                          prev.map((f) =>
+                            f.uid === file.uid ? { ...f, order_view: value } : f
+                          )
+                        );
                       }}
                       style={{ marginTop: 6, width: 70 }}
                     />

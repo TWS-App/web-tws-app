@@ -1,22 +1,19 @@
-import Navbar from "@/app/components/navbar/navbar";
-import Sidebar from "@/app/components/sidebar/sidebar";
-import { ThemeProvider } from "@/context/themes/ThemeContext";
+// METADATA
+export const metadata = {
+  title: "Admins | Settings",
+  alternates: {
+    canonical: "https://yhusan-digital.com/settings",
+  },
+};
 
-export default function MasterLayout({
+// PAGE COMPONENTS
+import MasterClientLayout from "./layout.client";
+
+// CODE
+export default function ItemsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="flex min-h-screen bg-gray-900 text-white">
-      <ThemeProvider>
-        <Sidebar />
-
-        <div className="flex-1 flex flex-col">
-          <Navbar />
-          <main className="flex-1 p-6">{children}</main>
-        </div>
-      </ThemeProvider>
-    </div>
-  );
+  return <MasterClientLayout>{children}</MasterClientLayout>;
 }

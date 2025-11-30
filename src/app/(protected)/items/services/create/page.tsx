@@ -425,7 +425,12 @@ export default function CreateServicePage() {
             justify="end"
             className="flex items-center justify-end gap-3 pt-2"
           >
-            <Button onClick={handleCancel} type="default" icon={<PiXCircle />}>
+            <Button
+              onClick={handleCancel}
+              variant="solid"
+              color="danger"
+              icon={<PiXCircle />}
+            >
               Cancel
             </Button>
 

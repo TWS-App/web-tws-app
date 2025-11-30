@@ -1,32 +1,19 @@
-"use client";
+// METADATA
+export const metadata = {
+  title: "Carts",
+  alternates: {
+    canonical: "https://yhusan-digital.com/cart",
+  },
+};
 
-import Navbar from "@/app/components/navbar/cartbar";
-import Sidebar from "@/app/components/sidebar";
+// PAGE COMPONENTS
+import CartClientLayout from "./layout.client";
 
-import { useEffect, useState } from "react";
-
+// CODE
 export default function CartLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    console.log(open);
-  }, [open]);
-
-  return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar */}
-      <Sidebar open={open} setOpen={setOpen} />
-
-      {/* Konten utama */}
-      <div className="flex-1 flex flex-col">
-        <Navbar onToggleSidebar={() => setOpen(!open)} />
-
-        <main>{children}</main>
-      </div>
-    </div>
-  );
+  return <CartClientLayout>{children}</CartClientLayout>;
 }

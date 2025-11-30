@@ -1,6 +1,6 @@
 // METADATA
 export const metadata = {
-  title: "Services | Yhusan Digital",
+  title: "Services",
   description: "Solusi perbaikan TWS anda untuk berbagai kerusakan.",
   alternates: {
     canonical: "https://yhusan-digital.com/services",

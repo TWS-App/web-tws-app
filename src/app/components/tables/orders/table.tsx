@@ -241,6 +241,7 @@ export default function TableOrders() {
         : await orderHeaderService.getPaginated({
             page: params?.page ? params.page : pagination.page,
             page_size: params?.pageSize ? params.pageSize : pagination.pageSize,
+            is_service: params?.keys === "product" ? false : true,
           });
 
       // console.log("Fetch res: ", data);
@@ -397,7 +398,7 @@ export default function TableOrders() {
   const handleLabel = (item: any) => {
     const found = orderStatus.find((status) => status.value == item);
 
-    return found ? found.label : "Unknown";
+    return found?.label ? found.label.toUpperCase() : "UNKNOWN";
   };
 
   return (

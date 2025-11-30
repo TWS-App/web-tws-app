@@ -105,8 +105,8 @@ export default function ServicePage() {
         setBulks(result.results);
       } else {
         // setDataProduct([]);
-        setService(result.results);
-        setBulks(result.results);
+        setService([]);
+        setBulks([]);
       }
 
       if (resultCat?.length) {
@@ -258,7 +258,7 @@ export default function ServicePage() {
 
           {/* Grid */}
           <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {service.map((item: any) => (
+            {(service ?? []).map((item: any) => (
               <ServiceCard key={item.id} item={item} loading={loading} />
             ))}
           </div>

@@ -1,6 +1,6 @@
 // METADATA
 export const metadata = {
-  title: "Track Order | Yhusan Digital",
+  title: "Track Order",
   alternates: {
     canonical: "https://yhusan-digital.com/tracking",
   },

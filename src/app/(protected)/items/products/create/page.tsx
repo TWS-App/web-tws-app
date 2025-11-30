@@ -101,13 +101,14 @@ export default function CreateProductPage() {
         colors: values?.colors?.length > 0 ? values.colors : [],
         description: values?.description,
         details: values?.details,
-        discount: values?.discount,
+        discount: values?.discount ?? 0,
         is_colors: values?.colors?.length > 0 ? true : false,
         is_ready: values?.is_ready,
         is_variants: values?.variants?.length > 0 ? true : false,
         price: values.price,
         product_name: values?.product_name,
         variants: values?.variants?.length > 0 ? values.variants : [],
+        versions: values?.versions?.length > 0 ? values.versions : [],
       };
 
       const res = await productServices.create(body);
@@ -404,6 +405,54 @@ export default function CreateProductPage() {
             </Form.List>
           </Form.Item>
 
+          <Form.Item label="Versions">
+            <Form.List name="versions">
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Row key={key} style={{ display: "flex" }} gutter={30}>
+                      <Col span={12}>
+                        <Form.Item
+                          {...restField}
+                          name={name}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input Versions!",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Version's name" />
+                        </Form.Item>
+                      </Col>
+
+                      <Col span={12}>
+                        <Button
+                          shape="circle"
+                          color="danger"
+                          variant="solid"
+                          icon={<PiTrash onClick={() => remove(name)} />}
+                        />
+                      </Col>
+                    </Row>
+                  ))}
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      variant="solid"
+                      color="green"
+                      onClick={() => add()}
+                      icon={<PiPlus />}
+                      className="text-white border-gray-500"
+                    >
+                      Add Versions
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
+          </Form.Item>
+
           <Form.Item
             label="Product Ready?"
             name="is_ready"
@@ -416,7 +465,12 @@ export default function CreateProductPage() {
             justify="end"
             className="flex items-center justify-end gap-3 pt-2"
           >
-            <Button onClick={handleCancel} type="default" icon={<PiXCircle />}>
+            <Button
+              onClick={handleCancel}
+              variant="solid"
+              color="danger"
+              icon={<PiXCircle />}
+            >
               Cancel
             </Button>
 

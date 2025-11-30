@@ -1,23 +1,19 @@
-import Navbar from "@/app/components/navbar/navbar";
-import Sidebar from "@/app/components/sidebar/sidebar";
-import TableProducts from "@/app/components/tables/products/Table";
-import { ThemeProvider } from "@/context/themes/ThemeContext";
+// METADATA
+export const metadata = {
+  title: "Admins | Items",
+  alternates: {
+    canonical: "https://yhusan-digital.com/items",
+  },
+};
 
-export default function DashboardLayout({
+// PAGE COMPONENTS
+import ItemsClientLayout from "./layout.client";
+
+// CODE
+export default function ItemsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="flex min-h-screen bg-gray-900 text-white">
-      <ThemeProvider>
-        <Sidebar />
-
-        <div className="flex-1 flex flex-col">
-          <Navbar />
-          <main className="flex-1 p-6">{children}</main>
-        </div>
-      </ThemeProvider>
-    </div>
-  );
+  return <ItemsClientLayout>{children}</ItemsClientLayout>;
 }

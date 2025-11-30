@@ -65,7 +65,7 @@ export default function ModalMasterShipment({
     } else {
       setOpen(false);
     }
-  }, [isOpen, dataEdit?.shipment_name]);
+  }, [isOpen, dataEdit?.name]);
 
   // FETCH DATA DETAILS
   const fetchDetails = async (value: any) => {
@@ -79,7 +79,7 @@ export default function ModalMasterShipment({
 
       setData(result);
 
-      if (value?.shipment_name) {
+      if (value?.name) {
         handleFormField(value);
       }
     } catch (err) {
@@ -91,7 +91,7 @@ export default function ModalMasterShipment({
   // Handle Form Fields
   const handleFormField = (value: any) => {
     form.setFieldsValue({
-      shipment_name: value?.shipment_name,
+      name: value?.name,
       shipment_number: value?.shipment_number,
       description: value.description,
       id: value?.id,
@@ -121,7 +121,7 @@ export default function ModalMasterShipment({
       className: "modals-confirm",
       title: `Are you sure want to ${
         isEdit ? "Update" : "Create a new Data"
-      } Master Shipment ${_data.shipment_name}?`,
+      } Master Shipment ${_data?.name ?? " - - - "}?`,
       okText: "Confirm",
       cancelText: "Cancel",
       centered: true,
@@ -231,7 +231,7 @@ export default function ModalMasterShipment({
           style={{ padding: "20px 10px 0px" }}
         >
           <Form.Item
-            name="shipment_name"
+            name="name"
             label="Shipment's Name"
             rules={[
               {
@@ -240,7 +240,7 @@ export default function ModalMasterShipment({
               },
             ]}
           >
-            <Input placeholder="Bank's Name" />
+            <Input placeholder="Shipment's Name" />
           </Form.Item>
 
           <Form.Item name="description" label="Description">

@@ -126,6 +126,7 @@ export default function EditProduct() {
           code: result?.code,
           colors: result?.colors?.length > 0 ? result.colors : [],
           variants: result?.variants?.length > 0 ? result.variants : [],
+          versions: result?.versions?.length > 0 ? result.versions : [],
           description: result?.description,
           details: result?.details,
           discount: result?.discount,
@@ -342,10 +343,10 @@ export default function EditProduct() {
   // Handle Delete
   const handleDelete = async (file: any) => {
     console.log("Files: ", file);
-    
+
     try {
-      if (file?.id) {
-        await imageServices.delete(file.id, file);
+      if (file?.id > 0) {
+        await imageServices.delete(file.id);
       }
 
       return true;

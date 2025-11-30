@@ -1,9 +1,14 @@
-"use client";
+// METADATA
+export const metadata = {
+  title: "Invoice",
+  description: "Invoice hasil pembelian atau jasa service dari Yhusan Digital.",
+  alternates: {
+    canonical: "https://yhusan-digital.com/invoice",
+  },
+};
 
-import Navbar from "@/app/components/navbar/cartbar";
-import Sidebar from "@/app/components/sidebar";
-
-import { useEffect, useState } from "react";
+// PAGE COMPONENTS
+import InvoiceClientLayout from "./layout.client";
 
 // CODE
 export default function InvoiceLayout({
@@ -11,23 +16,5 @@ export default function InvoiceLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    console.log(open);
-  }, [open]);
-
-  return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar */}
-      <Sidebar open={open} setOpen={setOpen} />
-
-      {/* Konten utama */}
-      <div className="flex-1 flex flex-col">
-        <Navbar onToggleSidebar={() => setOpen(!open)} />
-
-        <main>{children}</main>
-      </div>
-    </div>
-  );
+  return <InvoiceClientLayout>{children}</InvoiceClientLayout>;
 }

@@ -1,12 +1,17 @@
 "use client";
 
-import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
-
+// REACTS
 import Link from "next/link";
+
+// ANTD Components
 import { FaBox, FaTags } from "react-icons/fa";
 import { BsCreditCard2BackFill, BsLayersFill } from "react-icons/bs";
 import { LiaShippingFastSolid } from "react-icons/lia";
 
+// Page Components
+import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
+
+// LIST ITEMS
 const masterItems = [
   {
     name: "Product Categories",
@@ -30,6 +35,7 @@ const masterItems = [
   },
 ];
 
+// CODE
 export default function DashboardPage() {
   return (
     <section className="p-6">

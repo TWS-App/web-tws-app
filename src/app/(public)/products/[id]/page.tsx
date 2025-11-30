@@ -45,7 +45,7 @@ export default function ProductDetail({
   const [selectedVar, setSelectedVar] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [loadingBtn, setLoadingBtn] = useState(false);
 
   // FORMS
@@ -123,7 +123,7 @@ export default function ProductDetail({
   };
 
   // If No Data Found
-  if (!data) {
+  if (!data && !loading) {
     return <p className="text-center mt-20">Product not found.</p>;
   }
 
@@ -147,7 +147,7 @@ export default function ProductDetail({
     const _data = value;
 
     console.log("Finish: ", _data);
-    notifyWarning("Incomplete", _data.errorFields[0].errors);
+    notifyWarning("Incomplete", _data?.errorFields[0].errors);
   };
 
   // Handle Add
@@ -158,8 +158,8 @@ export default function ProductDetail({
     dispatch(
       addToCart({
         id: Number(data?.id),
-        name: data.product_name,
-        price: Number(data.price),
+        name: data?.product_name,
+        price: Number(data?.price),
         variant: _data?.variants,
         color: _data?.colors,
         quantity: _data?.qty,
@@ -180,7 +180,7 @@ export default function ProductDetail({
         <Link href="/products" className="hover:underline">
           Shop
         </Link>
-        &gt; <span className="text-black">{data.product_name}</span>
+        &gt; <span className="text-black">{data?.product_name}</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
@@ -194,7 +194,7 @@ export default function ProductDetail({
             >
               <Image
                 src={img.url || "error"}
-                alt={data.product_name || `img-${i}`}
+                alt={data?.product_name || `img-${i}`}
                 className="object-cover rounded-md  cursor-pointer"
                 preview={false}
                 fallback="data:image/png;base64,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"
@@ -207,7 +207,7 @@ export default function ProductDetail({
         <div className="relative col-span-6 aspect-square border hover:scale-105 transition-transform duration-500 rounded-md">
           <Image
             src={mainImage || "error"}
-            alt={data.product_name || `img`}
+            alt={data?.product_name || `img`}
             preview={false}
             className="object-cover cursor-pointer"
             width={"100%"}
@@ -219,12 +219,12 @@ export default function ProductDetail({
         {/* Info */}
         <div className="col-span-4">
           <h1 className="text-5xl font-bold text-black mb-4">
-            {data.product_name}
+            {data?.product_name}
           </h1>
           <div className="text-gray-500 mb-6">
-            {data.discount && (
+            {data?.discount && (
               <span className="line-through mr-3">
-                {formatPrice(Number(data.price))}
+                {formatPrice(Number(data?.price))}
               </span>
             )}
             <span
@@ -234,19 +234,19 @@ export default function ProductDetail({
             >
               {formatPrice(
                 data?.discount
-                  ? Number(data?.price) - Number(data.discount)
-                  : Number(data.price)
+                  ? Number(data?.price) - Number(data?.discount)
+                  : Number(data?.price)
               )}
             </span>
           </div>
 
           <h3 className="text-black font-semibold mb-2">DESCRIPTION</h3>
-          <p className="text-black mb-6">{data.description}</p>
+          <p className="text-black mb-6">{data?.description}</p>
 
           <h3 className="text-black font-semibold mb-2">DETAILS</h3>
           <ul className="list-disc list-inside text-gray-600 space-y-1 mb-6">
-            {data.details}
-            {/* {data.details.map((d, i) => (
+            {data?.details}
+            {/* {data?.details.map((d, i) => (
               <li key={i}>{d}</li>
             ))} */}
           </ul>
@@ -336,10 +336,10 @@ export default function ProductDetail({
             <Form.Item
               label={<span className="font-semibold text-black">Colors:</span>}
               name="colors"
-              hidden={data.is_colors ? false : true}
+              hidden={data?.is_colors ? false : true}
               rules={[
                 {
-                  required: data.is_colors ? true : false,
+                  required: data?.is_colors ? true : false,
                   message: "Please, Choose a Color!",
                   type: "string",
                 },
@@ -351,7 +351,7 @@ export default function ProductDetail({
                 className="flex flex-wrap gap-2"
                 // onChange={(e) => setSelectedVar(e.target.value)}
               >
-                {(data.colors ?? []).map((color: string) => (
+                {(data?.colors ?? []).map((color: string) => (
                   <Radio.Button key={color} value={color}>
                     {color}
                   </Radio.Button>
@@ -364,10 +364,10 @@ export default function ProductDetail({
                 <span className="font-semibold text-black">Variants:</span>
               }
               name="variants"
-              hidden={data.variants.length > 0 ? false : true}
+              hidden={(data?.variants ?? []).length > 0 ? false : true}
               rules={[
                 {
-                  required: data.variants?.length > 0 ? true : false,
+                  required: (data?.variants ?? []).length > 0 ? true : false,
                   message: "Please, Choose a Variant!",
                   type: "string",
                 },
@@ -379,7 +379,7 @@ export default function ProductDetail({
                 className="flex flex-wrap gap-2"
                 // onChange={(e) => setSelectedVar(e.target.value)}
               >
-                {(data.variants ?? []).map((variant: string) => (
+                {(data?.variants ?? []).map((variant: string) => (
                   <Radio.Button key={variant} value={variant}>
                     {variant}
                   </Radio.Button>
@@ -393,10 +393,10 @@ export default function ProductDetail({
                 <span className="font-semibold text-black">Versions:</span>
               }
               name="version"
-              hidden={data.versions?.length ? false : true}
+              hidden={data?.versions?.length ? false : true}
               rules={[
                 {
-                  required: data.versions?.length ? true : false,
+                  required: data?.versions?.length ? true : false,
                   message: "Please, Choose a Versions!",
                   type: "string",
                 },
@@ -408,14 +408,14 @@ export default function ProductDetail({
                 className="flex flex-wrap gap-2"
                 // onChange={(e) => setSelectedVar(e.target.value)}
               >
-                {(data.versions ?? []).map((version: string) => (
+                {(data?.versions ?? []).map((version: string) => (
                   <Radio.Button key={version} value={version}>
                     {version}
                   </Radio.Button>
                 ))}
               </Radio.Group>
               {/* <div className="flex flex-wrap gap-2">
-                {data.versions.map((version: string) => (
+                {data?.versions.map((version: string) => (
                   <button
                     key={version}
                     type="button"

@@ -3,7 +3,7 @@ import { notifySuccess } from "@/utils/notification/notifications";
 
 export interface ShipmentMaster {
   id?: number;
-  shipment_name: string | undefined | null;
+  name: string | undefined | null;
   description?: string | undefined | null;
 }
 

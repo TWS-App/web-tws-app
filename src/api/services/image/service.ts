@@ -97,9 +97,9 @@ export const imageServices = {
     }
   },
 
-  async delete(id: number, data: any) {
+  async delete(id: number) {
     try {
-      await api.delete(`/image/id/${id}`, data);
+      await api.delete(`/image/id/${id}`);
       notifySuccess("Images deleted successfully!");
     } catch (error: any) {
       throw error;

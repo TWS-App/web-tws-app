@@ -98,7 +98,7 @@ export default function ProductDetail({
 
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState<string | null>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [loadingBtn, setLoadingBtn] = useState(false);
 
   // FORMS
@@ -166,7 +166,7 @@ export default function ProductDetail({
     } catch (error) {}
   };
 
-  if (!data) {
+  if (!data && !loading) {
     return <p className="text-center mt-20">Product not found.</p>;
   }
 
@@ -181,9 +181,9 @@ export default function ProductDetail({
   const handleAdd = () => {
     dispatch(
       addToCart({
-        id: Number(data.id),
-        name: data.service_name,
-        price: Number(data.price),
+        id: Number(data?.id),
+        name: data?.service_name,
+        price: Number(data?.price),
         quantity: quantity,
         variant: "",
         image: mainImage,
@@ -199,7 +199,7 @@ export default function ProductDetail({
         <Link href="/services" className="hover:underline">
           Shop
         </Link>
-        &gt; <span className="text-black">{data.service_name}</span>
+        &gt; <span className="text-black">{data?.service_name}</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
@@ -213,7 +213,7 @@ export default function ProductDetail({
             >
               <Image
                 src={img.url || "error"}
-                alt={data.service_name || `img-${i}`}
+                alt={data?.service_name || `img-${i}`}
                 className="object-cover rounded-md  cursor-pointer"
                 preview={false}
                 width={"100%"}
@@ -228,7 +228,7 @@ export default function ProductDetail({
         <div className="relative col-span-6 aspect-square border rounded-md">
           <Image
             src={mainImage || "error"}
-            alt={data.service_name || `img`}
+            alt={data?.service_name || `img`}
             preview={false}
             width={"100%"}
             height={"100%"}
@@ -240,12 +240,12 @@ export default function ProductDetail({
         {/* Info */}
         <div className="col-span-4">
           <h1 className="text-3xl font-bold text-black mb-4">
-            {data.service_name}
+            {data?.service_name}
           </h1>
           <div className="text-gray-500 mb-6">
-            {data.discount && (
+            {data?.discount && (
               <span className="line-through mr-3">
-                {formatPrice(Number(data.price))}
+                {formatPrice(Number(data?.price))}
               </span>
             )}
             <span
@@ -255,18 +255,18 @@ export default function ProductDetail({
             >
               {formatPrice(
                 data?.discount
-                  ? Number(data?.price) - Number(data.discount)
-                  : Number(data.price)
+                  ? Number(data?.price) - Number(data?.discount)
+                  : Number(data?.price)
               )}
             </span>
           </div>
 
           <h3 className="text-black font-semibold mb-2">DESCRIPTION</h3>
-          <p className="text-black mb-6">{data.description}</p>
+          <p className="text-black mb-6">{data?.description}</p>
 
           <h3 className="text-black font-semibold mb-2">DETAILS</h3>
           <ul className="list-disc list-inside text-gray-600 space-y-1 mb-6">
-            {data.details}
+            {data?.details}
             {/* {(data).map((d, i) => (
               <li key={i}>{d}</li>
             ))} */}

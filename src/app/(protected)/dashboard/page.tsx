@@ -1,10 +1,13 @@
 "use client";
 
+// ANTD Components
+import { IoHome } from "react-icons/io5";
+import { FaClock, FaDollarSign, FaShoppingCart, FaUsers } from "react-icons/fa";
+
+// PAGE Components
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 import SalesChart from "@/app/components/charts/sales";
 // import SalesChart from "@/app/components/charts/sales";
-import { FaClock, FaDollarSign, FaShoppingCart, FaUsers } from "react-icons/fa";
-import { IoHome } from "react-icons/io5";
 
 const dataCard = [
   {
@@ -33,6 +36,7 @@ const dataCard = [
   },
 ];
 
+// CODE
 export default function DashboardPage() {
   return (
     <div>

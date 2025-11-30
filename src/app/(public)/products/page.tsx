@@ -64,6 +64,7 @@ export default function ProductsPage() {
   // Loading
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [pagination, setPagination] = useState({
     total: 0,
@@ -126,6 +127,7 @@ export default function ProductsPage() {
     } catch (err) {
     } finally {
       setTimeout(() => {
+        setIsLoading(false);
         setLoading(false);
       }, 500);
     }
@@ -185,7 +187,7 @@ export default function ProductsPage() {
   //   );
   // }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="absolute inset-0 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm rounded-lg">
         <Spin size="large" />
@@ -197,7 +199,40 @@ export default function ProductsPage() {
     <>
       <section className="min-h-screen bg-white pt-28 pb-12">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
+          <div className="flex flex-col justify-center gap-2 text-center mb-8">
+            <h1 className="text-3xl font-bold text-[#108ee9]">Products</h1>
+            <div className="w-16 h-1 bg-indigo-500 mx-auto mt-2 rounded-full"></div>
+
+            <div className="flex justify-center w-full">
+              <div className="w-full md:w-1/2 lg:w-1/3">
+                <Input.Search
+                  placeholder="Search Product..."
+                  enterButton="Search"
+                  value={searchQuery ?? ""}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                  loading={loading}
+                  size="large"
+                  suffix={
+                    <IoCloseCircle
+                      className="text-black hover:text-red-500 cursor-pointer"
+                      size={24}
+                      onClick={() => {
+                        setSearchQuery(null);
+                        fetchData({
+                          page: pagination.page,
+                          pageSize: pagination.pageSize,
+                          search: null,
+                        });
+                      }}
+                    />
+                  }
+                  onSearch={onSearch}
+                />
+              </div>
+            </div>
+          </div>
+          {/* <div className="text-center mb-8">
             <div className="flex justify-center gap-2">
               <h1 className="text-3xl font-bold text-[#108ee9]">Products</h1>
 
@@ -263,10 +298,10 @@ export default function ProductsPage() {
                   className="px-3 py-1 bg-[#1554ad] text-white rounded-lg hover:bg-[#1668dc] cursor-pointer"
                 >
                   Search
-                </button> */}
+                </button> 
               </div>
             </div>
-          )}
+          )} */}
 
           <div className="flex flex-wrap justify-center gap-4 mb-8 text-center">
             {categories.map((cat: any) => (
@@ -286,79 +321,81 @@ export default function ProductsPage() {
 
           <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {product.map((item: any) => (
-              <ProductCard key={item.id} item={item} />
+              <ProductCard key={item.id} item={item} loading={loading} />
             ))}
           </div>
         </div>
 
-        <div className="flex justify-center items-center gap-2 m-auto mt-20">
-          <div className="flex items-center gap-2">
-            <label htmlFor="rows" className="text-sm text-white">
-              Rows per page:
-            </label>
+        {!loading && (
+          <div className="flex justify-center items-center gap-2 m-auto mt-20">
+            <div className="flex items-center gap-2">
+              <label htmlFor="rows" className="text-sm text-white">
+                Rows per page:
+              </label>
 
-            <select
-              id="rows"
-              value={pagination.pageSize}
-              onChange={(e) => {
-                const newSize = Number(e.target.value);
-                const newPage =
-                  pagination.total / newSize < newSize ? 1 : pagination.page;
+              <select
+                id="rows"
+                value={pagination.pageSize}
+                onChange={(e) => {
+                  const newSize = Number(e.target.value);
+                  const newPage =
+                    pagination.total / newSize < newSize ? 1 : pagination.page;
 
-                fetchData?.({
-                  page: newPage,
-                  pageSize: newSize || 10,
+                  fetchData?.({
+                    page: newPage,
+                    pageSize: newSize || 10,
+                  });
+                }}
+                className="bg-gray-700 text-white rounded px-2 py-1 cursor-pointer hover:bg-gray-600"
+              >
+                {[5, 10, 20, 50].map((num) => (
+                  <option key={num} value={num}>
+                    {num}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              onClick={() => {
+                fetchData({
+                  linkUrl: pagination.previous || null,
                 });
               }}
-              className="bg-gray-700 text-white rounded px-2 py-1 cursor-pointer hover:bg-gray-600"
+              disabled={!pagination.previous}
+              className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 hover:text-blue-400 transition cursor-pointer disabled:opacity-50"
             >
-              {[5, 10, 20, 50].map((num) => (
-                <option key={num} value={num}>
-                  {num}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <button
-            onClick={() => {
-              fetchData({
-                linkUrl: pagination.previous || null,
-              });
-            }}
-            disabled={!pagination.previous}
-            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 hover:text-blue-400 transition cursor-pointer disabled:opacity-50"
-          >
-            Prev
-          </button>
-
-          {[...Array(1)].map((_, i) => (
-            <button
-              key={i + 1}
-              className={`px-3 py-1 rounded cursor-pointer transition ${
-                pagination.page === i + 1
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-700 hover:bg-gray-600"
-              }`}
-            >
-              {pagination.page}
+              Prev
             </button>
-          ))}
 
-          <button
-            onClick={() => {
-              // setPage((prev) => Math.min(prev + 1, totalPages));
+            {[...Array(1)].map((_, i) => (
+              <button
+                key={i + 1}
+                className={`px-3 py-1 rounded cursor-pointer transition ${
+                  pagination.page === i + 1
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-700 hover:bg-gray-600"
+                }`}
+              >
+                {pagination.page}
+              </button>
+            ))}
 
-              fetchData({
-                linkUrl: pagination.next || null,
-              });
-            }}
-            disabled={!pagination.next}
-            className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 hover:text-blue-400 transition cursor-pointer disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+            <button
+              onClick={() => {
+                // setPage((prev) => Math.min(prev + 1, totalPages));
+
+                fetchData({
+                  linkUrl: pagination.next || null,
+                });
+              }}
+              disabled={!pagination.next}
+              className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 hover:text-blue-400 transition cursor-pointer disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </section>
     </>
   );

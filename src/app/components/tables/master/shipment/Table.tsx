@@ -188,7 +188,7 @@ export default function TableShipments() {
                       </button>
                     </td>
                     <td className="py-3 px-4">
-                      <p className="font-semibold">{items.shipment_name}</p>
+                      <p className="font-semibold">{items?.name}</p>
                     </td>
                     <td className="py-3 px-4">{items.description}</td>
                   </tr>
