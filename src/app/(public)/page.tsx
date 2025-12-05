@@ -2,6 +2,11 @@
 import React from "react";
 
 // Page Components
+import SparepartTWS from "@/layout/Sparepart/Sparepart";
+import Navbar from "../components/navbar/navbar-home";
+import HeroBanner from "@/layout/Banner/hero";
+import CategorySelection from "@/layout/Category/category";
+import BrandLogos from "@/layout/Banner/logobanner";
 import ReviewSection from "@/layout/Review/review";
 import CategoriesSection from "../components/olds/category";
 import HotCollections from "../components/olds/collections";
@@ -9,14 +14,8 @@ import CreateSection from "../components/olds/create";
 import HomeFooter from "../components/footer/footer";
 import MarketSection from "../components/olds/market";
 import ServiceTWS from "@/layout/Banner/bannerService";
-import SparepartTWS from "@/layout/Sparepart/Sparepart";
-import Navbar from "../components/navbar/navbar-home";
-import HeroBanner from "@/layout/Banner/hero";
-import CategorySelection from "@/layout/Category/category";
-import BrandLogos from "@/layout/Banner/logobanner";
 
 import Script from "next/script";
-import { FloatButton } from "antd";
 
 // CODE
 export default function Home() {
@@ -30,7 +29,7 @@ export default function Home() {
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
             name: "Yhusan Digital",
-            image: "https://yhusan-digital.com/images/logo.png",
+            image: "https://yhusan-digital.com/logo.png",
             "@id": "https://yhusan-digital.com",
             url: "https://yhusan-digital.com",
             telephone: "+62-821-2995-1421",

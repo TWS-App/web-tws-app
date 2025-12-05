@@ -7,9 +7,11 @@ import {
   FaTwitter,
   FaLinkedinIn,
   FaYoutube,
+  FaInstagram,
 } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa6";
 import { IoSend } from "react-icons/io5";
+import { SiShopee } from "react-icons/si";
 
 // CODE
 export default function HomeFooter() {
@@ -23,10 +25,7 @@ export default function HomeFooter() {
           <h3 className="text-xl font-semibold">Subscribe</h3>
         </div>
 
-        <p className="text-sm text-gray-600">
-          Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do
-          eiusmod.
-        </p>
+        <p className="text-sm text-gray-600">Make Your Audio Great Again</p>
 
         <div className="flex w-full md:w-auto">
           <input
@@ -57,30 +56,47 @@ export default function HomeFooter() {
             seputar TWS Audio lainnya.
           </p>
 
-          <div className="flex gap-3 mt-4">
+          <div className="flex flex-wrap justify-center gap-3 mt-4">
             <a
-              href="#"
+              href="https://web.facebook.com/people/Yhusan-Digital/61567746741538/#"
               className="p-2 bg-gray-200 rounded-full hover:bg-blue-500 hover:text-white transition"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <FaFacebookF size={14} />
             </a>
             <a
-              href="#"
-              className="p-2 bg-gray-200 rounded-full hover:bg-sky-400 hover:text-white transition"
+              href="https://instagram.com/yhusan.digital"
+              className="p-2 bg-gray-200 rounded-full hover:bg-pink-400 hover:text-white transition"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <FaTwitter size={14} />
+              <FaInstagram size={14} />
             </a>
             <a
-              href="#"
-              className="p-2 bg-gray-200 rounded-full hover:bg-blue-700 hover:text-white transition"
+              href="https://www.tiktok.com/@yhusan.digital"
+              className="p-2 bg-gray-200 rounded-full hover:bg-gray-700 hover:text-white transition"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <FaTiktok size={14} />
             </a>
             <a
-              href="#"
+              href="https://www.youtube.com/@yhusan"
               className="p-2 bg-gray-200 rounded-full hover:bg-red-600 hover:text-white transition"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <FaYoutube size={14} />
+            </a>
+
+            <a
+              href="https://shopee.co.id/yhusan.digital?entryPoint=ShopBySearch&searchKeyword=yhusan%20digital"
+              className="p-2 bg-gray-200 rounded-full hover:bg-orange-400 hover:text-white transition"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <SiShopee size={14} />
             </a>
           </div>
         </div>

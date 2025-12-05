@@ -94,7 +94,7 @@ export default function ProductCard({
         </h3>
 
         <div className="text-gray-500">
-          {item?.discount && (
+          {item?.discount > 0 && (
             <span className="line-through mr-2">
               {formatPrice(item?.price)}
             </span>

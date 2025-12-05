@@ -4,8 +4,7 @@
 import { useEffect, useState } from "react";
 
 // Page Components
-import Navbar from "@/app/components/navbar/cartbar";
-import Sidebar from "@/app/components/sidebar";
+import Navbar from "@/app/components/navbar/navbar-home";
 
 // CODE
 export default function ErrorLayout({
@@ -18,10 +17,10 @@ export default function ErrorLayout({
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar open={open} setOpen={setOpen} />
+      {/* <Sidebar open={open} setOpen={setOpen} /> */}
 
       <div className="flex-1 flex flex-col">
-        <Navbar onToggleSidebar={() => setOpen(!open)} />
+        <Navbar />
 
         <main>{children}</main>
       </div>

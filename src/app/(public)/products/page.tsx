@@ -305,21 +305,25 @@ export default function ProductsPage() {
 
           <div className="flex flex-wrap justify-center gap-4 mb-8 text-center">
             {categories.map((cat: any) => (
-              <button
-                key={cat.id}
-                className={`${
-                  cat?.selected
-                    ? "text-blue-600 font-bold"
-                    : "text-gray-600 font-medium"
-                } hover:text-purple-600  cursor-pointer transition-colors`}
-                onClick={() => onFilter(cat)}
-              >
-                {cat?.category_name}
-              </button>
+              <div key={cat.id} className="flex flex-wrap">
+                <button
+                  key={cat.id}
+                  className={`${
+                    cat?.selected
+                      ? "text-blue-600 font-bold"
+                      : "text-gray-600 font-medium"
+                  } hover:text-purple-600 hover:font-bold hover:scale-105 cursor-pointer transition-transform`}
+                  onClick={() => onFilter(cat)}
+                >
+                  {cat?.category_name}
+                </button>
+
+                {cat.id > 0 && (<div className="text-black ml-2">{`•`}</div>)}
+              </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-2">
             {product.map((item: any) => (
               <ProductCard key={item.id} item={item} loading={loading} />
             ))}

@@ -29,7 +29,7 @@ import {
   PiXCircle,
 } from "react-icons/pi";
 
-// Appe Components
+// Pages Components
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
 import MasterCategoryProduct from "@/app/components/masters/category/categoryProduct";
 

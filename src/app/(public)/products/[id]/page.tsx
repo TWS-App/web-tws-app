@@ -174,13 +174,13 @@ export default function ProductDetail({
   };
 
   return (
-    <section className="min-h-screen bg-white py-12 px-6">
+    <section className="min-h-screen bg-white pt-32 py-12 px-6">
       {/* Breadcrumb */}
       <div className="mb-6 text-sm text-gray-500">
-        <Link href="/products" className="hover:underline">
-          Shop
+        <Link href="/products" className="font-bold text-black hover:text-[#108ee9] hover:underline">
+          Products
         </Link>
-        &gt; <span className="text-black">{data?.product_name}</span>
+        &gt; <span className="text-black hover:text-[#108ee9]">{data?.product_name}</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
@@ -222,18 +222,18 @@ export default function ProductDetail({
             {data?.product_name}
           </h1>
           <div className="text-gray-500 mb-6">
-            {data?.discount && (
+            {(data?.discount ?? 0) > 0 && (
               <span className="line-through mr-3">
                 {formatPrice(Number(data?.price))}
               </span>
             )}
             <span
               className={`text-3xl font-bold ${
-                data?.discount ? "text-red-500" : "text-black"
+                (data?.discount ?? 0) > 0 ? "text-red-500" : "text-black"
               }`}
             >
               {formatPrice(
-                data?.discount
+                (data?.discount ?? 0) > 0
                   ? Number(data?.price) - Number(data?.discount)
                   : Number(data?.price)
               )}

@@ -3,9 +3,12 @@
 // REACTS
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores";
 
 // ANTD Components
+import { Avatar, Badge, Image } from "antd";
 import { FiMenu, FiX, FiXCircle } from "react-icons/fi";
 import {
   FaCogs,
@@ -13,6 +16,7 @@ import {
   FaHome,
   FaMapMarkerAlt,
   FaQuestionCircle,
+  FaShoppingCart,
   FaTools,
   FaWhatsapp,
 } from "react-icons/fa";
@@ -22,14 +26,20 @@ import { PiMapPinAreaFill } from "react-icons/pi";
 const menu = [
   { icon: <FaHome />, label: "HOME", href: "/" },
   { icon: <FaCogs />, label: "PRODUCT", href: "/products" },
-  { icon: <FaTools />, label: "SERVICES TWS", href: "/services" },
+  { icon: <FaTools />, label: "SERVICE TWS", href: "/services" },
   // { icon: <FaQuestionCircle />, label: "Tutorial Pairing", href: "/tutorial" },
   { icon: <FaWhatsapp />, label: "CONTACT", href: "/#contact" },
-  { icon: <PiMapPinAreaFill />, label: "LOCATION", href: "/#location" },
+  { icon: <FaShoppingCart />, label: "CART", href: "/cart" },
 ];
 
 // CODE
 export default function Navbar() {
+  // STATE
+  const cartCount = useSelector((state: RootState) =>
+    state.cart.items.reduce((total, item) => total + item.quantity, 0)
+  );
+
+  // STATE MANAGEMENT
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -70,57 +80,32 @@ export default function Navbar() {
           </p>
         </Link>
 
-        {/* Menu */}
-        {/* <ul className="hidden md:flex gap-6 text-sm font-medium text-gray-700">
-          <li>
-            <Link
-              href="/"
-              className="text-blue-600 hover:text-purple-600 transition-colors duration-200"
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/products"
-              className="text-blue-600 hover:text-purple-600 transition-colors duration-200"
-            >
-              Product
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/services"
-              className="text-blue-600 hover:text-purple-600 transition-colors duration-200"
-            >
-              Services
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/collaborations"
-              className="text-blue-600 hover:text-purple-600 transition-colors duration-200"
-            >
-              Collaborations
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/about"
-              className="text-blue-600 hover:text-purple-600 transition-colors duration-200"
-            >
-              About
-            </Link>
-          </li>
-        </ul> */}
         <ul className="hidden md:flex items-center gap-6 text-sm font-medium">
-          {menu.map((item, index) => (
-            <li key={index}>
+          {menu.map((item: any, index: number) => (
+            <li key={item.label}>
               <Link
                 href={item.href}
                 className="flex items-center gap-2 px-3 py-2 hover:bg-yellow-400 rounded-full transition hover:scale-105 cursor-pointer"
               >
-                {item.icon}
+                {item.label === "CART" ? (
+                  <Badge
+                    count={cartCount}
+                    status="success"
+                    showZero
+                  >
+                    <Avatar
+                      shape="circle"
+                      size="default"
+                      icon={item.icon}
+                      style={{
+                        background: "#03a9f4",
+                      }}
+                    />
+                  </Badge>
+                ) : (
+                  item.icon
+                )}
+
                 <span>{item.label}</span>
               </Link>
             </li>
@@ -128,17 +113,46 @@ export default function Navbar() {
         </ul>
       </nav>
 
-      <button
-        onClick={toggleMenu}
-        className="md:hidden text-2xl text-white self-center"
-        aria-label="Toggle Menu"
-      >
-        <FiMenu
-          style={{
-            cursor: "pointer",
-          }}
-        />
-      </button>
+      <div className="md:hidden sticky top-0 z-50 flex items-center justify-between text-white px-6 py-4">
+        <button
+          onClick={toggleMenu}
+          className="md:hidden text-2xl text-white self-center"
+          aria-label="Toggle Menu"
+        >
+          <FiMenu
+            style={{
+              cursor: "pointer",
+            }}
+          />
+        </button>
+
+        <Link
+          href="/"
+          className="flex justify-center self-center-safe cursor-pointer"
+        >
+          <Image
+            src="/images/assets/MainLogo.png"
+            alt="Logo"
+            preview={false}
+            width={30}
+            height={30}
+          />
+          <h1 className="font-bold text-lg">Yhusan Store</h1>
+        </Link>
+
+        <Link
+          href="/cart"
+          className="md:hidden flex justify-between items-center cursor-pointer hover:text-blue-400 transition"
+        >
+          <FaShoppingCart size={22} />
+
+          {cartCount >= 0 && (
+            <span className="text-lg px-2 py-0.5 rounded-full">
+              {cartCount}
+            </span>
+          )}
+        </Link>
+      </div>
 
       {open && (
         <div
@@ -187,13 +201,13 @@ export default function Navbar() {
             Services
           </Link>
           <Link
-            href="#"
+            href="/#location"
             className="text-custom-blue hover:text-purple-600 transition-colors duration-200"
           >
             Location
           </Link>
           <Link
-            href="#"
+            href="/#contact"
             className="text-custom-blue hover:text-purple-600 transition-colors duration-200"
           >
             About

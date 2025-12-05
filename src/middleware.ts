@@ -56,6 +56,7 @@ const VALID_ROUTES = [
   "/errorpage/not-found",
   "/errorpage/internal",
   "/errorpage/unauthorized",
+  "/settings/master",
   "/items/:path*",
   "/services/:path*",
   "/payments/:path*",

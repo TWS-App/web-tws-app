@@ -24,7 +24,12 @@ export default function LoginPage() {
 
     if (email === "admin@example.com" && password === "123456") {
       // Set cookie token
-      document.cookie = "token=sample-token; path=/; max-age=3600";
+      document.cookie = "token=sample-token-admin; path=/; max-age=28800";
+      router.push("/dashboard");
+    } else if (email === "admin@gmail.com" && password === "admin@123") {
+      // Set cookie token
+      document.cookie =
+        "token=sample-token-admin-second; path=/; max-age=28800";
       router.push("/dashboard");
     } else {
       setError("Email atau password salah!");
@@ -39,9 +44,9 @@ export default function LoginPage() {
           {/* Left Image */}
           <div className="hidden md:block w-1/2">
             <img
-              src="/ServiceLogo.png"
+              src="/logo.png"
               alt="Login"
-              className="object-cover w-full h-full bg-gray-600"
+              className="object-cover w-full h-full"
             />
           </div>
 

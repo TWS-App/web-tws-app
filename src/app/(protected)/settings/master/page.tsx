@@ -1,12 +1,15 @@
 "use client";
 
 // REACTS
+import { useState } from "react";
 import Link from "next/link";
 
 // ANTD Components
-import { FaBox, FaTags } from "react-icons/fa";
+import { Spin } from "antd";
+import { FaBox, FaSpinner, FaTags } from "react-icons/fa";
 import { BsCreditCard2BackFill, BsLayersFill } from "react-icons/bs";
 import { LiaShippingFastSolid } from "react-icons/lia";
+import { ImSpinner, ImSpinner6 } from "react-icons/im";
 
 // Page Components
 import Breadcrumb from "@/app/components/breadcrumb/breadcrumb";
@@ -37,6 +40,28 @@ const masterItems = [
 
 // CODE
 export default function DashboardPage() {
+  // STATE MANAGEMENT
+  const [loading, setLoading] = useState(true);
+
+  // LOADINGS
+  if (loading) {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    return (
+      <>
+        <div className="absolute inset-0 flex items-center justify-center mt-20 mb-20 bg-gray-900/40 backdrop-blur-sm rounded-lg">
+          <Spin
+            size="large"
+            spinning
+            indicator={<FaSpinner style={{ fontSize: 72 }} className="animate-spin" />}
+          />
+        </div>
+      </>
+    );
+  }
+
   return (
     <section className="p-6">
       <Breadcrumb

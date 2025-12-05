@@ -18,8 +18,8 @@ const nextConfig: NextConfig = {
   compiler: {
     // Remove console logs only in production, excluding error logs
     removeConsole:
-      // process.env.NEXT_PUBLIC_PRODUCTION ? { exclude: ["error"] } : false,
-      process.env.NEXT_PUBLIC_PRODUCTION ? false : { exclude: ["error"] },
+      process.env.NEXT_PUBLIC_PRODUCTION ? { exclude: ["error"] } : false,
+      // process.env.NEXT_PUBLIC_PRODUCTION ? false : { exclude: ["error"] },
   },
   async redirects() {
     return [];
